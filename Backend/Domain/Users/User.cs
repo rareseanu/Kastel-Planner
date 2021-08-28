@@ -1,12 +1,12 @@
-﻿using Domain.Persons;
+﻿using Domain.Base;
+using Domain.Persons;
 using System;
 
 namespace Domain.Users
 {
-    public class User
+    public class User : BasicEntity
     {
-        public int Id { get; set; }
-        public Nullable<int> PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
         [RegexValidator(@"^[a-z0-9\-_.@]*$")]
         public string Email { get; set; }

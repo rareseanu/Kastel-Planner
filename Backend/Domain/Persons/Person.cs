@@ -1,4 +1,5 @@
-﻿using Domain.BeneficiaryWeeklyLogs;
+﻿using Domain.Base;
+using Domain.BeneficiaryWeeklyLogs;
 using Domain.PersonsLabels;
 using Domain.PersonsRoles;
 using Domain.Schedules;
@@ -6,10 +7,8 @@ using System.Collections.Generic;
 
 namespace Domain.Persons
 {
-    public class Person
+    public class Person : BasicEntity
     {
-        public int Id { get; set; }
-
         [RegexValidator(@"^[a-zA-Z]*$")]
         public string FirstName { get; set; }
 

@@ -1,14 +1,15 @@
-﻿using Domain.BeneficiaryWeeklyLogs;
+﻿using Domain.Base;
+using Domain.BeneficiaryWeeklyLogs;
 using Domain.Persons;
 using System;
 
 namespace Domain.Schedules
 {
-    public class Schedule
+    public class Schedule : BasicEntity
     {
-        public int Id { get; set; }
-        public Nullable<int> VolunteerId { get; set; }
-        public Nullable<int> WeeklyLogId { get; set; }
+        public Guid VolunteerId { get; set; }
+        public Guid WeeklyLogId { get; set; }
+
         public DateTime Date;
 
         [RegexValidator(@"^[0-9]*$")]

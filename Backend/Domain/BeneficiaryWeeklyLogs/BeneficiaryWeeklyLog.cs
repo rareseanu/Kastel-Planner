@@ -1,17 +1,16 @@
-﻿using Domain.Persons;
+﻿using Domain.Base;
+using Domain.Persons;
 using Domain.Schedules;
 using System;
 using System.Collections.Generic;
 
 namespace Domain.BeneficiaryWeeklyLogs
 {
-    public class BeneficiaryWeeklyLog
+    public class BeneficiaryWeeklyLog : BasicEntity
     {
-        public int Id { get; set; }
+        public Guid BeneficiaryId { get; set; }
 
-        public Nullable<int> BeneficiaryId { get; set; }
-
-        public int StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         public string DayOfWeek { get; set; }
 

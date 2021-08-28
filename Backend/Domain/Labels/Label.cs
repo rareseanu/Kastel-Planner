@@ -1,11 +1,11 @@
-﻿using Domain.PersonsLabels;
+﻿using Domain.Base;
+using Domain.PersonsLabels;
 using System.Collections.Generic;
 
 namespace Domain.Labels
 {
-    public class Label
+    public class Label : BasicEntity
     {
-        public int Id { get; set; }
         public string LabelName { get; set; }
 
         public virtual ICollection<PersonLabel> PersonLabels { get; set; }
