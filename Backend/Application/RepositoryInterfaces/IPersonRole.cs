@@ -1,15 +1,8 @@
 ﻿using Domain.PersonsRoles;
-using System.Collections.Generic;
 
 namespace Application.RepositoryInterfaces
 {
-    public interface IPersonRole
+    public interface IPersonRole : IRepository<PersonRole>
     {
-        IEnumerable<PersonRole> GetAll();
-        PersonRole GetById(int id);
-        void Insert(PersonRole personRole);
-        void Update(PersonRole personRole);
-        void Delete(int id);
-        void Save();
     }
 }

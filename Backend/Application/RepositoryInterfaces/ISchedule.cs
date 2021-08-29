@@ -1,15 +1,8 @@
 ﻿using Domain.Schedules;
-using System.Collections.Generic;
 
 namespace Application.RepositoryInterfaces
 {
-    public interface ISchedule
+    public interface ISchedule : IRepository<Schedule>
     {
-        IEnumerable<Schedule> GetAll();
-        Schedule GetById(int id);
-        void Insert(Schedule schedule);
-        void Update(Schedule schedule);
-        void Delete(int id);
-        void Save();
     }
 }

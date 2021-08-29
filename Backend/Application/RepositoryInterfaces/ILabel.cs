@@ -1,15 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Reflection.Emit;
+﻿using Domain.Labels;
 
 namespace Application.RepositoryInterfaces
 {
-    public interface ILabel 
+    public interface ILabel : IRepository<Label>
     {
-        IEnumerable<Label> GetAll();
-        Label GetById(int id);
-        void Insert(Label label);
-        void Update(Label label);
-        void Delete(int id);
-        void Save();
     }
 }
