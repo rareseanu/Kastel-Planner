@@ -9,13 +9,31 @@ namespace Domain.BeneficiaryWeeklyLogs
     public class BeneficiaryWeeklyLog : BasicEntity
     {
         public Guid BeneficiaryId { get; set; }
-
         public DateTime StartTime { get; set; }
+        public ValueObjects.DayOfWeek DayOfWeek { get; set; }
 
-        public string DayOfWeek { get; set; }
+        public Person Person { get; set; }
+        public ICollection<Schedule> Schedules { get; set; }
 
-        public virtual Person Person { get; set; }
+        private BeneficiaryWeeklyLog()
+        {
+        }
 
-        public virtual ICollection<Schedule> Schedules { get; set; }
+        public BeneficiaryWeeklyLog(Guid beneficiaryId, DateTime startTime,
+                ValueObjects.DayOfWeek dayOfWeek)
+        {
+            Id = Guid.NewGuid();
+            BeneficiaryId = beneficiaryId;
+            StartTime = startTime;
+            DayOfWeek = dayOfWeek;
+        }
+
+        public void UpdateBeneficiaryWeeklyLog(Guid beneficiaryId, DateTime startTime,
+                ValueObjects.DayOfWeek dayOfWeek)
+        {
+            BeneficiaryId = beneficiaryId;
+            StartTime = startTime;
+            DayOfWeek = dayOfWeek;
+        }
     }
 }

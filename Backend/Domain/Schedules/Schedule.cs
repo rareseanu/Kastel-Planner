@@ -1,6 +1,7 @@
 ﻿using Domain.Base;
 using Domain.BeneficiaryWeeklyLogs;
 using Domain.Persons;
+using Domain.Schedules.ValueObjects;
 using System;
 
 namespace Domain.Schedules
@@ -9,13 +10,32 @@ namespace Domain.Schedules
     {
         public Guid VolunteerId { get; set; }
         public Guid WeeklyLogId { get; set; }
+        public DateTime Date { get; set; }
+        public Duration Duration { get; set; }
+        public Person Volunteer { get; set; }
+        public BeneficiaryWeeklyLog BeneficiaryWeeklyLog { get; set; }
 
-        public DateTime Date;
+        private Schedule()
+        {
+        }
 
-        [RegexValidator(@"^[0-9]*$")]
-        public int Duration;
+        public Schedule(Guid volunteerId, Guid weeklyLogId, DateTime date,
+                Duration duration)
+        {
+            Id = Guid.NewGuid();
+            VolunteerId = volunteerId;
+            WeeklyLogId = weeklyLogId;
+            Date = date;
+            Duration = duration;
+        }
 
-        public virtual Person Volunteer { get; set; }
-        public virtual BeneficiaryWeeklyLog BeneficiaryWeeklyLog { get; set; }
+        public void UpdateSchedule(Guid volunteerId, Guid weeklyLogId, DateTime date,
+                Duration duration)
+        {
+            VolunteerId = volunteerId;
+            WeeklyLogId = weeklyLogId;
+            Date = date;
+            Duration = duration;
+        }
     }
 }
