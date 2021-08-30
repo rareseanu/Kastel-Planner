@@ -9,6 +9,8 @@ namespace Domain.Labels
     public class Label : BasicEntity
     {
         public LabelName LabelName { get; set; }
+
+        // Navigation properties
         public ICollection<PersonLabel> PersonLabels { get; set; }
 
         private Label()

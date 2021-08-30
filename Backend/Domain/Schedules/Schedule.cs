@@ -8,10 +8,12 @@ namespace Domain.Schedules
 {
     public class Schedule : BasicEntity
     {
-        public Guid VolunteerId { get; set; }
-        public Guid WeeklyLogId { get; set; }
         public DateTime Date { get; set; }
         public Duration Duration { get; set; }
+
+        // Navigation properties
+        public Guid VolunteerId { get; set; }
+        public Guid WeeklyLogId { get; set; }
         public Person Volunteer { get; set; }
         public BeneficiaryWeeklyLog BeneficiaryWeeklyLog { get; set; }
 

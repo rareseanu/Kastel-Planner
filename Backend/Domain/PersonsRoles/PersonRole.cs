@@ -7,6 +7,7 @@ namespace Domain.PersonsRoles
 {
     public class PersonRole : BasicEntity
     {
+        // Navigation properties
         public Guid RoleId { get; set; }
         public Guid PersonId { get; set; }
         public Role Role { get; set; }

@@ -20,8 +20,8 @@ namespace Domain.BeneficiaryWeeklyLogs.ValueObjects
             Value = value;
             Name = name;
         }
-        private int Value { get; }
-        private string Name { get; }
+        public int Value { get; }
+        public string Name { get; }
 
         public static IEnumerable<DayOfWeek> List()
         {

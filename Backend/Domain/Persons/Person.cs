@@ -4,6 +4,7 @@ using Domain.Persons.ValueObjects;
 using Domain.PersonsLabels;
 using Domain.PersonsRoles;
 using Domain.Schedules;
+using Domain.Users;
 using System;
 using System.Collections.Generic;
 
@@ -15,6 +16,8 @@ namespace Domain.Persons
         public PhoneNumber PhoneNumber { get; set; }
         public bool IsActive { get; set; }
 
+        // Navigation properties
+        public User User { get; set; }
         public ICollection<PersonLabel> PersonLabels { get; set; }
         public ICollection<PersonRole> PersonRoles { get; set; }
         public ICollection<Schedule> Schedules { get; set; }

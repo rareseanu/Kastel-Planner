@@ -8,10 +8,12 @@ namespace Domain.BeneficiaryWeeklyLogs
 {
     public class BeneficiaryWeeklyLog : BasicEntity
     {
-        public Guid BeneficiaryId { get; set; }
+
         public DateTime StartTime { get; set; }
         public ValueObjects.DayOfWeek DayOfWeek { get; set; }
 
+        // Navigation properties
+        public Guid BeneficiaryId { get; set; }
         public Person Person { get; set; }
         public ICollection<Schedule> Schedules { get; set; }
 

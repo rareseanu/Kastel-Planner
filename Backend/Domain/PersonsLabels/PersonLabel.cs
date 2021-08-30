@@ -7,6 +7,7 @@ namespace Domain.PersonsLabels
 {
     public class PersonLabel : BasicEntity
     {
+        // Navigation properties
         public Guid LabelId { get; set; }
         public Guid PersonId { get; set; }
         public Label Label { get; set; }

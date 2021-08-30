@@ -5,12 +5,10 @@ namespace Domain.Schedules.ValueObjects
 {
     public sealed class Duration : ValueObject
     {
-        private Duration(int hours, int minutes)
+        private Duration(int minutes)
         {
-            Hours = hours;
             Minutes = minutes;
         }
-        public int Hours { get; }
         public int Minutes { get; }
 
         public static Result<Duration> Create(int hours, int minutes)
@@ -28,19 +26,13 @@ namespace Domain.Schedules.ValueObjects
                 return Result.Failure<Duration>("Invalid duration.");
             }
 
-            if(minutes > 0)
-            {
-                int convertedHours = minutes / 60;
-                hours += convertedHours;
-                minutes -= convertedHours * 60;
-            }
+            minutes += hours * 60;
 
-            return Result.Success(new Duration(hours, minutes));
+            return Result.Success(new Duration(minutes));
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Hours;
             yield return Minutes;
         }
     }

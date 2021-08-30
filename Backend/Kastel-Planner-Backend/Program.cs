@@ -1,13 +1,22 @@
+using Infrastructure.Context;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Kastel_Planner_Backend
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            await CreateDbIfNotExists(host);
+
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -16,5 +25,22 @@ namespace Kastel_Planner_Backend
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        private static async Task CreateDbIfNotExists(IHost host)
+        {
+            using var scope = host.Services.CreateScope();
+
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<KastelPlannerDbContext>();
+                await context.Database.EnsureCreatedAsync();
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred creating the DB.");
+            }
+        }
     }
 }
