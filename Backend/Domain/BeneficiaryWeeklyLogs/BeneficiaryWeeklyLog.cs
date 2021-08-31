@@ -9,7 +9,7 @@ namespace Domain.BeneficiaryWeeklyLogs
     public class BeneficiaryWeeklyLog : BasicEntity
     {
 
-        public DateTime StartTime { get; set; }
+        public TimeSpan StartTime { get; set; }
         public ValueObjects.DayOfWeek DayOfWeek { get; set; }
 
         // Navigation properties
@@ -21,7 +21,7 @@ namespace Domain.BeneficiaryWeeklyLogs
         {
         }
 
-        public BeneficiaryWeeklyLog(Guid beneficiaryId, DateTime startTime,
+        public BeneficiaryWeeklyLog(Guid beneficiaryId, TimeSpan startTime,
                 ValueObjects.DayOfWeek dayOfWeek)
         {
             Id = Guid.NewGuid();
@@ -30,7 +30,7 @@ namespace Domain.BeneficiaryWeeklyLogs
             DayOfWeek = dayOfWeek;
         }
 
-        public void UpdateBeneficiaryWeeklyLog(Guid beneficiaryId, DateTime startTime,
+        public void UpdateBeneficiaryWeeklyLog(Guid beneficiaryId, TimeSpan startTime,
                 ValueObjects.DayOfWeek dayOfWeek)
         {
             BeneficiaryId = beneficiaryId;

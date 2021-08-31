@@ -1,4 +1,5 @@
 using Infrastructure.Context;
+using Infrastructure.Migrations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,7 +35,7 @@ namespace Kastel_Planner_Backend
             try
             {
                 var context = services.GetRequiredService<KastelPlannerDbContext>();
-                await context.Database.EnsureCreatedAsync();
+                await DbInitializer.Initialize(context);
             }
             catch (Exception ex)
             {

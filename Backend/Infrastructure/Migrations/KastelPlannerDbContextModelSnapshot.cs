@@ -24,7 +24,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     b.Property<Guid>("BeneficiaryId")
                         .HasColumnType("uuid")
@@ -35,8 +35,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("day_of_week");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp without time zone")
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("interval")
                         .HasColumnName("start_time");
 
                     b.HasKey("Id");
@@ -51,7 +51,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     b.HasKey("Id");
 
@@ -63,7 +63,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")
@@ -79,7 +79,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     b.Property<Guid>("LabelId")
                         .HasColumnType("uuid")
@@ -103,7 +103,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uuid")
@@ -127,7 +127,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     b.HasKey("Id");
 
@@ -139,10 +139,10 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("date")
                         .HasColumnName("date");
 
                     b.Property<Guid>("VolunteerId")
@@ -167,7 +167,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Id");
+                        .HasColumnName("id");
 
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uuid")

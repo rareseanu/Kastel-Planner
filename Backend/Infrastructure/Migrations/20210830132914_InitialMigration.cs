@@ -11,19 +11,19 @@ namespace Infrastructure.Migrations
                 name: "label",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_label", x => x.Id);
+                    table.PrimaryKey("PK_label", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "person",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     first_name = table.Column<string>(type: "text", nullable: true),
                     last_name = table.Column<string>(type: "text", nullable: true),
                     phone_number = table.Column<string>(type: "text", nullable: true),
@@ -31,43 +31,43 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_person", x => x.Id);
+                    table.PrimaryKey("PK_person", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "role",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     role = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_role", x => x.Id);
+                    table.PrimaryKey("PK_role", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "person_label",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     label_id = table.Column<Guid>(type: "uuid", nullable: false),
                     person_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_person_label", x => x.Id);
+                    table.PrimaryKey("PK_person_label", x => x.id);
                     table.ForeignKey(
                         name: "FK_person_label_label_label_id",
                         column: x => x.label_id,
                         principalTable: "label",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_person_label_person_person_id",
                         column: x => x.person_id,
                         principalTable: "person",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -75,18 +75,18 @@ namespace Infrastructure.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     person_id = table.Column<Guid>(type: "uuid", nullable: false),
                     email = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_users", x => x.Id);
+                    table.PrimaryKey("PK_users", x => x.id);
                     table.ForeignKey(
                         name: "FK_users_person_person_id",
                         column: x => x.person_id,
                         principalTable: "person",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -94,19 +94,19 @@ namespace Infrastructure.Migrations
                 name: "weekly_log",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    start_time = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    start_time = table.Column<TimeSpan>(type: "interval", nullable: false),
                     day_of_week = table.Column<string>(type: "text", nullable: false),
                     beneficiary_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_weekly_log", x => x.Id);
+                    table.PrimaryKey("PK_weekly_log", x => x.id);
                     table.ForeignKey(
                         name: "FK_weekly_log_person_beneficiary_id",
                         column: x => x.beneficiary_id,
                         principalTable: "person",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -114,24 +114,24 @@ namespace Infrastructure.Migrations
                 name: "person_role",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     role_id = table.Column<Guid>(type: "uuid", nullable: false),
                     person_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_person_role", x => x.Id);
+                    table.PrimaryKey("PK_person_role", x => x.id);
                     table.ForeignKey(
                         name: "FK_person_role_person_person_id",
                         column: x => x.person_id,
                         principalTable: "person",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_person_role_role_role_id",
                         column: x => x.role_id,
                         principalTable: "role",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -139,26 +139,26 @@ namespace Infrastructure.Migrations
                 name: "schedule",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    date = table.Column<DateTime>(type: "date", nullable: false),
                     duration = table.Column<int>(type: "integer", nullable: true),
                     volunteer_id = table.Column<Guid>(type: "uuid", nullable: false),
                     weekly_log_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_schedule", x => x.Id);
+                    table.PrimaryKey("PK_schedule", x => x.id);
                     table.ForeignKey(
                         name: "FK_schedule_person_volunteer_id",
                         column: x => x.volunteer_id,
                         principalTable: "person",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_schedule_weekly_log_weekly_log_id",
                         column: x => x.weekly_log_id,
                         principalTable: "weekly_log",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 

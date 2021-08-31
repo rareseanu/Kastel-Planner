@@ -17,7 +17,7 @@ namespace Domain.PersonsLabels
         {
         }
 
-        public PersonLabel(Guid labelId, Guid personId)
+        public PersonLabel(Guid personId, Guid labelId)
         {
             Id = Guid.NewGuid();
             LabelId = labelId;
