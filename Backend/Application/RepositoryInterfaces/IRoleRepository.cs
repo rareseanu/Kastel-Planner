@@ -2,7 +2,7 @@
 
 namespace Application.RepositoryInterfaces
 {
-    public interface IRole : IRepository<Role>
+    public interface IRoleRepository : IRepository<Role>
     {
     }
 }

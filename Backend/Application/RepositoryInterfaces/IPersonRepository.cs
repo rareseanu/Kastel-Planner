@@ -2,7 +2,7 @@
 
 namespace Application.RepositoryInterfaces
 {
-    public interface IPerson : IRepository<Person>
+    public interface IPersonRepository : IRepository<Person>
     {
     }
 }

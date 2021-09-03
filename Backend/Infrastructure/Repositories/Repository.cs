@@ -32,7 +32,7 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public virtual Task<List<TEntity>> GetAllByAsync(Expression<Func<TEntity, bool>> predicate,
+        public virtual Task<List<TEntity>> GetAllByPredicateAsync(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includes)
         {
             return EntityQuery
@@ -47,7 +47,7 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public Task<TEntity> GetFirstByIdAsync(Expression<Func<TEntity, bool>> predicate,
+        public Task<TEntity> GetFirstByPredicateAsync(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includes)
         {
             return EntityQuery.Includes(includes)
@@ -57,7 +57,6 @@ namespace Infrastructure.Repositories
 
         public async Task<TEntity> AddAsync(TEntity entity)
         {
-
             var result = await Entities.AddAsync(entity);
             await Context.SaveChangesAsync();
             return result.Entity;
@@ -74,7 +73,6 @@ namespace Infrastructure.Repositories
         {
             Context.Remove(entity);
             await Context.SaveChangesAsync();
-
         }
 
         protected virtual IQueryable<TEntity> DefaultIncludes(IQueryable<TEntity> queryable)

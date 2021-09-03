@@ -2,7 +2,7 @@
 
 namespace Application.RepositoryInterfaces
 {
-    public interface ISchedule : IRepository<Schedule>
+    public interface IScheduleRepository : IRepository<Schedule>
     {
     }
 }

@@ -1,3 +1,4 @@
+using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +22,8 @@ namespace Kastel_Planner_Backend
         {
             services.AddDatabase(Configuration.GetConnectionString("DefaultConnection"));
 
+            services.AddRepositories();
+            services.AddServices();
             services.AddControllers();
         }
 

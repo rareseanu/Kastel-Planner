@@ -2,7 +2,7 @@
 
 namespace Application.RepositoryInterfaces
 {
-    public interface IBeneficiaryWeeklyLog : IRepository<BeneficiaryWeeklyLog>
+    public interface IBeneficiaryWeeklyLogRepository : IRepository<BeneficiaryWeeklyLog>
     {
     }
 }

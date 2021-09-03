@@ -2,7 +2,7 @@
 
 namespace Application.RepositoryInterfaces
 {
-    public interface IUser : IRepository<User>
+    public interface IUserRepository : IRepository<User>
     {
     }
 }

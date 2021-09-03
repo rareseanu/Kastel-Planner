@@ -10,12 +10,12 @@ namespace Application.RepositoryInterfaces
     {
         Task<List<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includes);
 
-        Task<List<TEntity>> GetAllByAsync(Expression<Func<TEntity, bool>> predicate,
+        Task<List<TEntity>> GetAllByPredicateAsync(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includes);
 
         Task<TEntity> GetByIdAsync(Guid entityId);
 
-        Task<TEntity> GetFirstByIdAsync(Expression<Func<TEntity, bool>> predicate,
+        Task<TEntity> GetFirstByPredicateAsync(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includes);
 
         Task<TEntity> AddAsync(TEntity entity);

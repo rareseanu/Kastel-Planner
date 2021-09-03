@@ -4,7 +4,7 @@ using Infrastructure.Context;
 
 namespace Infrastructure.Repositories
 {
-    public class BeneficiaryWeeklyLogRepository : Repository<BeneficiaryWeeklyLog>, IBeneficiaryWeeklyLog
+    public class BeneficiaryWeeklyLogRepository : Repository<BeneficiaryWeeklyLog>, IBeneficiaryWeeklyLogRepository
     {
         public BeneficiaryWeeklyLogRepository(KastelPlannerDbContext context) : base(context)
         {

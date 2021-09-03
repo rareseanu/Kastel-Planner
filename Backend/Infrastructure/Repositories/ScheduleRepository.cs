@@ -4,7 +4,7 @@ using Infrastructure.Context;
 
 namespace Infrastructure.Repositories
 {
-    public class ScheduleRepository : Repository<Schedule>, ISchedule
+    public class ScheduleRepository : Repository<Schedule>, IScheduleRepository
     {
        public ScheduleRepository(KastelPlannerDbContext context) : base(context)
         {
