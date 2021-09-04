@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace Domain.Users.ValueObjects
 {
-    public class Password : ValueObject
+    public sealed class Password : ValueObject
     {
         private static readonly int SaltLength = 8;
         private static readonly int Pbkdf2Iterations = 10000;
@@ -72,7 +72,10 @@ namespace Domain.Users.ValueObjects
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return PasswordHash;
+            for(int i = 0; i < PasswordHash.Length; ++i)
+            {
+                yield return PasswordHash[i];
+            }
         }
     }
 }

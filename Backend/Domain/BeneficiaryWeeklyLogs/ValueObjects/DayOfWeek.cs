@@ -7,7 +7,6 @@ namespace Domain.BeneficiaryWeeklyLogs.ValueObjects
 {
     public sealed class DayOfWeek : ValueObject
     {
-        //TODO: Replace with basic enum type? Weird enum value access: DayOfWeek.EnumTypeName.Monday 
         public static DayOfWeek Monday { get; } = new DayOfWeek(0, "Monday");
         public static DayOfWeek Tuesday { get; } = new DayOfWeek(1, "Tuesday");
         public static DayOfWeek Wednesday { get; } = new DayOfWeek(2, "Wednesday");

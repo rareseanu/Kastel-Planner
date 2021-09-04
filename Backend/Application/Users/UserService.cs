@@ -22,20 +22,25 @@ namespace Application.Users
         public async Task<Result> Authenticate(AuthenticateRequest request)
         {
             Result<Email> userEmailOrError = Email.Create(request.Email);
-            Result<Password> userPasswordOrError = Password.Create(request.Password);
-
-            var result = Result.Combine(userEmailOrError, userPasswordOrError);
-            if (result.IsFailure)
+            if(userEmailOrError.IsFailure)
             {
-                return Result.Failure(result.Error);
+                return Result.Failure(userEmailOrError.Error);
             }
 
-            User user = await _userRepository.GetFirstByPredicateAsync(u => u.Email.Equals(userEmailOrError));
+            User user = await _userRepository.GetFirstByPredicateAsync(u =>
+                    u.Email.Value == userEmailOrError.Value.Value);
             if(user == null)
             {
                 return Result.Failure<UserResponse>($"User {request.Email} was not found.");
             }
-            if(!user.Password.Equals(userPasswordOrError.Value))
+
+            Result<Password> userPasswordOrError = Password.Create(request.Password, user.Password.PasswordSalt);
+            if (userPasswordOrError.IsFailure)
+            {
+                return Result.Failure(userPasswordOrError.Error);
+            }
+
+            if (!user.Password.Equals(userPasswordOrError.Value))
             {
                 return Result.Failure<UserResponse>("Incorrect password.");
             }
