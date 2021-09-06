@@ -13,8 +13,9 @@ namespace Application.Users
     {
         Task<IList<UserResponse>> GetAllUsersAsync();
         Task<Result<UserResponse>> GetUserByIdAsync(Guid userId);
-        Task<Result> CreateUserAsync(CreateUserRequest request);
-        Task<Result> UpdateUserAsync(Guid userId, UpdateUserRequest request);
+        Task<Result<UserResponse>> Authenticate(AuthenticateRequest request);
+        Task<Result<UserResponse>> CreateUserAsync(CreateUserRequest request);
+        Task<Result<UserResponse>> UpdateUserAsync(Guid userId, UpdateUserRequest request);
         Task<Result> DeleteUserAsync(Guid userId);
     }
 }

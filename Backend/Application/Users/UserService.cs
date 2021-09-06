@@ -19,12 +19,12 @@ namespace Application.Users
             _userRepository = userRepository;
         }
 
-        public async Task<Result> Authenticate(AuthenticateRequest request)
+        public async Task<Result<UserResponse>> Authenticate(AuthenticateRequest request)
         {
             Result<Email> userEmailOrError = Email.Create(request.Email);
             if(userEmailOrError.IsFailure)
             {
-                return Result.Failure(userEmailOrError.Error);
+                return Result.Failure<UserResponse>(userEmailOrError.Error);
             }
 
             User user = await _userRepository.GetFirstByPredicateAsync(u =>
@@ -37,7 +37,7 @@ namespace Application.Users
             Result<Password> userPasswordOrError = Password.Create(request.Password, user.Password.PasswordSalt);
             if (userPasswordOrError.IsFailure)
             {
-                return Result.Failure(userPasswordOrError.Error);
+                return Result.Failure<UserResponse>(userPasswordOrError.Error);
             }
 
             if (!user.Password.Equals(userPasswordOrError.Value))
@@ -55,21 +55,34 @@ namespace Application.Users
             return Result.Success(response);
         }
 
-        public async Task<Result> CreateUserAsync(CreateUserRequest request)
+        public async Task<Result<UserResponse>> CreateUserAsync(CreateUserRequest request)
         {
             Result<Email> userEmailOrError = Email.Create(request.Email);
-            Result<Password> userPasswordOrError = Password.Create(request.Password);
 
+            User foundUser = await _userRepository.GetFirstByPredicateAsync(u =>
+                    u.Email.Value == userEmailOrError.Value.Value);
+            if(foundUser != null)
+            {
+                return Result.Failure<UserResponse>($"Email {request.Email} is already taken.");
+            }
+
+            Result<Password> userPasswordOrError = Password.Create(request.Password);
             var result = Result.Combine(userEmailOrError, userPasswordOrError);
             if (result.IsFailure)
             {
-                return Result.Failure(result.Error);
+                return Result.Failure<UserResponse>(result.Error);
             }
 
             User user = new User(request.PersonId, userEmailOrError.Value, userPasswordOrError.Value);
             await _userRepository.AddAsync(user);
+            UserResponse userResponse = new UserResponse()
+            {
+                Id = user.Id,
+                PersonId = user.PersonId,
+                Email = user.Email.Value
+            };
 
-            return Result.Success();
+            return Result.Success(userResponse);
         }
 
         public async Task<Result> DeleteUserAsync(Guid userId)
@@ -122,15 +135,15 @@ namespace Application.Users
             return Result.Success(response);
         }
 
-        public async Task<Result> UpdateUserAsync(Guid userId, UpdateUserRequest request)
+        public async Task<Result<UserResponse>> UpdateUserAsync(Guid userId, UpdateUserRequest request)
         {
-            Result<Email> userEmailOrError = Email.Create(request.Email);
-            Result<Password> userPasswordOrError = Password.Create(request.Password);
+            Result<Email> userEmailOrError = Email.Create(request?.Email);
+            Result<Password> userPasswordOrError = Password.Create(request?.Password);
 
             var result = Result.Combine(userEmailOrError, userPasswordOrError);
             if (result.IsFailure)
             {
-                return Result.Failure(result.Error);
+                return Result.Failure<UserResponse>(result.Error);
             }
 
             User user = await _userRepository.GetByIdAsync(userId);
@@ -139,10 +152,17 @@ namespace Application.Users
             {
                 return Result.Failure<UserResponse>($"User with id {userId} was not found.");
             }
-            user.UpdateUser(request.PersonId, userEmailOrError.Value, userPasswordOrError.Value);
-
+            user.UpdateUser(user.PersonId, userEmailOrError.Value, userPasswordOrError.Value);
             await _userRepository.Update(user);
-            return Result.Success();
+
+            UserResponse response = new UserResponse()
+            {
+                Id = user.Id,
+                PersonId = user.PersonId,
+                Email = user.Email.Value
+            };
+
+            return Result.Success(response);
         }
     }
 }
