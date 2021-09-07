@@ -1,10 +1,15 @@
 using Application;
+using Domain.Configurations;
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 
 namespace Kastel_Planner_Backend
 {
@@ -20,11 +25,31 @@ namespace Kastel_Planner_Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddDatabase(Configuration.GetConnectionString("DefaultConnection"));
 
             services.AddRepositories();
             services.AddServices();
             services.AddControllers();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(jwt =>
+                {
+                    var jwtSecret = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
+                    jwt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(jwtSecret),
+                        ValidateIssuer = false, // Development only
+                        ValidateAudience = false,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,7 +58,8 @@ namespace Kastel_Planner_Backend
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            } else
+            }
+            else
             {
                 // TODO: Production error page.
             }
@@ -42,6 +68,7 @@ namespace Kastel_Planner_Backend
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

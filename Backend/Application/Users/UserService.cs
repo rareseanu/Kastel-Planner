@@ -2,10 +2,16 @@
 using Application.Users.Requests;
 using Application.Users.Responses;
 using Domain;
+using Domain.Configurations;
 using Domain.Users;
 using Domain.Users.ValueObjects;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Users
@@ -13,41 +19,44 @@ namespace Application.Users
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly JwtConfig _jwtConfig;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IOptions<JwtConfig> jwtConfig)
         {
             _userRepository = userRepository;
+            _jwtConfig = jwtConfig.Value;
         }
 
-        public async Task<Result<UserResponse>> Authenticate(AuthenticateRequest request)
+        public async Task<Result<AuthenticateResponse>> Authenticate(AuthenticateRequest request)
         {
             Result<Email> userEmailOrError = Email.Create(request.Email);
             if(userEmailOrError.IsFailure)
             {
-                return Result.Failure<UserResponse>(userEmailOrError.Error);
+                return Result.Failure<AuthenticateResponse>(userEmailOrError.Error);
             }
 
             User user = await _userRepository.GetFirstByPredicateAsync(u =>
                     u.Email.Value == userEmailOrError.Value.Value);
             if(user == null)
             {
-                return Result.Failure<UserResponse>($"User {request.Email} was not found.");
+                return Result.Failure<AuthenticateResponse>($"User {request.Email} was not found.");
             }
 
             Result<Password> userPasswordOrError = Password.Create(request.Password, user.Password.PasswordSalt);
             if (userPasswordOrError.IsFailure)
             {
-                return Result.Failure<UserResponse>(userPasswordOrError.Error);
+                return Result.Failure<AuthenticateResponse>(userPasswordOrError.Error);
             }
 
             if (!user.Password.Equals(userPasswordOrError.Value))
             {
-                return Result.Failure<UserResponse>("Incorrect password.");
+                return Result.Failure<AuthenticateResponse>("Incorrect password.");
             }
 
-            UserResponse response = new UserResponse()
+            AuthenticateResponse response = new AuthenticateResponse()
             {
                 Id = user.Id,
+                Token = GenerateJwtToken(user),
                 PersonId = user.PersonId,
                 Email = user.Email.Value
             };
@@ -163,6 +172,26 @@ namespace Application.Users
             };
 
             return Result.Success(response);
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var jwtSecret = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var jwtTokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[] {
+                    new Claim("Id", user.Id.ToString()),
+                    new Claim("Email", user.Email.Value)
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(jwtSecret),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = jwtTokenHandler.CreateToken(jwtTokenDescriptor);
+
+            return jwtTokenHandler.WriteToken(token);
         }
     }
 }
