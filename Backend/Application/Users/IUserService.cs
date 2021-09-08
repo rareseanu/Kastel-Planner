@@ -12,6 +12,8 @@ namespace Application.Users
         Task<IList<UserResponse>> GetAllUsersAsync();
         Task<Result<UserResponse>> GetUserByIdAsync(Guid userId);
         Task<Result<AuthenticateResponse>> Authenticate(AuthenticateRequest request);
+        Task<Result<AuthenticateResponse>> RefreshToken(RefreshTokenRequest request);
+        Task<Result<RevokeTokenResponse>> RevokeToken(RefreshTokenRequest request);
         Task<Result<UserResponse>> CreateUserAsync(CreateUserRequest request);
         Task<Result<UserResponse>> UpdateUserAsync(Guid userId, UpdateUserRequest request);
         Task<Result> DeleteUserAsync(Guid userId);

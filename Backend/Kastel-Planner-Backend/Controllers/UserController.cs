@@ -65,6 +65,30 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        {
+            var result = await _userService.RefreshToken(request);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenRequest request)
+        {
+            var result = await _userService.RevokeToken(request);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {

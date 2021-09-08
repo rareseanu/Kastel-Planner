@@ -3,6 +3,8 @@ using Application.Users.Requests;
 using Application.Users.Responses;
 using Domain;
 using Domain.Configurations;
+using Domain.RefreshTokens;
+using Domain.RefreshTokens.ValueObjects;
 using Domain.Users;
 using Domain.Users.ValueObjects;
 using Microsoft.Extensions.Options;
@@ -11,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,11 +22,14 @@ namespace Application.Users
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly JwtConfig _jwtConfig;
 
-        public UserService(IUserRepository userRepository, IOptions<JwtConfig> jwtConfig)
+        public UserService(IUserRepository userRepository, 
+                IRefreshTokenRepository refreshTokenRepository, IOptions<JwtConfig> jwtConfig)
         {
             _userRepository = userRepository;
+            _refreshTokenRepository = refreshTokenRepository;
             _jwtConfig = jwtConfig.Value;
         }
 
@@ -53,15 +59,87 @@ namespace Application.Users
                 return Result.Failure<AuthenticateResponse>("Incorrect password.");
             }
 
+            Result<Token> token = Token.Create(GenerateRefreshToken());
+            if(token.IsFailure)
+            {
+                return Result.Failure<AuthenticateResponse>(token.Error);
+            }
+            RefreshToken refreshToken = new RefreshToken(token.Value,
+                    DateTime.Now.AddDays(7), DateTime.Now, user.Id);
+            await _refreshTokenRepository.AddAsync(refreshToken);
+
             AuthenticateResponse response = new AuthenticateResponse()
             {
                 Id = user.Id,
                 Token = GenerateJwtToken(user),
+                RefreshToken = token.Value.Value,
                 PersonId = user.PersonId,
                 Email = user.Email.Value
             };
 
             return Result.Success(response);
+        }
+
+        public async Task<Result<AuthenticateResponse>> RefreshToken(RefreshTokenRequest request)
+        {
+            RefreshToken token = await _refreshTokenRepository.GetFirstByPredicateAsync(r => 
+                    r.Token.Value.Equals(request.RefreshToken));
+            if(token == null)
+            {
+                return Result.Failure<AuthenticateResponse>($"Refresh token {request.RefreshToken} was not found.");
+            }
+
+            User userWithRefreshToken = await _userRepository.GetByIdAsync(token.UserId);
+            if(userWithRefreshToken == null)
+            {
+                return Result.Failure<AuthenticateResponse>($"Refresh token with user ID {token.UserId} was not found");
+            }
+
+            await _refreshTokenRepository.Delete(token);
+            if (DateTime.Now >= token.ExpiresAt || token.RevokedAt != null)
+            {
+                return Result.Failure<AuthenticateResponse>("Expired refresh token.");
+            }
+
+            Result<Token> newToken = Token.Create(GenerateRefreshToken());
+            if (newToken.IsFailure)
+            {
+                return Result.Failure<AuthenticateResponse>(newToken.Error);
+            }
+            RefreshToken newRefreshToken = new RefreshToken(newToken.Value,
+                    DateTime.Now.AddDays(7), DateTime.Now, userWithRefreshToken.Id);
+
+            await _refreshTokenRepository.AddAsync(newRefreshToken);
+
+            AuthenticateResponse response = new AuthenticateResponse()
+            {
+                Id = userWithRefreshToken.Id,
+                Token = GenerateJwtToken(userWithRefreshToken),
+                RefreshToken = newToken.Value.Value,
+                PersonId = userWithRefreshToken.PersonId,
+                Email = userWithRefreshToken.Email.Value
+            };
+
+            return Result.Success(response);
+        }
+
+        public async Task<Result<RevokeTokenResponse>> RevokeToken(RefreshTokenRequest request)
+        {
+            RefreshToken token = await _refreshTokenRepository.GetFirstByPredicateAsync(r => 
+                    r.Token.Value.Equals(request.RefreshToken));
+            if(token == null)
+            {
+                return Result.Failure<RevokeTokenResponse>($"Refresh token {request.RefreshToken} was not found.");
+            }
+            token.RevokedAt = DateTime.Now;
+            await _refreshTokenRepository.Update(token);
+
+            RevokeTokenResponse revokeTokenResponse = new RevokeTokenResponse()
+            {
+                RefreshToken = request.RefreshToken,
+                RevokedAt = token.RevokedAt.Value
+            };
+            return Result.Success(revokeTokenResponse);
         }
 
         public async Task<Result<UserResponse>> CreateUserAsync(CreateUserRequest request)
@@ -192,6 +270,16 @@ namespace Application.Users
             var token = jwtTokenHandler.CreateToken(jwtTokenDescriptor);
 
             return jwtTokenHandler.WriteToken(token);
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomBytes = new byte[32];
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(randomBytes);
+            }
+            return Convert.ToBase64String(randomBytes);
         }
     }
 }

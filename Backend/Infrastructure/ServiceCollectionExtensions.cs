@@ -26,6 +26,7 @@ namespace Infrastructure
             services.AddScoped<IPersonRoleRepository, PersonRoleRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IScheduleRepository, ScheduleRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository> ();
         }
     }
 }
