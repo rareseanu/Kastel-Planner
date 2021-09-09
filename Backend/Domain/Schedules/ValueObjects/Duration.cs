@@ -10,6 +10,7 @@ namespace Domain.Schedules.ValueObjects
             Minutes = minutes;
         }
         public int Minutes { get; }
+        public int Hours { get; }
 
         public static Result<Duration> Create(int hours, int minutes)
         {

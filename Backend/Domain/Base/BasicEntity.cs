@@ -10,7 +10,7 @@ namespace Domain.Base
     {
         public Guid Id { get; protected init; }
 
-        protected BasicEntity()
+    protected BasicEntity()
         {
 
         }
