@@ -4,7 +4,7 @@ using Infrastructure.Context;
 
 namespace Infrastructure.Repositories
 {
-    public class PersonRepository : Repository<Person>, IPerson
+    public class PersonRepository : Repository<Person>, IPersonRepository
     {
         public PersonRepository(KastelPlannerDbContext context) : base(context)
         {

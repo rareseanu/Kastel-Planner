@@ -17,6 +17,16 @@ namespace Infrastructure.Configurations
                     .IsRequired();
             });
 
+            builder.OwnsOne(u => u.Password, password =>
+            {
+                password.Property(uu => uu.PasswordHash)
+                    .HasColumnName("password_hash")
+                    .IsRequired();
+                password.Property(uu => uu.PasswordSalt)
+                    .HasColumnName("password_salt")
+                    .IsRequired();
+            });
+
             builder.Property(u => u.PersonId)
                 .HasColumnName("person_id")
                 .IsRequired();

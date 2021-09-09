@@ -49,7 +49,7 @@ namespace Infrastructure.Migrations
 
             var users = new User[]
             {
-                CreateUser(personDbSet.Single(i => i.Name.FirstName.Equals("Bob")).Id, "bob@gmail.com")
+                CreateUser(personDbSet.Single(i => i.Name.FirstName.Equals("Bob")).Id, "bob@gmail.com", "bob123456")
             };
             await usersDbSet.AddRangeAsync(users);
             await context.SaveChangesAsync();
@@ -133,10 +133,11 @@ namespace Infrastructure.Migrations
             return person;
         }
 
-        private static User CreateUser(Guid personId, string emailAddress)
+        private static User CreateUser(Guid personId, string emailAddress, string password)
         {
             Email email = Email.Create(emailAddress).Value;
-            User user = new User(personId, email);
+            Password passwordValueObj = Password.Create(password).Value;
+            User user = new User(personId, email, passwordValueObj);
 
             return user;
         }

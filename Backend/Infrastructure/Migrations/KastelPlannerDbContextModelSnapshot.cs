@@ -122,6 +122,35 @@ namespace Infrastructure.Migrations
                     b.ToTable("person_role");
                 });
 
+            modelBuilder.Entity("Domain.RefreshTokens.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("revoked_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("refresh_token");
+                });
+
             modelBuilder.Entity("Domain.Roles.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -297,6 +326,37 @@ namespace Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Domain.RefreshTokens.RefreshToken", b =>
+                {
+                    b.HasOne("Domain.Users.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.RefreshTokens.ValueObjects.Token", "Token", b1 =>
+                        {
+                            b1.Property<Guid>("RefreshTokenId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("token");
+
+                            b1.HasKey("RefreshTokenId");
+
+                            b1.ToTable("refresh_token");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RefreshTokenId");
+                        });
+
+                    b.Navigation("Token");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Roles.Role", b =>
                 {
                     b.OwnsOne("Domain.Roles.ValueObjects.RoleName", "RoleName", b1 =>
@@ -384,7 +444,32 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
+                    b.OwnsOne("Domain.Users.ValueObjects.Password", "Password", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<byte[]>("PasswordHash")
+                                .IsRequired()
+                                .HasColumnType("bytea")
+                                .HasColumnName("password_hash");
+
+                            b1.Property<byte[]>("PasswordSalt")
+                                .IsRequired()
+                                .HasColumnType("bytea")
+                                .HasColumnName("password_salt");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
                     b.Navigation("Email");
+
+                    b.Navigation("Password");
 
                     b.Navigation("Person");
                 });
@@ -415,6 +500,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Roles.Role", b =>
                 {
                     b.Navigation("PersonRoles");
+                });
+
+            modelBuilder.Entity("Domain.Users.User", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }
