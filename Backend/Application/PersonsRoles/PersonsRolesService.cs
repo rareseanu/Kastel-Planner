@@ -11,10 +11,10 @@ namespace Application.PersonsRoles
 {
     public sealed class PersonsRolesService : IPersonsRolesService
     {
-        private readonly IPersonRole _personRoleRepository;
+        private readonly IPersonRoleRepository _personRoleRepository;
         private Guid roleId, personId;
 
-        public PersonsRolesService(IPersonRole personRoleRepository)
+        public PersonsRolesService(IPersonRoleRepository personRoleRepository)
         {
             _personRoleRepository = personRoleRepository;
         }

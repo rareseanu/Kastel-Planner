@@ -14,9 +14,9 @@ namespace Application.Schedules
 {
     public sealed class ScheduleService : IScheduleService
     {
-        private readonly ISchedule _scheduleRepository;
+        private readonly IScheduleRepository _scheduleRepository;
 
-        public ScheduleService(ISchedule scheduleRepository)
+        public ScheduleService(IScheduleRepository scheduleRepository)
         {
             _scheduleRepository = scheduleRepository;
         }

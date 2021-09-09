@@ -12,10 +12,10 @@ namespace Application.Persons
 {
     public sealed class PersonService : IPersonService
     {
-        private readonly IPerson _personRepository;
+        private readonly IPersonRepository _personRepository;
         private bool isActive;
 
-        public PersonService(IPerson personRepository)
+        public PersonService(IPersonRepository personRepository)
         {
             _personRepository = personRepository;
         }

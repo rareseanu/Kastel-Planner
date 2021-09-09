@@ -11,10 +11,10 @@ namespace Application.PersonsLabels
 {
     public sealed class PersonsLabelsService : IPersonsLabelsService
     {
-        private readonly IPersonLabel _personLabelRepository;
+        private readonly IPersonLabelRepository _personLabelRepository;
         private Guid labelId, personId;
 
-        public PersonsLabelsService(IPersonLabel personLabelRepository)
+        public PersonsLabelsService(IPersonLabelRepository personLabelRepository)
         {
             _personLabelRepository = personLabelRepository;
         }

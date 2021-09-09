@@ -10,11 +10,11 @@ namespace Application.BeneficiaryWeeklyLogs.Responses
 {
     public sealed class BeneficiaryWeeklyLogService : IBeneficiaryWeeklyLogService
     {
-        private readonly IBeneficiaryWeeklyLog _weeklyLogRepository;
+        private readonly IBeneficiaryWeeklyLogRepository _weeklyLogRepository;
         private TimeSpan startTime;
         private Guid benecifiaryId;
 
-        public BeneficiaryWeeklyLogService(IBeneficiaryWeeklyLog weeklyLogRepository)
+        public BeneficiaryWeeklyLogService(IBeneficiaryWeeklyLogRepository weeklyLogRepository)
         {
             _weeklyLogRepository = weeklyLogRepository;
         }

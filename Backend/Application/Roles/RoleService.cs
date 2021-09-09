@@ -14,9 +14,9 @@ namespace Application.Roles
 {
     public sealed class RoleService : IRoleService
     {
-        private readonly IRole _roleRepository;
+        private readonly IRoleRepository _roleRepository;
 
-        public RoleService(IRole roleRepository)
+        public RoleService(IRoleRepository roleRepository)
         {
             _roleRepository = roleRepository;
         }

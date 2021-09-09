@@ -15,6 +15,7 @@ namespace Kastel_Planner_Backend.Controllers
             _userService = userService;
         }
 
+        //[Route("getallusers")]
         public async Task<IActionResult> Index()
         {
             var users = await _userService.GetAllUsersAsync();

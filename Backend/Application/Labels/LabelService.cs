@@ -12,9 +12,9 @@ namespace Application.Labels
 {
     public sealed class LabelService : ILabelService
     {
-        private readonly ILabel _labelRepository;
+        private readonly ILabelRepository _labelRepository;
 
-        public LabelService(ILabel labelRepository)
+        public LabelService(ILabelRepository labelRepository)
         {
             _labelRepository = labelRepository;
         }
