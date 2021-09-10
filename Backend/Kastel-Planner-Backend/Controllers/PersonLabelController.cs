@@ -3,26 +3,30 @@ using Microsoft.AspNetCore.Mvc;
 using Application.BeneficiaryWeeklyLogs;
 using System;
 using System.Threading.Tasks;
+using Application.Persons;
+using Application.Persons.Requests;
+using Application.PersonsLabels;
+using Application.PersonsLabels.Requests;
 
 namespace Kastel_Planner_Backend.Controllers
 {
-    public class BenecificaryWeeklyLogController : Controller
+    public class PersonLabelController : Controller
     {
-        private readonly IBeneficiaryWeeklyLogService _weeklyService;
+        private readonly IPersonsLabelsService _personsLabelsService;
 
-        public BenecificaryWeeklyLogController(IBeneficiaryWeeklyLogService weeklyService)
+        public PersonLabelController(IPersonsLabelsService personsLabelsService)
         {
-            _weeklyService = weeklyService;
+            _personsLabelsService = personsLabelsService;
         }
 
-        [Route("weeklylogs")]
+        [Route("persons-labels")]
         public async Task<IActionResult> Index()
         {
-            var weeklyLogs = await _weeklyService.GetAllWeeklyLogsAsync();
-            return Ok(weeklyLogs);
+            var personsLabels = await _personsLabelsService.GetAllPersonsLabelsAsync();
+            return Ok(personsLabels);
         }
 
-        [Route("weeklylogs/{id}")]
+        [Route("persons-labels/{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -30,7 +34,7 @@ namespace Kastel_Planner_Backend.Controllers
                 return NotFound();
             }
 
-            var result = await _weeklyService.GetWeeklyLogByAsync(id);
+            var result = await _personsLabelsService.GetPersonLabelByAsync(id);
             if(result.IsFailure)
             {
                 return NotFound(result.Error);
@@ -40,14 +44,14 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("weeklylog")]
-        public async Task<IActionResult> Create([FromBody] CreateBeneficiaryWeeklyLogRequest request)
+        [Route("person-label")]
+        public async Task<IActionResult> Create([FromBody] CreatePersonsLabelsRequest request)
         {
             if(request == null)
             {
                 return BadRequest();
             }
-            var result = await _weeklyService.CreateWeeklyLogAsync(request);
+            var result = await _personsLabelsService.CreatePersonLabelAsync(request);
 
             if(result.IsFailure)
             {
@@ -59,7 +63,7 @@ namespace Kastel_Planner_Backend.Controllers
 
 
         [HttpDelete]
-        [Route("weeklylog/{id}")]
+        [Route("person-label/{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -67,7 +71,7 @@ namespace Kastel_Planner_Backend.Controllers
                 return NotFound();
             }
 
-            var result = await _weeklyService.DeleteWeeklyLogAsync(id);
+            var result = await _personsLabelsService.DeletePersonLabelAsync(id);
             if (result.IsFailure)
             {
                 return NotFound(result.Error);
@@ -77,15 +81,15 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPatch]
-        [Route("weeklylogs/weeklylog/{id}")]
-        public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdateBeneficiaryWeeklyLog request)
+        [Route("persons-labels/person-label/{id}")]
+        public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdatePersonsLabelsRequest request)
         {
             if (id == Guid.Empty)
             {
                 return NotFound();
             }
 
-            var result = await _weeklyService.UpdateWeeklyLogAsync(id, request);
+            var result = await _personsLabelsService.UpdatePersonLabelAsync(id, request);
             if (result.IsFailure)
             {
                 return NotFound(result.Error);

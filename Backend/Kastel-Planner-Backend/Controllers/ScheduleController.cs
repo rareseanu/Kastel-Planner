@@ -1,28 +1,30 @@
-﻿using Application.BeneficiaryWeeklyLogs.Requests;
+﻿using Application.Labels;
+using Application.Labels.Requests;
+using Application.Schedules;
+using Application.Schedules.Requests;
 using Microsoft.AspNetCore.Mvc;
-using Application.BeneficiaryWeeklyLogs;
 using System;
 using System.Threading.Tasks;
 
 namespace Kastel_Planner_Backend.Controllers
 {
-    public class BenecificaryWeeklyLogController : Controller
+    public class ScheduleController : Controller
     {
-        private readonly IBeneficiaryWeeklyLogService _weeklyService;
+        private readonly IScheduleService _scheduleService;
 
-        public BenecificaryWeeklyLogController(IBeneficiaryWeeklyLogService weeklyService)
+        public ScheduleController(IScheduleService scheduleService)
         {
-            _weeklyService = weeklyService;
+            _scheduleService = scheduleService;
         }
 
-        [Route("weeklylogs")]
+        [Route("schedules")]
         public async Task<IActionResult> Index()
         {
-            var weeklyLogs = await _weeklyService.GetAllWeeklyLogsAsync();
-            return Ok(weeklyLogs);
+            var schedules = await _scheduleService.GetAllSchedulesAsync();
+            return Ok(schedules);
         }
 
-        [Route("weeklylogs/{id}")]
+        [Route("schedules/{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -30,7 +32,7 @@ namespace Kastel_Planner_Backend.Controllers
                 return NotFound();
             }
 
-            var result = await _weeklyService.GetWeeklyLogByAsync(id);
+            var result = await _scheduleService.GetScheduleByAsync(id);
             if(result.IsFailure)
             {
                 return NotFound(result.Error);
@@ -40,26 +42,26 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("weeklylog")]
-        public async Task<IActionResult> Create([FromBody] CreateBeneficiaryWeeklyLogRequest request)
+        [Route("schedule")]
+        public async Task<IActionResult> Create([FromBody] CreateScheduleRequest request)
         {
             if(request == null)
             {
                 return BadRequest();
             }
-            var result = await _weeklyService.CreateWeeklyLogAsync(request);
-
+            var result = await _scheduleService.CreateScheduleAsync(request);
             if(result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
 
-            return CreatedAtAction(nameof(Details), new { id = result.Value.Id }, result.Value);
+            return CreatedAtAction(nameof(Details), new { id = result.Value.Id}, result.Value);
         }
 
+    
 
         [HttpDelete]
-        [Route("weeklylog/{id}")]
+        [Route("schedule/{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -67,7 +69,7 @@ namespace Kastel_Planner_Backend.Controllers
                 return NotFound();
             }
 
-            var result = await _weeklyService.DeleteWeeklyLogAsync(id);
+            var result = await _scheduleService.DeleteScheduleAsync(id);
             if (result.IsFailure)
             {
                 return NotFound(result.Error);
@@ -77,16 +79,16 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPatch]
-        [Route("weeklylogs/weeklylog/{id}")]
-        public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdateBeneficiaryWeeklyLog request)
+        [Route("schedules/schedule/{id}")]
+        public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdateScheduleRequest request)
         {
-            if (id == Guid.Empty)
+            if(id == Guid.Empty)
             {
                 return NotFound();
             }
 
-            var result = await _weeklyService.UpdateWeeklyLogAsync(id, request);
-            if (result.IsFailure)
+            var result = await _scheduleService.UpdateScheduleAsync(id, request);
+            if(result.IsFailure)
             {
                 return NotFound(result.Error);
             }
