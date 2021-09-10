@@ -27,7 +27,14 @@ namespace Kastel_Planner_Backend
         {
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddDatabase(Configuration.GetConnectionString("DefaultConnection"));
-
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
+                    builder.AllowAnyHeader();
+                });
+            });
             services.AddRepositories();
             services.AddServices();
             services.AddControllers();
@@ -67,7 +74,7 @@ namespace Kastel_Planner_Backend
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 
