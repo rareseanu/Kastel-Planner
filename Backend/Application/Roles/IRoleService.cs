@@ -13,8 +13,8 @@ namespace Application.Roles
     {
         Task<IList<RoleResponse>> GetAllRolesAsync();
         Task<Result<RoleResponse>> GetRoleByAsync(Guid id);
-        Task<Result> CreateRoleAsync(CreateRoleRequest request);
-        Task<Result> UpdateRoleAsync(Guid roleId, UpdateRoleRequest request);
+        Task<Result<RoleResponse>> CreateRoleAsync(CreateRoleRequest request);
+        Task<Result<RoleResponse>> UpdateRoleAsync(Guid roleId, UpdateRoleRequest request);
         Task<Result> DeleteRoleAsync(Guid roleId);
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.PersonsRoles
 {
-    public sealed class PersonsRolesService : IPersonsRolesService
+    public class PersonsRolesService : IPersonsRolesService
     {
         private readonly IPersonRoleRepository _personRoleRepository;
         private Guid roleId, personId;
@@ -19,7 +19,7 @@ namespace Application.PersonsRoles
             _personRoleRepository = personRoleRepository;
         }
 
-        public async Task<Result> CreatePersonRoleAsync(CreatePersonsRolesRequest request)
+        public async Task<Result<PersonsRolesResponse>> CreatePersonRoleAsync(CreatePersonsRolesRequest request)
         {
             roleId = request.RoleId;
             personId = request.PersonId;
@@ -28,7 +28,15 @@ namespace Application.PersonsRoles
 
             await _personRoleRepository.AddAsync(personRole);
 
-            return Result.Success();
+            var personRoleResponse = new PersonsRolesResponse()
+            {
+
+                Id = personRole.Id,
+                RoleId = personRole.RoleId,
+                PersonId = personRole.PersonId
+            };
+
+            return Result.Success(personRoleResponse);
         }
 
         public async Task<Result> DeletePersonRoleAsync(Guid personRoleId)
@@ -53,7 +61,7 @@ namespace Application.PersonsRoles
 
             foreach (var personRole in personsRoles)
             {
-                var personRoleResponse = new PersonsRolesResponse
+                var personRoleResponse = new PersonsRolesResponse()
                 {
 
                     Id = personRole.Id,
@@ -86,7 +94,7 @@ namespace Application.PersonsRoles
             return Result.Success(response);
         }
 
-        public async Task<Result> UpdatePersonRoleAsync(Guid personRoleId, UpdatePersonsRolesRequest request)
+        public async Task<Result<PersonsRolesResponse>> UpdatePersonRoleAsync(Guid personRoleId, UpdatePersonsRolesRequest request)
         {
             roleId = request.RoleId;
             personId = request.PersonId;
@@ -95,14 +103,21 @@ namespace Application.PersonsRoles
 
             if (personRole == null)
             {
-                return Result.Failure($"Person role with Id {personRoleId} was not found");
+                return Result.Failure<PersonsRolesResponse>($"Person role with Id {personRoleId} was not found");
             }
 
             personRole.UpdatePersonRole(roleId, personId);
 
             await _personRoleRepository.Update(personRole);
 
-            return Result.Success();
+            var response = new PersonsRolesResponse()
+            {
+                Id = personRole.Id,
+                RoleId = personRole.RoleId,
+                PersonId = personRole.PersonId
+            };
+
+            return Result.Success(response);
         }
     }
 }

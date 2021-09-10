@@ -13,8 +13,8 @@ namespace Application.Persons
     {
         Task<IList<PersonResponse>> GetAllPersonsAsync();
         Task<Result<PersonResponse>> GetPersonByAsync(Guid id);
-        Task<Result> CreatePersonAsync(CreatePersonRequest request);
-        Task<Result> UpdatePersonAsync(Guid personId, UpdatePersonRequest request);
+        Task<Result<PersonResponse>> CreatePersonAsync(CreatePersonRequest request);
+        Task<Result<PersonResponse>> UpdatePersonAsync(Guid personId, UpdatePersonRequest request);
         Task<Result> DeletePersonAsync(Guid personId);
     }
 }

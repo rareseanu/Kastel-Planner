@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Labels
 {
-    public sealed class LabelService : ILabelService
+    public class LabelService : ILabelService
     {
         private readonly ILabelRepository _labelRepository;
 
@@ -19,19 +19,25 @@ namespace Application.Labels
             _labelRepository = labelRepository;
         }
 
-        public async Task<Result> CreateLabelAsync(CreateLabelRequest request)
+        public async Task<Result<LabelResponse>> CreateLabelAsync(CreateLabelRequest request)
         {
             Result<LabelName> labelNameOrError = LabelName.Create(request?.LabelName);
             if (labelNameOrError.IsFailure)
             {
-                return Result.Failure(labelNameOrError.Error);
+                return Result.Failure<LabelResponse>(labelNameOrError.Error);
             }
 
             var label = new Label (labelNameOrError.Value);
 
             await _labelRepository.AddAsync(label);
 
-            return Result.Success();
+            var response = new LabelResponse()
+            {
+                Id = label.Id,
+                LabelName = label.LabelName.Value
+            };
+
+            return Result.Success(response);
         }
 
         public async Task<Result> DeleteLabelAsync(Guid labelId)
@@ -56,7 +62,7 @@ namespace Application.Labels
 
             foreach (var label in labels)
             {
-                var labelResponse = new LabelResponse
+                var labelResponse = new LabelResponse()
                 {
                     Id = label.Id,
                     LabelName = label.LabelName.Value
@@ -86,28 +92,34 @@ namespace Application.Labels
             return Result.Success(response);
         }
 
-        public async Task<Result> UpdateLabelAsync(Guid labelId, UpdateLabelRequest request)
+        public async Task<Result<LabelResponse>> UpdateLabelAsync(Guid labelId, UpdateLabelRequest request)
         {
             Result<LabelName> labelNameOrError = LabelName.Create(request?.LabelName);
 
 
             if (labelNameOrError.IsFailure)
             {
-                return Result.Failure(labelNameOrError.Error);
+                return Result.Failure<LabelResponse>(labelNameOrError.Error);
             }
 
             var label = await _labelRepository.GetByIdAsync(labelId);
 
             if (label == null)
             {
-                return Result.Failure($"Label with Id {labelId} was not found");
+                return Result.Failure<LabelResponse>($"Label with Id {labelId} was not found");
             }
 
             label.UpdateLabel(labelNameOrError.Value);
 
             await _labelRepository.Update(label);
 
-            return Result.Success();
+            var response = new LabelResponse()
+            {
+                Id = label.Id,
+                LabelName = label.LabelName.Value
+            };
+
+            return Result.Success(response);
         }
     }
 }

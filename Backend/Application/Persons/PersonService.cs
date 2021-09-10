@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Persons
 {
-    public sealed class PersonService : IPersonService
+    public class PersonService : IPersonService
     {
         private readonly IPersonRepository _personRepository;
         private bool isActive;
@@ -20,7 +20,7 @@ namespace Application.Persons
             _personRepository = personRepository;
         }
 
-        public async Task<Result> CreatePersonAsync(CreatePersonRequest request)
+        public async Task<Result<PersonResponse>> CreatePersonAsync(CreatePersonRequest request)
         {
             Result<Name>nameOrError = Name.Create(request?.FirstName, request?.LastName);
             Result<PhoneNumber> phoneNumberOrError = PhoneNumber.Create(request?.PhoneNumber);
@@ -28,19 +28,28 @@ namespace Application.Persons
 
             if (nameOrError.IsFailure)
             {
-                return Result.Failure(nameOrError.Error);
+                return Result.Failure<PersonResponse>(nameOrError.Error);
             }
 
             if (phoneNumberOrError.IsFailure)
             {
-                return Result.Failure(phoneNumberOrError.Error);
+                return Result.Failure<PersonResponse>(phoneNumberOrError.Error);
             }
 
             var person = new Person(nameOrError.Value, phoneNumberOrError.Value, isActive);
 
             await _personRepository.AddAsync(person);
 
-            return Result.Success();
+            var personResponse = new PersonResponse()
+            {
+                Id = person.Id,
+                FirstName = person.Name.FirstName,
+                LastName = person.Name.LastName,
+                PhoneNumber = person.PhoneNumber.Number,
+                IsActive = person.IsActive
+            };
+
+            return Result.Success(personResponse);
         }
 
         public async Task<Result> DeletePersonAsync(Guid personId)
@@ -65,7 +74,7 @@ namespace Application.Persons
 
             foreach (var person in persons)
             {
-                var personResponse = new PersonResponse
+                var personResponse = new PersonResponse()
                 {
                     Id = person.Id,
                     FirstName = person.Name.FirstName,
@@ -101,7 +110,7 @@ namespace Application.Persons
             return Result.Success(response);
         }
 
-        public async Task<Result> UpdatePersonAsync(Guid personId, UpdatePersonRequest request)
+        public async Task<Result<PersonResponse>> UpdatePersonAsync(Guid personId, UpdatePersonRequest request)
         {
             Result<Name> nameOrError = Name.Create(request?.FirstName, request?.LastName);
             Result<PhoneNumber> phoneNumberOrError = PhoneNumber.Create(request?.PhoneNumber);
@@ -109,26 +118,35 @@ namespace Application.Persons
 
             if (nameOrError.IsFailure)
             {
-                return Result.Failure(nameOrError.Error);
+                return Result.Failure<PersonResponse> (nameOrError.Error);
             }
 
             if (phoneNumberOrError.IsFailure)
             {
-                return Result.Failure(phoneNumberOrError.Error);
+                return Result.Failure<PersonResponse>(phoneNumberOrError.Error);
             }
 
             var person = await _personRepository.GetByIdAsync(personId);
 
             if (person == null)
             {
-                return Result.Failure($"Person with Id {personId} was not found");
+                return Result.Failure<PersonResponse>($"Person with Id {personId} was not found");
             }
 
             person.UpdatePerson(nameOrError.Value, phoneNumberOrError.Value, request.IsActive);
 
             await _personRepository.Update(person);
 
-            return Result.Success();
+            var response = new PersonResponse()
+            {
+                Id = person.Id,
+                FirstName = person.Name.FirstName,
+                LastName = person.Name.LastName,
+                PhoneNumber = person.PhoneNumber.Number,
+                IsActive = person.IsActive
+            };
+
+            return Result.Success(response);
         }
     }
 }

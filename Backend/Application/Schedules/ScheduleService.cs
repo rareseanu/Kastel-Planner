@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Schedules
 {
-    public sealed class ScheduleService : IScheduleService
+    public class ScheduleService : IScheduleService
     {
         private readonly IScheduleRepository _scheduleRepository;
 
@@ -21,19 +21,28 @@ namespace Application.Schedules
             _scheduleRepository = scheduleRepository;
         }
 
-        public async Task<Result> CreateScheduleAsync(CreateScheduleRequest request)
+        public async Task<Result<ScheduleResponse>> CreateScheduleAsync(CreateScheduleRequest request)
         {
             Result<Duration> durationNameOrError = Duration.Create(request.Hours, request.Minutes);
             if (durationNameOrError.IsFailure)
             {
-                return Result.Failure(durationNameOrError.Error);
+                return Result.Failure<ScheduleResponse>(durationNameOrError.Error);
             }
 
             var schedule = new Schedule(request.VolunteerId, request.WeeklyLogId, request.Date, durationNameOrError.Value);
 
             await _scheduleRepository.AddAsync(schedule);
 
-            return Result.Success();
+            var response = new ScheduleResponse()
+            {
+                Id = schedule.Id,
+                Hours = schedule.Duration.Hours,
+                Minutes = schedule.Duration.Minutes,
+                VolunteerId = schedule.VolunteerId,
+                WeeklyLogId = schedule.WeeklyLogId
+            };
+
+            return Result.Success(response);
         }
 
         public async Task<Result> DeleteScheduleAsync(Guid scheduleId)
@@ -58,7 +67,7 @@ namespace Application.Schedules
 
             foreach (var schedule in schedules)
             {
-                var scheduleResponse = new ScheduleResponse
+                var scheduleResponse = new ScheduleResponse()
                 {
                     Id = schedule.Id,
                     Hours = schedule.Duration.Hours,
@@ -94,26 +103,35 @@ namespace Application.Schedules
             return Result.Success(response);
         }
 
-        public async Task<Result> UpdateScheduleAsync(Guid scheduleId, UpdateScheduleRequest request)
+        public async Task<Result<ScheduleResponse>> UpdateScheduleAsync(Guid scheduleId, UpdateScheduleRequest request)
         {
             Result<Duration> durationNameOrError = Duration.Create(request.Hours, request.Minutes);
             if (durationNameOrError.IsFailure)
             {
-                return Result.Failure(durationNameOrError.Error);
+                return Result.Failure<ScheduleResponse>(durationNameOrError.Error);
             }
 
             var schedule = await _scheduleRepository.GetByIdAsync(scheduleId);
 
             if (schedule == null)
             {
-                return Result.Failure($"Schedule with Id {scheduleId} was not found");
+                return Result.Failure<ScheduleResponse>($"Schedule with Id {scheduleId} was not found");
             }
 
             schedule.UpdateSchedule(request.VolunteerId, request.WeeklyLogId, request.Date, durationNameOrError.Value);
 
             await _scheduleRepository.Update(schedule);
 
-            return Result.Success();
+            var response = new ScheduleResponse()
+            {
+                Id = schedule.Id,
+                Hours = schedule.Duration.Hours,
+                Minutes = schedule.Duration.Minutes,
+                VolunteerId = schedule.VolunteerId,
+                WeeklyLogId = schedule.WeeklyLogId
+            };
+
+            return Result.Success(response);
         }
     }
 }

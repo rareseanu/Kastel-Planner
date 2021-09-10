@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Roles
 {
-    public sealed class RoleService : IRoleService
+    public class RoleService : IRoleService
     {
         private readonly IRoleRepository _roleRepository;
 
@@ -21,19 +21,25 @@ namespace Application.Roles
             _roleRepository = roleRepository;
         }
 
-        public async Task<Result> CreateRoleAsync(CreateRoleRequest request)
+        public async Task<Result<RoleResponse>> CreateRoleAsync(CreateRoleRequest request)
         {
             Result<RoleName> roleNameOrError = RoleName.Create(request?.RoleName);
             if (roleNameOrError.IsFailure)
             {
-                return Result.Failure(roleNameOrError.Error);
+                return Result.Failure<RoleResponse>(roleNameOrError.Error);
             }
 
             var role = new Role(roleNameOrError.Value);
 
             await _roleRepository.AddAsync(role);
 
-            return Result.Success();
+            var response = new RoleResponse()
+            {
+                Id = role.Id,
+                RoleName = role.RoleName.Value
+            };
+
+            return Result.Success(response);
         }
 
         public async Task<Result> DeleteRoleAsync(Guid roleId)
@@ -58,7 +64,7 @@ namespace Application.Roles
 
             foreach (var role in roles)
             {
-                var roleResponse = new RoleResponse
+                var roleResponse = new RoleResponse()
                 {
                     Id = role.Id,
                     RoleName = role.RoleName.Value
@@ -88,26 +94,32 @@ namespace Application.Roles
             return Result.Success(response);
         }
 
-        public async Task<Result> UpdateRoleAsync(Guid roleId, UpdateRoleRequest request)
+        public async Task<Result<RoleResponse>> UpdateRoleAsync(Guid roleId, UpdateRoleRequest request)
         {
             Result<RoleName> roleNameOrError = RoleName.Create(request?.RoleName);
             if (roleNameOrError.IsFailure)
             {
-                return Result.Failure(roleNameOrError.Error);
+                return Result.Failure<RoleResponse>(roleNameOrError.Error);
             }
 
             var role = await _roleRepository.GetByIdAsync(roleId);
 
             if (role == null)
             {
-                return Result.Failure($"Role with Id {roleId} was not found");
+                return Result.Failure<RoleResponse>($"Role with Id {roleId} was not found");
             }
 
             role.UpdateRole(roleNameOrError.Value);
 
             await _roleRepository.Update(role);
 
-            return Result.Success();
+            var response = new RoleResponse()
+            {
+                Id = role.Id,
+                RoleName = role.RoleName.Value
+            };
+
+            return Result.Success(response);
         }
     }
 }

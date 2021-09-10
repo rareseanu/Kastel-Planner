@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.PersonsLabels
 {
-    public sealed class PersonsLabelsService : IPersonsLabelsService
+    public class PersonsLabelsService : IPersonsLabelsService
     {
         private readonly IPersonLabelRepository _personLabelRepository;
         private Guid labelId, personId;
@@ -20,7 +20,7 @@ namespace Application.PersonsLabels
         }
 
 
-        public async Task<Result> CreatePersonLabelAsync(CreatePersonsLabelsRequest request)
+        public async Task<Result<PersonsLabelsResponse>> CreatePersonLabelAsync(CreatePersonsLabelsRequest request)
         {
             labelId = request.LabelId;
             personId = request.PersonId;
@@ -29,7 +29,15 @@ namespace Application.PersonsLabels
 
             await _personLabelRepository.AddAsync(personLabel);
 
-            return Result.Success();
+            var personLabelResponse = new PersonsLabelsResponse()
+            {
+
+                Id = personLabel.Id,
+                PersonId = personLabel.PersonId,
+                LabelId = personLabel.LabelId
+            };
+
+            return Result.Success(personLabelResponse);
         }
 
         public async Task<Result> DeletePersonLabelAsync(Guid personLabelId)
@@ -54,7 +62,7 @@ namespace Application.PersonsLabels
 
             foreach (var personLabel in personsLabels)
             {
-                var personLabelResponse = new PersonsLabelsResponse
+                var personLabelResponse = new PersonsLabelsResponse()
                 {
 
                     Id = personLabel.Id,
@@ -87,7 +95,7 @@ namespace Application.PersonsLabels
             return Result.Success(response);
         }
 
-        public async Task<Result> UpdatePersonLabelAsync(Guid personLabelId, UpdatePersonsLabelsRequest request)
+        public async Task<Result<PersonsLabelsResponse>> UpdatePersonLabelAsync(Guid personLabelId, UpdatePersonsLabelsRequest request)
         {
             labelId = request.LabelId;
             personId = request.PersonId;
@@ -96,14 +104,21 @@ namespace Application.PersonsLabels
 
             if (personLabel == null)
             {
-                return Result.Failure($"Person label with Id {personLabelId} was not found");
+                return Result.Failure<PersonsLabelsResponse>($"Person label with Id {personLabelId} was not found");
             }
 
             personLabel.UpdatePersonLabel(labelId, personId);
 
             await _personLabelRepository.Update(personLabel);
 
-            return Result.Success();
+            var response = new PersonsLabelsResponse()
+            {
+                Id = personLabel.Id,
+                PersonId = personLabel.PersonId,
+                LabelId = personLabel.LabelId
+            };
+
+            return Result.Success(response);
 
         }
     }

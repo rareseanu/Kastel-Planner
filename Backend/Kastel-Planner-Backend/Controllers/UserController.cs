@@ -15,13 +15,14 @@ namespace Kastel_Planner_Backend.Controllers
             _userService = userService;
         }
 
-        //[Route("getallusers")]
+        [Route("users")]
         public async Task<IActionResult> Index()
         {
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
 
+        [Route("users/{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -39,6 +40,7 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
+        [Route("user")]
         public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
         {
             if(request == null)
@@ -55,6 +57,7 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
+        [Route("login")]
         public async Task<IActionResult> Login([FromBody] AuthenticateRequest request)
         {
             var result = await _userService.Authenticate(request);
@@ -91,6 +94,7 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpDelete]
+        [Route("user/{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -108,6 +112,7 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPatch]
+        [Route("users/user/{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdateUserRequest request)
         {
             if(id == Guid.Empty)

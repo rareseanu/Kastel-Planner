@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.BeneficiaryWeeklyLogs;
 using Application.RepositoryInterfaces;
+using Application.BeneficiaryWeeklyLogs.Responses;
 
-namespace Application.BeneficiaryWeeklyLogs.Responses
+namespace Application.BeneficiaryWeeklyLogs
 {
-    public sealed class BeneficiaryWeeklyLogService : IBeneficiaryWeeklyLogService
+    public class BeneficiaryWeeklyLogService : IBeneficiaryWeeklyLogService
     {
         private readonly IBeneficiaryWeeklyLogRepository _weeklyLogRepository;
         private TimeSpan startTime;
@@ -19,7 +20,7 @@ namespace Application.BeneficiaryWeeklyLogs.Responses
             _weeklyLogRepository = weeklyLogRepository;
         }
 
-        public async Task<Result> CreateWeeklyLogAsync(CreateBeneficiaryWeeklyLogRequest request)
+        public async Task<Result<BeneficiaryWeeklyLogResponse>> CreateWeeklyLogAsync(CreateBeneficiaryWeeklyLogRequest request)
         {
             Result<Domain.BeneficiaryWeeklyLogs.ValueObjects.DayOfWeek> dayOfWeekOrError = Domain.BeneficiaryWeeklyLogs.ValueObjects.DayOfWeek.Create(request?.DayOfWeek);
             startTime = request.StartTime;
@@ -27,17 +28,25 @@ namespace Application.BeneficiaryWeeklyLogs.Responses
 
             if (dayOfWeekOrError.IsFailure)
             {
-                return Result.Failure(dayOfWeekOrError.Error);
+                return Result.Failure<BeneficiaryWeeklyLogResponse>(dayOfWeekOrError.Error);
             }
 
             var weeklyLog = new BeneficiaryWeeklyLog(benecifiaryId, startTime, dayOfWeekOrError.Value);
 
             await _weeklyLogRepository.AddAsync(weeklyLog);
 
-            return Result.Success();
+            BeneficiaryWeeklyLogResponse weeklyResponse = new BeneficiaryWeeklyLogResponse()
+            {
+                Id = weeklyLog.Id,
+                StartTime = weeklyLog.StartTime,
+                DayOfWeek = weeklyLog.DayOfWeek,
+                BeneficiaryId = weeklyLog.BeneficiaryId
+            };
+
+            return Result.Success(weeklyResponse);
         }
 
-        public async Task<Result> DeleteCompanyAsync(Guid weeklyLogId)
+        public async Task<Result> DeleteWeeklyLogAsync(Guid weeklyLogId)
         {
             var weeklyLog = await _weeklyLogRepository.GetByIdAsync(weeklyLogId);
 
@@ -59,7 +68,7 @@ namespace Application.BeneficiaryWeeklyLogs.Responses
 
             foreach (var weekly in weeklyLogs)
             {
-                var weeklyLogResponse = new BeneficiaryWeeklyLogResponse
+                var weeklyLogResponse = new BeneficiaryWeeklyLogResponse()
                 {
                     Id = weekly.Id,
                     StartTime = weekly.StartTime,
@@ -95,7 +104,7 @@ namespace Application.BeneficiaryWeeklyLogs.Responses
             return Result.Success(response);
         }
 
-        public async Task<Result> UpdateCompanyAsync(Guid weeklyLogId, UpdateBeneficiaryWeeklyLog request)
+        public async Task<Result<BeneficiaryWeeklyLogResponse>> UpdateWeeklyLogAsync(Guid weeklyLogId, UpdateBeneficiaryWeeklyLog request)
         {
            
             Result<Domain.BeneficiaryWeeklyLogs.ValueObjects.DayOfWeek> dayOfWeekOrError = Domain.BeneficiaryWeeklyLogs.ValueObjects.DayOfWeek.Create(request?.DayOfWeek);
@@ -104,7 +113,7 @@ namespace Application.BeneficiaryWeeklyLogs.Responses
 
             if (dayOfWeekOrError.IsFailure)
             {
-                return Result.Failure(dayOfWeekOrError.Error);
+                return Result.Failure<BeneficiaryWeeklyLogResponse>(dayOfWeekOrError.Error);
             }
 
             var weeklyLog = await _weeklyLogRepository.GetByIdAsync(weeklyLogId);
@@ -112,14 +121,22 @@ namespace Application.BeneficiaryWeeklyLogs.Responses
 
             if (weeklyLog == null)
             {
-                return Result.Failure($"Weekly log with id {weeklyLogId} was not found");
+                return Result.Failure<BeneficiaryWeeklyLogResponse>($"Weekly log with id {weeklyLogId} was not found");
             }
 
             weeklyLog.UpdateBeneficiaryWeeklyLog(request.BeneficiaryId, request.StartTime, dayOfWeekOrError.Value);
 
             await _weeklyLogRepository.Update(weeklyLog);
 
-            return Result.Success();
+            var response = new BeneficiaryWeeklyLogResponse()
+            {
+                Id = weeklyLog.Id,
+                StartTime = weeklyLog.StartTime,
+                DayOfWeek = weeklyLog.DayOfWeek,
+                BeneficiaryId = weeklyLog.BeneficiaryId
+            };
+
+            return Result.Success(response);
         }
     }
 }

@@ -13,8 +13,8 @@ namespace Application.Labels
     {
         Task<IList<LabelResponse>> GetAllLabelsAsync();
         Task<Result<LabelResponse>> GetLabelByAsync(Guid id);
-        Task<Result> CreateLabelAsync(CreateLabelRequest request);
-        Task<Result> UpdateLabelAsync(Guid labelId, UpdateLabelRequest request);
+        Task<Result<LabelResponse>> CreateLabelAsync(CreateLabelRequest request);
+        Task<Result<LabelResponse>> UpdateLabelAsync(Guid labelId, UpdateLabelRequest request);
         Task<Result> DeleteLabelAsync(Guid labelId);
     }
 }

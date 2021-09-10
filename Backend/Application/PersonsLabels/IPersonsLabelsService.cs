@@ -13,8 +13,8 @@ namespace Application.PersonsLabels
     {
         Task<IList<PersonsLabelsResponse>> GetAllPersonsLabelsAsync();
         Task<Result<PersonsLabelsResponse>> GetPersonLabelByAsync(Guid id);
-        Task<Result> CreatePersonLabelAsync(CreatePersonsLabelsRequest request);
-        Task<Result> UpdatePersonLabelAsync(Guid personLabelId, UpdatePersonsLabelsRequest request);
+        Task<Result<PersonsLabelsResponse>> CreatePersonLabelAsync(CreatePersonsLabelsRequest request);
+        Task<Result<PersonsLabelsResponse>> UpdatePersonLabelAsync(Guid personLabelId, UpdatePersonsLabelsRequest request);
         Task<Result> DeletePersonLabelAsync(Guid personLabelId);
     }
 }
