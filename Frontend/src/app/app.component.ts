@@ -14,17 +14,16 @@ export class AppComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService
   ) {
-    this.currentUser = this.authenticationService.getUser().subscribe;
-    console.log(this.currentUser.email);
   }
 
   ngOnInit() {
-    this.authenticationService.getUser().subscribe(
+    this.authenticationService.currentUser.subscribe(
       (data) => this.currentUser = data);
   }
 
   logout() {
+    console.log("LOGOUT");
     this.authenticationService.logout();
-    this.router.navigate(['/login']);
   }
+
 }

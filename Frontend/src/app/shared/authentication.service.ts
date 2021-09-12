@@ -5,19 +5,25 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { User } from './user.model';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    public currentUser: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+    private currentUserSubject: BehaviorSubject<User | null>;
+    public currentUser: Observable<User | null>;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private router: Router) {
+        this.currentUserSubject = new BehaviorSubject<User | null>(null);
+        this.currentUser = this.currentUserSubject.asObservable();
+        this.currentUser.subscribe();
     }
 
-    public getUser() {
-        return this.currentUser.asObservable();
+    public get getCurrentUser() {
+        return this.currentUserSubject.getValue();
     }
 
     private handleError(err: HttpErrorResponse) {
+        console.log(err);
         let errorMessage = '';
 
         if(err.error instanceof ErrorEvent) {
@@ -30,41 +36,49 @@ export class AuthenticationService {
     }
 
     login(email: string, password: string): Observable<User> {
-        return this.http.post<User>(`${environment.BASE_API_URL}/user/login`, { email, password })
+        return this.http.post<User>(`${environment.BASE_API_URL}/login`, { email, password }, { withCredentials: true })
             .pipe(
                 tap(data => { 
-                    this.currentUser.next(data);
-                    this.setCookie("jwtToken", data.token, 15, '/');
+                    this.currentUserSubject.next(data);
+                    this.startRefreshTokenTimer();
+                    console.log("User logged in.");
+                }),
+                catchError(this.handleError)
+            );
+    }
+    
+    refreshToken(): Observable<User> {
+        return this.http.post<User>(`${environment.BASE_API_URL}/user/refreshToken`, {}, { withCredentials: true })
+            .pipe(
+                tap(data => {
+                    this.currentUserSubject.next(data);
+                    this.startRefreshTokenTimer();
+                    console.log("Token refreshed.");
                 }),
                 catchError(this.handleError)
             );
     }
 
-    private setCookie(name: string, value: string, minutes: number, path: string = '') {
-        let d:Date = new Date();
-        d.setTime(d.getTime() + minutes * 60 * 60 * 1000);
-        let expires:string = `expires=${d.toUTCString()}`;
-        let cpath:string = path ? `; path=${path}` : '';
-        document.cookie = `${name}=${value}; secure;${expires}${cpath}`;
-    }
-
-    public getCookie(name: string) {
-        let ca: Array<string> = document.cookie.split(';');
-        let caLen: number = ca.length;
-        let cookieName = `${name}=`;
-        let c: string;
-
-        for (let i: number = 0; i < caLen; i += 1) {
-            c = ca[i].replace(/^\s+/g, '');
-            if (c.indexOf(cookieName) == 0) {
-                return c.substring(cookieName.length, c.length);
-            }
-        }
-        return '';
-    }
-
     logout() {
-        
-        this.currentUser.next(null);
+        this.http.post<any>(`${environment.BASE_API_URL}/user/revokeToken`, {}, {withCredentials:true}).subscribe();
+        this.stopRefreshTokenTimer();
+        this.currentUserSubject.next(null);
+        this.router.navigate(['/']);
+    }
+
+    private refreshTokenTimeout: any;
+
+    private startRefreshTokenTimer() {
+        if(this.getCurrentUser) {
+            const jwtToken = JSON.parse(atob(this.getCurrentUser.token.split('.')[1]));
+
+            const expires = new Date(jwtToken.exp * 1000);
+            const timeout = expires.getTime() - Date.now() - (5 * 1000);
+            this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
+        }
+    }
+
+    private stopRefreshTokenTimer() {
+        clearTimeout(this.refreshTokenTimeout);
     }
 }

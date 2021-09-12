@@ -20,7 +20,7 @@
           <a class="nav-item nav-link" (click)="logout()" *ngIf="currentUser">Logout</a>
         </li>
         <li class="nav-item">
-          <a class="nav-item nav-link" *ngIf="currentUser" (click)="logout()">{{currentUser.email}}</a>
+          <a class="nav-item nav-link" *ngIf="currentUser">{{currentUser.email}}</a>
         </li>
       </ul>
     </div>

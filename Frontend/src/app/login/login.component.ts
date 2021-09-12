@@ -26,11 +26,7 @@ export class LoginComponent implements OnInit {
             password: ['', Validators.required]
         });
 
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-
-        this.authenticationService.getUser().subscribe(
-            (data) => console.log(data));
-        
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';        
     }
 
     get f() { return this.loginForm.controls; }
@@ -46,7 +42,6 @@ export class LoginComponent implements OnInit {
         this.authenticationService.login(this.f.email.value, this.f.password.value)
             .subscribe(
                 (data) => {
-                    console.log(data);
                     this.loading = false;
                 },
                 (error) => {
