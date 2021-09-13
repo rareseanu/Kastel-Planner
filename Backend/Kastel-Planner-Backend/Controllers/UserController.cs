@@ -57,7 +57,7 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("login")]
+        [Route("user/login")]
         public async Task<IActionResult> Login([FromBody] AuthenticateRequest request)
         {
             var result = await _userService.Authenticate(request);
