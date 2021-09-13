@@ -1,5 +1,7 @@
 ﻿using Application.Users;
 using Application.Users.Requests;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -65,6 +67,7 @@ namespace Kastel_Planner_Backend.Controllers
             {
                 return BadRequest(result.Error);
             }
+            SetRefreshTokenCookie(result.Value.RefreshToken, result.Value.Expires);
 
             return Ok(result.Value);
         }
@@ -72,11 +75,14 @@ namespace Kastel_Planner_Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
-            var result = await _userService.RefreshToken(request);
+            string refreshToken = request.RefreshToken ?? Request.Cookies["refreshToken"];
+
+            var result = await _userService.RefreshToken(refreshToken);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
+            SetRefreshTokenCookie(result.Value.RefreshToken, result.Value.Expires);
 
             return Ok(result.Value);
         }
@@ -84,7 +90,14 @@ namespace Kastel_Planner_Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenRequest request)
         {
-            var result = await _userService.RevokeToken(request);
+            string refreshToken = request.RefreshToken ?? Request.Cookies["refreshToken"];
+            if (Request.Cookies["refreshToken"] != null)
+            {
+                Response.Cookies.Delete("refreshToken");
+            }
+
+            var result = await _userService.RevokeToken(refreshToken);
+            
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
@@ -129,5 +142,16 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
+        private void SetRefreshTokenCookie(string refreshToken, DateTime expires)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Expires = expires,
+                SameSite = SameSiteMode.None
+            };
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+        }
     }
 }

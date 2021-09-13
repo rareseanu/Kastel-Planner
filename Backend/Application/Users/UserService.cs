@@ -73,6 +73,7 @@ namespace Application.Users
                 Id = user.Id,
                 Token = GenerateJwtToken(user),
                 RefreshToken = token.Value.Value,
+                Expires = refreshToken.ExpiresAt,
                 PersonId = user.PersonId,
                 Email = user.Email.Value
             };
@@ -80,13 +81,17 @@ namespace Application.Users
             return Result.Success(response);
         }
 
-        public async Task<Result<AuthenticateResponse>> RefreshToken(RefreshTokenRequest request)
+        public async Task<Result<AuthenticateResponse>> RefreshToken(string refreshToken)
         {
+            if(string.IsNullOrEmpty(refreshToken))
+            {
+                return Result.Failure<AuthenticateResponse>("Invalid refresh token request.");
+            }
             RefreshToken token = await _refreshTokenRepository.GetFirstByPredicateAsync(r => 
-                    r.Token.Value.Equals(request.RefreshToken));
+                    r.Token.Value.Equals(refreshToken));
             if(token == null)
             {
-                return Result.Failure<AuthenticateResponse>($"Refresh token {request.RefreshToken} was not found.");
+                return Result.Failure<AuthenticateResponse>($"Refresh token {refreshToken} was not found.");
             }
 
             User userWithRefreshToken = await _userRepository.GetByIdAsync(token.UserId);
@@ -116,6 +121,7 @@ namespace Application.Users
                 Id = userWithRefreshToken.Id,
                 Token = GenerateJwtToken(userWithRefreshToken),
                 RefreshToken = newToken.Value.Value,
+                Expires = newRefreshToken.ExpiresAt,
                 PersonId = userWithRefreshToken.PersonId,
                 Email = userWithRefreshToken.Email.Value
             };
@@ -123,22 +129,27 @@ namespace Application.Users
             return Result.Success(response);
         }
 
-        public async Task<Result<RevokeTokenResponse>> RevokeToken(RefreshTokenRequest request)
+        public async Task<Result<RevokeTokenResponse>> RevokeToken(string refreshToken)
         {
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return Result.Failure<RevokeTokenResponse>("Invalid refresh token request.");
+            }
             RefreshToken token = await _refreshTokenRepository.GetFirstByPredicateAsync(r => 
-                    r.Token.Value.Equals(request.RefreshToken));
+                    r.Token.Value.Equals(refreshToken));
             if(token == null)
             {
-                return Result.Failure<RevokeTokenResponse>($"Refresh token {request.RefreshToken} was not found.");
+                return Result.Failure<RevokeTokenResponse>($"Refresh token {refreshToken} was not found.");
             }
             token.RevokedAt = DateTime.Now;
             await _refreshTokenRepository.Update(token);
 
             RevokeTokenResponse revokeTokenResponse = new RevokeTokenResponse()
             {
-                RefreshToken = request.RefreshToken,
+                RefreshToken = refreshToken,
                 RevokedAt = token.RevokedAt.Value
             };
+
             return Result.Success(revokeTokenResponse);
         }
 
@@ -262,7 +273,7 @@ namespace Application.Users
                     new Claim("Id", user.Id.ToString()),
                     new Claim("Email", user.Email.Value)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddSeconds(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(jwtSecret),
                     SecurityAlgorithms.HmacSha256Signature)
             };

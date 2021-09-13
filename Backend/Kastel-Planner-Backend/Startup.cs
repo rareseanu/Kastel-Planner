@@ -32,6 +32,9 @@ namespace Kastel_Planner_Backend
                 options.AddDefaultPolicy(builder =>
                 {
                     builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
+                    builder.AllowAnyHeader();
+                    builder.AllowCredentials();
+                    builder.AllowAnyMethod();
                     builder.AllowAnyHeader();                 
                 });
             });
