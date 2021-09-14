@@ -29,9 +29,16 @@ export class RegisterFormComponent implements OnInit {
       label: []
     });
    }
+
+   name:string = 'Nothin Selected Yet';
    
 
   ngOnInit(): void {
+  }
+
+  showNextComponent(value:string) {
+    this.name = value;
+    console.log(this.name);
   }
 
 

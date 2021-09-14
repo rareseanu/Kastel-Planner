@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, forwardRef, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Label } from '../shared/label.model';
 import { FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -30,7 +30,7 @@ export interface LabelFormValues {
 })
 export class LabelFormComponent implements OnInit {
 
-  @Input()
+  
   labelsInDropdown : Label[];
 
   types$: any;
@@ -111,6 +111,8 @@ export class LabelFormComponent implements OnInit {
 
   //methods to get dropdown values
   dropDownLabelName: string = '';
+  selected: string ='';
+
   selectedHandlerLabelName(event : any)
   {
     if(event.target.value != 'default') 
@@ -118,9 +120,13 @@ export class LabelFormComponent implements OnInit {
     else 
       {this.dropDownLabelName = '';}
 
-      console.log(this.dropDownLabelName);
+     // console.log(this.dropDownLabelName);
   }
-
+  
+  @Output() buttonClicked = new EventEmitter();
+  onOptionsSelected(value:string){
+    this.buttonClicked.emit(value);
+  }
 
   selectedLabel(){
     return this.dropDownLabelName;
@@ -128,5 +134,8 @@ export class LabelFormComponent implements OnInit {
 
   ngOnInit(): void {
      this.displayLabels();
+     this.onOptionsSelected(this.dropDownLabelName);
   }
   }
+
+
