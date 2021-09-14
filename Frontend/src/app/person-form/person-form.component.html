@@ -1,0 +1,19 @@
+<div class="col-sm-8 offset-sm-2">
+    <h2>Register</h2>
+<div [formGroup]="personForm">
+    <div class="mb-3">
+        <label for="first-name" class="form-label">First Name</label>
+        <input formControlName="firstName" class="form-control" id="first-name" />
+    </div>
+
+    <div class="mb-3">
+        <label for="last-name">Last Name</label>
+        <input formControlName="lastName" class="form-control" id="last-name" />
+    </div>
+
+    <div class="mb-3">
+        <label for="phone-number">Phone Number</label>
+        <input formControlName="phoneNumber" class="form-control" id="phone-number" />
+    </div>
+</div>
+</div>

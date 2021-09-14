@@ -31,11 +31,13 @@ namespace Kastel_Planner_Backend
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
-                    builder.AllowAnyHeader();
-                    builder.AllowCredentials();
-                    builder.AllowAnyMethod();
-                    builder.AllowAnyHeader();                 
+                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowCredentials().AllowAnyMethod().AllowAnyHeader();
+
+                    /* builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
+                     builder.AllowAnyHeader();
+                     builder.AllowCredentials();
+                     builder.AllowAnyMethod();
+                     builder.AllowAnyHeader(); */
                 });
             });
             services.AddRepositories();

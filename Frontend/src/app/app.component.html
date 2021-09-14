@@ -17,6 +17,9 @@
           <a class="nav-item nav-link" routerLink="calendar" routerLinkActive="active">Calendar</a>
         </li>
         <li class="nav-item">
+          <a class="nav-item nav-link" routerLink="register" routerLinkActive="active" *ngIf="!currentUser">Register</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-item nav-link" (click)="logout()" *ngIf="currentUser">Logout</a>
         </li>
         <li class="nav-item">

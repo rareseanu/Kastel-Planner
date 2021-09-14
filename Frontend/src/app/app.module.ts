@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,17 +9,25 @@ import { LoginComponent } from './login';
 import { AccessTokenInterceptor } from './helpers/token.interceptor';
 import { appInitializer } from './helpers/app.initializer';
 import { AuthenticationService } from './shared/authentication.service';
+import { RegisterFormComponent } from './register-form/register-form.component';
+import { PersonFormComponent } from './person-form/person-form.component';
+import { LabelFormComponent } from './label-form/label-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterFormComponent,
+    PersonFormComponent,
+    LabelFormComponent
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService]},

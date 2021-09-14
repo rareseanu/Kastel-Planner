@@ -1,0 +1,10 @@
+<form [formGroup]="labelForm">
+<select class="form-select" (click)="selectedHandlerLabelName($event)">  
+
+    <option value ="default">Choose person's label</option>
+    <option *ngFor="let l of labelsInDropdown" [value] = "l.id">{{l.labelName}}
+    </option>
+  </select>
+  </form>
+
+
