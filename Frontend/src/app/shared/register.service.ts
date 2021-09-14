@@ -14,15 +14,25 @@ export class RegisterService {
     private currentPersonSubject: BehaviorSubject<Person | null>;
     private personLabelSubject: BehaviorSubject<PersonLabel | null>;
     public currentPerson: Observable<Person | null>;
+    public currentPersonLabel: Observable<PersonLabel | null>;
 
     constructor(private http: HttpClient, private router: Router) {
+
         this.currentPersonSubject = new BehaviorSubject<Person | null>(null);
         this.currentPerson = this.currentPersonSubject.asObservable();
         this.currentPerson.subscribe();
+
+        this.personLabelSubject= new BehaviorSubject<PersonLabel | null>(null);;
+        this.currentPersonLabel = this.personLabelSubject.asObservable();
+        this.currentPersonLabel.subscribe();
     }
 
     public get getCurrentPerson() {
         return this.currentPersonSubject.getValue();
+    }
+
+    public get getCurrentPersonLabel() {
+        return this.personLabelSubject.getValue();
     }
 
     private handleError(err: HttpErrorResponse) {
@@ -56,9 +66,12 @@ export class RegisterService {
         
     }
 
-    insertPersonLabel(id:string, personId:string): Observable<PersonLabel>
+    insertPersonLabel(labelId: string, personId: string): Observable<PersonLabel>
     {
-        return this.http.post<PersonLabel>(`${environment.BASE_API_URL}/person-label`, {id, personId})
+        
+        console.log("Label id" + " " +labelId);
+
+        return this.http.post<PersonLabel>(`${environment.BASE_API_URL}/person-label`, {labelId, personId})
             .pipe(
                 tap(data => { 
                     this.personLabelSubject.next(data);

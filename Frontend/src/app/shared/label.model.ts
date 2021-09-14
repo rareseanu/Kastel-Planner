@@ -1,4 +1,4 @@
 export class Label {
-     id: '';
-     labelName: '';
+     public id: '';
+     public labelName: '';
 }

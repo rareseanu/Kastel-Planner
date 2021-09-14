@@ -1,4 +1,4 @@
 export class PersonLabel {
-    id: '';
-    personId: '';
+    public labelId: '';
+    public personId: '';
 }
