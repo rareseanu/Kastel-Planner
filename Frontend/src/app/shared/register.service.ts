@@ -9,13 +9,18 @@ import { Person } from './person.model';
 import { Label } from './label.model';
 import { PersonLabel } from './person-label.model';
 import { Role } from './role.model';
+import { PersonRole } from './person-role.model';
 
 @Injectable({ providedIn: 'root' })
 export class RegisterService {
+
     private currentPersonSubject: BehaviorSubject<Person | null>;
     private personLabelSubject: BehaviorSubject<PersonLabel | null>;
+    private personRoleSubject: BehaviorSubject<PersonRole | null>;
+
     public currentPerson: Observable<Person | null>;
     public currentPersonLabel: Observable<PersonLabel | null>;
+    public currentPersonRole: Observable<PersonRole | null>;
 
     constructor(private http: HttpClient, private router: Router) {
 
@@ -26,6 +31,10 @@ export class RegisterService {
         this.personLabelSubject= new BehaviorSubject<PersonLabel | null>(null);;
         this.currentPersonLabel = this.personLabelSubject.asObservable();
         this.currentPersonLabel.subscribe();
+
+        this.personRoleSubject= new BehaviorSubject<PersonRole | null>(null);;
+        this.currentPersonRole = this.personRoleSubject.asObservable();
+        this.currentPersonRole.subscribe();
     }
 
     public get getCurrentPerson() {
@@ -84,6 +93,21 @@ export class RegisterService {
                 tap(data => { 
                     this.personLabelSubject.next(data);
                     console.log("Inserted person label.");
+                }),
+                catchError(this.handleError)
+            );
+    }
+
+    insertPersonRole(roleId: string, personId: string): Observable<PersonRole>
+    {
+        
+        console.log("Role id" + " " +roleId);
+
+        return this.http.post<PersonRole>(`${environment.BASE_API_URL}/person-role`, {roleId, personId})
+            .pipe(
+                tap(data => { 
+                    this.personRoleSubject.next(data);
+                    console.log("Inserted person role.");
                 }),
                 catchError(this.handleError)
             );
