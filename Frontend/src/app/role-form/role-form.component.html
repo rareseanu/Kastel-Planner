@@ -1,0 +1,8 @@
+<form [formGroup]="roleForm">
+    <select #myRoleSelect class="form-select" (click)="selectedHandlerRoleName($event)" (change)="onRoleSelected(myRoleSelect.value)">  
+    
+        <option value ="default">Choose person's role</option>
+        <option *ngFor="let r of rolesInDropdown" [value] = "r.id">{{r.roleName}}
+        </option>
+    </select>
+</form>

@@ -30,7 +30,8 @@ export class RegisterFormComponent implements OnInit {
     });
    }
 
-   name:string = 'Nothin Selected Yet';
+   name:string = '';
+   selectedRoleFromParentComponent:string ='';
    
 
   ngOnInit(): void {
@@ -39,6 +40,11 @@ export class RegisterFormComponent implements OnInit {
   showNextComponent(value:string) {
     this.name = value;
     console.log(this.name);
+  }
+
+  showNextRoleComponent(value:string) {
+    this.selectedRoleFromParentComponent = value;
+    console.log(this.selectedRoleFromParentComponent);
   }
 
 

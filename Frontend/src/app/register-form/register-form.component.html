@@ -2,13 +2,15 @@
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <app-person-form formControlName="person"></app-person-form>
     <app-label-form formControlName="label" (buttonClicked)='showNextComponent($event)'></app-label-form>
+    <app-role-form formControlName="role" (roleClickedEmitter)='showNextRoleComponent($event)'></app-role-form>
     <div class="d-grid gap-2 col-2 mx-auto">
       <button class="btn btn-primary">Sign Up</button>
   </div>
   </form>
 </div>
 
-<p>Currently Selected: {{ name }}</p>
+<p>Currently Label Selected: {{ name }}</p>
+<p>Currently Role Selected: {{ selectedRoleFromParentComponent }}</p>
 
 
 

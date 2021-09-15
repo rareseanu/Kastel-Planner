@@ -33,16 +33,15 @@ export class LabelFormComponent implements OnInit {
   
   labelsInDropdown : Label[];
 
-  types$: any;
 
   labelForm: FormGroup;
   loading = false;
-    submitted = false;
-    returnUrl: string;
-    error: string;
-    subscriptions: Subscription[] = [];
+  submitted = false;
+  returnUrl: string;
+  error: string;
+  subscriptions: Subscription[] = [];
 
-  constructor(private registerService: RegisterService, private formBuilder: FormBuilder,) {
+  constructor(private registerService: RegisterService, private formBuilder: FormBuilder) {
     this.displayLabels();
     
       this.labelForm = this.formBuilder.group({

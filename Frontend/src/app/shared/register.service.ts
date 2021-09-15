@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Person } from './person.model';
 import { Label } from './label.model';
 import { PersonLabel } from './person-label.model';
+import { Role } from './role.model';
 
 @Injectable({ providedIn: 'root' })
 export class RegisterService {
@@ -61,6 +62,13 @@ export class RegisterService {
 
     getLabelsFromAPI():Observable<Label[]>{
         return this.http.get<Label[]>(`${environment.BASE_API_URL}/labels`)
+        .pipe(
+            map((response: any) => response));
+        
+    }
+
+    getRolesFromAPI():Observable<Role[]>{
+        return this.http.get<Role[]>(`${environment.BASE_API_URL}/roles`)
         .pipe(
             map((response: any) => response));
         

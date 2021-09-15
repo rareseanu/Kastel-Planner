@@ -12,6 +12,7 @@ import { AuthenticationService } from './shared/authentication.service';
 import { RegisterFormComponent } from './register-form/register-form.component';
 import { PersonFormComponent } from './person-form/person-form.component';
 import { LabelFormComponent } from './label-form/label-form.component';
+import { RoleFormComponent } from './role-form/role-form.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { LabelFormComponent } from './label-form/label-form.component';
     LoginComponent,
     RegisterFormComponent,
     PersonFormComponent,
-    LabelFormComponent
+    LabelFormComponent,
+    RoleFormComponent
     
   ],
   imports: [
