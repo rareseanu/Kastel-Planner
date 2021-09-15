@@ -1,10 +1,12 @@
 <form [formGroup]="labelForm">
+  <div class="mb-3">
 <select #mySelect class="form-select" (click)="selectedHandlerLabelName($event)" (change)="onOptionsSelected(mySelect.value)">  
 
     <option value ="default">Choose person's label</option>
     <option *ngFor="let l of labelsInDropdown" [value] = "l.id">{{l.labelName}}
     </option>
   </select>
+</div>
   </form>
 
 

@@ -3,6 +3,8 @@
     <app-person-form formControlName="person"></app-person-form>
     <app-label-form formControlName="label" (buttonClicked)='showNextComponent($event)'></app-label-form>
     <app-role-form formControlName="role" (roleClickedEmitter)='showNextRoleComponent($event)'></app-role-form>
+    <app-user-form formControlName="user" *ngIf="selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434'"></app-user-form>
+    <app-beneficiary-form formControlName="beneficiary" *ngIf="selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d'"></app-beneficiary-form>
     <div class="d-grid gap-2 col-2 mx-auto">
       <button class="btn btn-primary">Sign Up</button>
   </div>
@@ -10,7 +12,11 @@
 </div>
 
 <p>Currently Label Selected: {{ name }}</p>
-<p>Currently Role Selected: {{ selectedRoleFromParentComponent }}</p>
+<p>Currently Role Selected: {{ selectedRoleFromParentComponent}}</p>
 
+
+<pre>
+  {{registerForm.value | json}}
+  </pre>
 
 

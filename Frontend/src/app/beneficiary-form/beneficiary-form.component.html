@@ -1,0 +1,20 @@
+<h4>Beneficiary info</h4>
+<form [formGroup]="beneficiaryForm">
+    <div class="mb-3">
+        <label for="start-time" class="form-label">Hour</label>
+        <input formControlName="startTime" class="form-control" id="start-time" placeholder="hh:mm:ss" />
+    </div>
+
+    <div class="mb-3">
+        <select #myBeneficiarySelect class="form-select">      
+            <option value ="default">Day of Week</option>
+            <option value="0">Monday</option>
+            <option value="1">Tuesday</option>
+            <option value="2">Wednesday</option>
+            <option value="3">Thursday</option>
+            <option value="4">Friday</option>
+            <option value="5">Saturday</option>
+            <option value="6">Sunday</option>
+        </select>
+    </div>
+</form>

@@ -26,7 +26,9 @@ export class RegisterFormComponent implements OnInit {
     {
     this.registerForm = this.formBuilder.group({
       person: [],
-      label: []
+      label: [],
+      role: [],
+      user: []
     });
    }
 
