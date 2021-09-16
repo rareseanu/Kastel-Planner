@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, forwardRef, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Beneficiary } from '../shared/beneficiary.model';
@@ -7,7 +7,7 @@ import { RegisterService } from '../shared/register.service';
 export interface BeneiciaryFormValues {
   startTime: string;
   dayOfWeek: string;
-  BeneficiaryId: string;
+  beneficiaryId: string;
 }
 
 @Component({
@@ -41,8 +41,9 @@ export class BeneficiaryFormComponent implements OnInit {
 
   constructor(private registerService: RegisterService, private formBuilder: FormBuilder) {
     this.beneficiaryForm = this.formBuilder.group({
-      id: [],
-      roleName: []
+      startTime: [],
+      dayOfWeek: [], 
+      beneficiaryId: []
     });
 
     this.subscriptions.push(
@@ -91,7 +92,31 @@ export class BeneficiaryFormComponent implements OnInit {
     return this.beneficiaryForm.valid ? null : { beneficiary: { valid: false } };
   }
 
+  dropDownDayOfWeek: string = '';
+  selectedHandlerDayOfWeek(event : any)
+  {
+    if(event.target.value != 'default') 
+      { this.dropDownDayOfWeek = event.target.value;}
+    else 
+      {this.dropDownDayOfWeek = '';}
+
+      //console.log(this.dropDownRole);
+  }
+
+
+  @Output() dayOfWeekClickedEmitter = new EventEmitter();
+  onDayOfWeekSelected(value:string){
+    this.dayOfWeekClickedEmitter.emit(value);
+  }
+
+  selected(){
+    return this.dropDownDayOfWeek;
+  }
+
+
+
   ngOnInit(): void {
+    this.onDayOfWeekSelected(this.dropDownDayOfWeek);
   }
 
 }

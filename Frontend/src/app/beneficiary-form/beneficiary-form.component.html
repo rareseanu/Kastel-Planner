@@ -1,20 +1,27 @@
 <h4>Beneficiary info</h4>
+<h6>Please provide the time and the day of the week when beneficiary is available</h6>
 <form [formGroup]="beneficiaryForm">
     <div class="mb-3">
-        <label for="start-time" class="form-label">Hour</label>
+        <label for="start-time" class="form-label">Time</label>
         <input formControlName="startTime" class="form-control" id="start-time" placeholder="hh:mm:ss" />
     </div>
 
     <div class="mb-3">
-        <select #myBeneficiarySelect class="form-select">      
+        <select #dayOfWeekSelect 
+                class="form-select"
+                formControlName="dayOfWeek"
+                (click)="selectedHandlerDayOfWeek($event)" 
+                (change)="onDayOfWeekSelected(dayOfWeekSelect.value)">      
             <option value ="default">Day of Week</option>
-            <option value="0">Monday</option>
-            <option value="1">Tuesday</option>
-            <option value="2">Wednesday</option>
-            <option value="3">Thursday</option>
-            <option value="4">Friday</option>
-            <option value="5">Saturday</option>
-            <option value="6">Sunday</option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
         </select>
     </div>
 </form>
+
+{{beneficiaryForm.value| json}}

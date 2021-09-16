@@ -28,12 +28,14 @@ export class RegisterFormComponent implements OnInit {
       person: [],
       label: [],
       role: [],
-      user: []
+      user: [],
+      beneficiary:[]
     });
    }
 
    name:string = '';
    selectedRoleFromParentComponent:string ='';
+   selectedDayOfWeekFromParentComponent:string ='';
    
 
   ngOnInit(): void {
@@ -49,9 +51,14 @@ export class RegisterFormComponent implements OnInit {
     console.log(this.selectedRoleFromParentComponent);
   }
 
+  showNextDayOfTheWeekComponent(value:string) {
+    this.selectedDayOfWeekFromParentComponent = value;
+    console.log(this.selectedDayOfWeekFromParentComponent);
+  }
+
 
   onSubmit() {
-    /*this.registerService.register(this.registerForm.get('person')?.value.firstName, this.registerForm.get('person')?.value.lastName, this.registerForm.get('person')?.value.phoneNumber, true)
+    this.registerService.register(this.registerForm.get('person')?.value.firstName, this.registerForm.get('person')?.value.lastName, this.registerForm.get('person')?.value.phoneNumber, true)
     .subscribe(
       (data) => {
           this.loading = false;
@@ -59,9 +66,9 @@ export class RegisterFormComponent implements OnInit {
       (error) => {
           this.error = error;
           this.loading = false;
-      });*/
+      });
 
-    /*this.registerService.insertPersonLabel ("b8b57560-025f-492c-a7ac-435d86ca18c3","89083b49-bf0d-4be7-bcb2-853836e5081f")
+    this.registerService.insertPersonLabel ("b8b57560-025f-492c-a7ac-435d86ca18c3","89083b49-bf0d-4be7-bcb2-853836e5081f")
     .subscribe(
       (data) => {
           this.loading = false;
@@ -69,7 +76,7 @@ export class RegisterFormComponent implements OnInit {
       (error) => {
           this.error = error;
           this.loading = false;
-      });*/
+      });
 
       this.registerService.insertPersonRole ("49e177fb-7d43-41e9-b8f5-d7851c811434","89083b49-bf0d-4be7-bcb2-853836e5081f")
     .subscribe(
