@@ -66,18 +66,6 @@ export class LabelFormComponent implements OnInit {
    }
 
  
-   onChange1(labelName: string, isChecked: boolean) {
-    const labels = (this.labelForm.controls.labelName as FormArray);
-
-    if (isChecked) {
-      labels.push(new FormControl(labelName));
-    } else {
-      const index = labels.controls.findIndex(x => x.value === labelName);
-      labels.removeAt(index);
-    }
-  }
-
-  
    get value(): LabelFormComponent {
     return this.labelForm.value;
   }
@@ -121,30 +109,16 @@ export class LabelFormComponent implements OnInit {
       subscribe(data => {
         if(data) {
           this.labelsInDropdown = data;
-          console.log(this.labelsInDropdown);
+          //console.log(this.labelsInDropdown);
         }
       } );
     
     }
-
-
-  //methods to get dropdown values
-  dropDownLabelName: string = '';
-  selected: string ='';
-
-  selectedHandlerLabelName(event : any)
-  {
-    if(event.target.value != 'default') 
-      { this.dropDownLabelName = event.target.value;}
-    else 
-      {this.dropDownLabelName = '';}
-
-     // console.log(this.dropDownLabelName);
-  }
   
-  @Output() buttonClicked = new EventEmitter();
-  onOptionsSelected(value:string){
-    this.buttonClicked.emit(value);
+
+  @Output() selectedLabelsClickedEmitter = new EventEmitter();
+  onSelectedLabelsArray(value:string[]){
+    this.selectedLabelsClickedEmitter.emit(value);
   }
 
   ngOnInit(): void {
@@ -152,20 +126,24 @@ export class LabelFormComponent implements OnInit {
      this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
-      textField: 'labelName',
+      textField: 'labelName'
     };
+    
+  
      
   }
 
   onItemSelect(item: any) {
     this.selectedLabels.push(item);
-    console.log(this.selectedLabels);
+    this.onSelectedLabelsArray(this.selectedLabels);
+   // console.log(this.selectedLabels);
   }
 
   onItemDeSelect(item: any) {
     let index = this.selectedLabels.indexOf(item);
      this.selectedLabels.splice(index, 1);
-    console.log(this.selectedLabels);
+     this.onSelectedLabelsArray(this.selectedLabels);
+   // console.log(this.selectedLabels);
   }
 
  

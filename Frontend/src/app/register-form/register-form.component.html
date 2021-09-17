@@ -1,7 +1,7 @@
 <div class="col-sm-8 offset-sm-2">
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <app-person-form formControlName="person"></app-person-form>
-    <app-label-form formControlName="label" (buttonClicked)='showNextComponent($event)'></app-label-form>
+    <app-label-form formControlName="label" (selectedLabelsClickedEmitter) = 'showSelectedLabelsArray($event)'></app-label-form>
     <app-role-form formControlName="role" (roleClickedEmitter)='showNextRoleComponent($event)'></app-role-form>
     <app-user-form formControlName="user" *ngIf="selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434'"></app-user-form>
     <app-beneficiary-form 
@@ -15,8 +15,9 @@
   </form>
 </div>
 
-<p>Currently Label Selected: {{ name }}</p>
 <p>Currently Role Selected: {{ selectedRoleFromParentComponent}}</p>
+<p> {{selectedLabelsArrayFromParentComponent| json}} </p>
+
 
 
 <pre>

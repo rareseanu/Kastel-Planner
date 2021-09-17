@@ -36,15 +36,12 @@ export class RegisterFormComponent implements OnInit {
    name:string = '';
    selectedRoleFromParentComponent:string ='';
    selectedDayOfWeekFromParentComponent:string ='';
+   selectedLabelsArrayFromParentComponent: string[] = [];
    
 
   ngOnInit(): void {
   }
 
-  showNextComponent(value:string) {
-    this.name = value;
-    console.log(this.name);
-  }
 
   showNextRoleComponent(value:string) {
     this.selectedRoleFromParentComponent = value;
@@ -54,6 +51,12 @@ export class RegisterFormComponent implements OnInit {
   showNextDayOfTheWeekComponent(value:string) {
     this.selectedDayOfWeekFromParentComponent = value;
     console.log(this.selectedDayOfWeekFromParentComponent);
+  }
+
+  showSelectedLabelsArray(value:string[]){
+this.selectedLabelsArrayFromParentComponent = value;
+console.log(this.selectedLabelsArrayFromParentComponent);
+
   }
 
 

@@ -29,7 +29,7 @@ export interface RoleFormValues {
 })
 export class RoleFormComponent implements OnInit {
 
-  rolesInDropdown : Role[];
+  rolesInDropdown : RoleFormValues[];
 
   roleForm: FormGroup;
   loading = false;
