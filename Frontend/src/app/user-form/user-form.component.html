@@ -1,15 +1,13 @@
 <div class="col-sm-8 offset-sm-2">
     <h4>User info</h4>
-    <h6>Please provide an email address and a password for the volunteer</h6>
+    <h6>Please provide an email address for the volunteer</h6>
 <div [formGroup]="userForm">
+
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="text" formControlName="email" class="form-control" id="email" />
     </div>
 
-    <div class="mb-3">
-        <label for="password">Password</label>
-        <input type="password" formControlName="password" class="form-control" id="password" />
-    </div>
+
 </div>
 </div>

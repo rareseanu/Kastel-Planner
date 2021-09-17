@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, forwardRef, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { RegisterService } from '../shared/register.service';
+import { matchingInputsValidator } from './validators';
 
 export interface InsertUserFormValues {
   email: string;
-  password: string;
 }
 
 @Component({
@@ -26,7 +26,7 @@ export interface InsertUserFormValues {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserFormComponent implements OnInit {
+export class UserFormComponent implements OnInit, ControlValueAccessor {
 
   userForm: FormGroup;
   loading = false;
@@ -37,8 +37,7 @@ export class UserFormComponent implements OnInit {
 
   constructor(private registerService: RegisterService,private formBuilder: FormBuilder) {
     this.userForm = this.formBuilder.group({
-      email: [],
-      password: []
+      email: []
     });
 
     this.subscriptions.push(
@@ -58,6 +57,14 @@ export class UserFormComponent implements OnInit {
     this.userForm.setValue(value);
     this.onChange(value);
     this.onTouched();
+  }
+
+  get passwordControl() {
+    return this.userForm.controls.password;
+  }
+
+  get confirmPasswordControl() {
+    return this.userForm.controls.confirmPassword;
   }
 
 
@@ -92,3 +99,5 @@ export class UserFormComponent implements OnInit {
   }
 
 }
+
+

@@ -7,12 +7,14 @@
     </div>
 
     <div class="mb-3">
+        <label for="day" class="form-label">Day Of The Week</label>
         <select #dayOfWeekSelect 
                 class="form-select"
                 formControlName="dayOfWeek"
+                id = "day"
                 (click)="selectedHandlerDayOfWeek($event)" 
                 (change)="onDayOfWeekSelected(dayOfWeekSelect.value)">      
-            <option value ="default">Day of Week</option>
+            <option value ="default" disabled selected>Please select beneficiary disponibility</option>
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
             <option value="Wednesday">Wednesday</option>

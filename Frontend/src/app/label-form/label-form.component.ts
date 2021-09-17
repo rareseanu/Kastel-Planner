@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Label } from '../shared/label.model';
-import { FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { RegisterService } from '../shared/register.service';
 
 export interface LabelFormValues {
@@ -31,22 +31,28 @@ export interface LabelFormValues {
 export class LabelFormComponent implements OnInit {
 
   
-  labelsInDropdown : Label[];
-
-
+  labelsInDropdown : any[];
   labelForm: FormGroup;
+  selectedLabels: any[] = [];;
+  dropdownSettings = {};
+
   loading = false;
   submitted = false;
   returnUrl: string;
   error: string;
   subscriptions: Subscription[] = [];
+  formControls: any;
+
+  get labelsFormArray() {
+    return this.labelForm.controls.labels as FormArray;
+  }
 
   constructor(private registerService: RegisterService, private formBuilder: FormBuilder) {
     this.displayLabels();
     
       this.labelForm = this.formBuilder.group({
-        id: [],
-        labelName: []
+        id:[],
+        labelName:[]
       });
 
       this.subscriptions.push(
@@ -55,9 +61,23 @@ export class LabelFormComponent implements OnInit {
           this.onTouched();
         })
       );
-     
+
+ 
    }
 
+ 
+   onChange1(labelName: string, isChecked: boolean) {
+    const labels = (this.labelForm.controls.labelName as FormArray);
+
+    if (isChecked) {
+      labels.push(new FormControl(labelName));
+    } else {
+      const index = labels.controls.findIndex(x => x.value === labelName);
+      labels.removeAt(index);
+    }
+  }
+
+  
    get value(): LabelFormComponent {
     return this.labelForm.value;
   }
@@ -104,9 +124,9 @@ export class LabelFormComponent implements OnInit {
           console.log(this.labelsInDropdown);
         }
       } );
-
     
     }
+
 
   //methods to get dropdown values
   dropDownLabelName: string = '';
@@ -127,14 +147,29 @@ export class LabelFormComponent implements OnInit {
     this.buttonClicked.emit(value);
   }
 
-  selectedLabel(){
-    return this.dropDownLabelName;
-  }
-
   ngOnInit(): void {
      this.displayLabels();
-     this.onOptionsSelected(this.dropDownLabelName);
+     this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'labelName',
+    };
+     
   }
+
+  onItemSelect(item: any) {
+    this.selectedLabels.push(item);
+    console.log(this.selectedLabels);
+  }
+
+  onItemDeSelect(item: any) {
+    let index = this.selectedLabels.indexOf(item);
+     this.selectedLabels.splice(index, 1);
+    console.log(this.selectedLabels);
+  }
+
+ 
+
   }
 
 

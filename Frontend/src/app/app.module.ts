@@ -15,7 +15,7 @@ import { LabelFormComponent } from './label-form/label-form.component';
 import { RoleFormComponent } from './role-form/role-form.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { BeneficiaryFormComponent } from './beneficiary-form/beneficiary-form.component';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +33,8 @@ import { BeneficiaryFormComponent } from './beneficiary-form/beneficiary-form.co
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService]},
