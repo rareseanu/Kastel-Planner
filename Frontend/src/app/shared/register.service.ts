@@ -11,6 +11,7 @@ import { PersonLabel } from './person-label.model';
 import { Role } from './role.model';
 import { PersonRole } from './person-role.model';
 import { Beneficiary } from './beneficiary.model';
+import { InsertUser } from './insert-user.model';
 
 @Injectable({ providedIn: 'root' })
 export class RegisterService {
@@ -19,11 +20,13 @@ export class RegisterService {
     private personLabelSubject: BehaviorSubject<PersonLabel | null>;
     private personRoleSubject: BehaviorSubject<PersonRole | null>;
     private personWeeklyLogSubject: BehaviorSubject<Beneficiary | null>;
+    private userEmailSubject: BehaviorSubject<InsertUser | null>;
 
     public currentPerson: Observable<Person | null>;
     public currentPersonLabel: Observable<PersonLabel | null>;
     public currentPersonRole: Observable<PersonRole | null>;
     public currentWeeklyLog: Observable<Beneficiary | null>;
+    public currentUserEmail: Observable<InsertUser | null>;
 
     constructor(private http: HttpClient, private router: Router) {
 
@@ -42,6 +45,10 @@ export class RegisterService {
         this.personWeeklyLogSubject= new BehaviorSubject<Beneficiary | null>(null);;
         this.currentWeeklyLog = this.personWeeklyLogSubject.asObservable();
         this.currentWeeklyLog.subscribe();
+
+        this.userEmailSubject= new BehaviorSubject<InsertUser | null>(null);;
+        this.currentUserEmail = this.userEmailSubject.asObservable();
+        this.currentUserEmail.subscribe();
     }
 
     public get getCurrentPerson() {
@@ -59,6 +66,10 @@ export class RegisterService {
     
     public get getCurrentWeeklyLog() {
         return this.personWeeklyLogSubject.getValue();
+    }
+
+    public get getCurrentUserEmail() {
+        return this.userEmailSubject.getValue();
     }
 
     private handleError(err: HttpErrorResponse) {
@@ -149,6 +160,19 @@ export class RegisterService {
                 tap(data => { 
                     this.personWeeklyLogSubject.next(data);
                     console.log("Inserted weeklylog.");
+                }),
+                catchError(this.handleError)
+            );
+    }
+
+    insertUserEmail(email: string): Observable<InsertUser>
+    {
+    
+        return this.http.post<InsertUser>(`${environment.BASE_API_URL}/weeklylog`, {email})
+            .pipe(
+                tap(data => { 
+                    this.userEmailSubject.next(data);
+                    console.log("Inserted email.");
                 }),
                 catchError(this.handleError)
             );

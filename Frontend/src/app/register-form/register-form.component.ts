@@ -64,13 +64,59 @@ console.log(this.selectedLabelsArrayFromParentComponent);
 
 onSubmit(){
 
-
-   /* this.registerService.register(this.registerForm.get('person')?.value.firstName, this.registerForm.get('person')?.value.lastName, this.registerForm.get('person')?.value.phoneNumber, true)
+ // (data) => { thi.loading = false; this.register.insertPersonLabel( ...... ).subscribe( (data) => { this.registerService.insertPersonRole
+    this.registerService.register(this.registerForm.get('person')?.value.firstName, this.registerForm.get('person')?.value.lastName, this.registerForm.get('person')?.value.phoneNumber, true)
     .subscribe(
       (data) => {
+        this.insertedPersonId = data.id;
+        console.log("perosn id from register()" + data.id);
           this.loading = false;
-          console.log("perosn id from register()" + data.id);
-          this.insertedPersonId = data.id;
+
+          
+          this.registerService.insertPersonRole (this.selectedRoleFromParentComponent,this.insertedPersonId)
+    .subscribe(
+      (data) => {
+        console.log("perosn id from insertPersonRole" + data.personId);
+        console.log("role id from insertPersonRole" + data.roleId);
+          this.loading = false;
+           //daca rolul persoanei este de beneficiar
+      if(this.selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d')
+         {
+            this.registerService.insertWeeklyLog (this.registerForm.get('beneficiary')?.value.startTime, this.selectedDayOfWeekFromParentComponent, this.insertedPersonId)
+            .subscribe(
+                 (data) => {
+      
+                            this.loading = false;
+                            },
+                (error) => {
+                          this.error = error;
+                          this.loading = false;
+        });
+      }
+      //daca rolul persoanei este de volntar
+      else if (this.selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434')
+      {
+        this.registerService.insertUserEmail (this.registerForm.get('user')?.value.email)
+    .subscribe(
+      (data) => {
+
+          this.loading = false;
+      },
+      (error) => {
+          this.error = error;
+          this.loading = false;
+      });
+
+      }
+
+
+      },
+      (error) => {
+          this.error = error;
+          this.loading = false;
+      });
+ 
+      
       },
       (error) => {
           this.error = error;
@@ -78,7 +124,7 @@ onSubmit(){
       });
 
 
-      
+      /*
     this.registerService.insertPersonRole (this.selectedRoleFromParentComponent,this.insertedPersonId)
     .subscribe(
       (data) => {
@@ -102,7 +148,7 @@ onSubmit(){
           this.loading = false;
       }); */
 
-    this.registerService.insertWeeklyLog (this.registerForm.get('beneficiary')?.value.startTime, this.selectedDayOfWeekFromParentComponent, "a93fb416-d6a6-4a34-a0fd-8e570cac2f54")
+    /*this.registerService.insertWeeklyLog (this.registerForm.get('beneficiary')?.value.startTime, this.selectedDayOfWeekFromParentComponent, "a93fb416-d6a6-4a34-a0fd-8e570cac2f54")
     .subscribe(
       (data) => {
     
@@ -111,7 +157,7 @@ onSubmit(){
       (error) => {
           this.error = error;
           this.loading = false;
-      });
+      });*/
  } 
 
 }
