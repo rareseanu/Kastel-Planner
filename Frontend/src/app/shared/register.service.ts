@@ -10,6 +10,7 @@ import { Label } from './label.model';
 import { PersonLabel } from './person-label.model';
 import { Role } from './role.model';
 import { PersonRole } from './person-role.model';
+import { Beneficiary } from './beneficiary.model';
 
 @Injectable({ providedIn: 'root' })
 export class RegisterService {
@@ -17,10 +18,12 @@ export class RegisterService {
     private currentPersonSubject: BehaviorSubject<Person | null>;
     private personLabelSubject: BehaviorSubject<PersonLabel | null>;
     private personRoleSubject: BehaviorSubject<PersonRole | null>;
+    private personWeeklyLogSubject: BehaviorSubject<Beneficiary | null>;
 
     public currentPerson: Observable<Person | null>;
     public currentPersonLabel: Observable<PersonLabel | null>;
     public currentPersonRole: Observable<PersonRole | null>;
+    public currentWeeklyLog: Observable<Beneficiary | null>;
 
     constructor(private http: HttpClient, private router: Router) {
 
@@ -35,6 +38,10 @@ export class RegisterService {
         this.personRoleSubject= new BehaviorSubject<PersonRole | null>(null);;
         this.currentPersonRole = this.personRoleSubject.asObservable();
         this.currentPersonRole.subscribe();
+
+        this.personWeeklyLogSubject= new BehaviorSubject<Beneficiary | null>(null);;
+        this.currentWeeklyLog = this.personWeeklyLogSubject.asObservable();
+        this.currentWeeklyLog.subscribe();
     }
 
     public get getCurrentPerson() {
@@ -43,6 +50,15 @@ export class RegisterService {
 
     public get getCurrentPersonLabel() {
         return this.personLabelSubject.getValue();
+    }
+
+    public get getCurrentPersonRole() {
+        return this.personRoleSubject.getValue();
+    }
+
+    
+    public get getCurrentWeeklyLog() {
+        return this.personWeeklyLogSubject.getValue();
     }
 
     private handleError(err: HttpErrorResponse) {
@@ -63,7 +79,23 @@ export class RegisterService {
             .pipe(
                 tap(data => { 
                     this.currentPersonSubject.next(data);
-                    console.log("Inserted person.");
+                    console.log("Inserted person");
+                }),
+                catchError(this.handleError)
+            );
+    }
+
+    insertPersonRole(roleId: string, personId: string): Observable<PersonRole>
+    {
+        
+        console.log("Role id from register service" + " " +roleId);
+        console.log("Person id from register service" + " " +personId);
+
+        return this.http.post<PersonRole>(`${environment.BASE_API_URL}/person-role`, {roleId, personId})
+            .pipe(
+                tap(data => { 
+                    this.personRoleSubject.next(data);
+                    console.log("Inserted person role.");
                 }),
                 catchError(this.handleError)
             );
@@ -79,7 +111,18 @@ export class RegisterService {
     getRolesFromAPI():Observable<Role[]>{
         return this.http.get<Role[]>(`${environment.BASE_API_URL}/roles`)
         .pipe(
-            map((response: any) => response));
+            map(
+                (response: any) => response)
+            
+            );
+
+           /* .pipe(
+                tap(data => { 
+                   // console.log(data);
+                }),
+                catchError(this.handleError)
+            );*/
+           
         
     }
 
@@ -98,19 +141,17 @@ export class RegisterService {
             );
     }
 
-    insertPersonRole(roleId: string, personId: string): Observable<PersonRole>
+    insertWeeklyLog(startTime: string, dayOfWeek: string, BeneficiaryId: string): Observable<Beneficiary>
     {
-        
-        console.log("Role id" + " " +roleId);
-
-        return this.http.post<PersonRole>(`${environment.BASE_API_URL}/person-role`, {roleId, personId})
+    
+        return this.http.post<Beneficiary>(`${environment.BASE_API_URL}/weeklylog`, {startTime, dayOfWeek,BeneficiaryId })
             .pipe(
                 tap(data => { 
-                    this.personRoleSubject.next(data);
-                    console.log("Inserted person role.");
+                    this.personWeeklyLogSubject.next(data);
+                    console.log("Inserted weeklylog.");
                 }),
                 catchError(this.handleError)
             );
     }
-    
+ 
 }

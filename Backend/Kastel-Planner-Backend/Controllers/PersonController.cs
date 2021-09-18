@@ -56,6 +56,7 @@ namespace Kastel_Planner_Backend.Controllers
                 return BadRequest(result.Error);
             }
 
+            Guid id1 = result.Value.Id;
             return CreatedAtAction(nameof(Details), new { id = result.Value.Id }, result.Value);
         }
 
