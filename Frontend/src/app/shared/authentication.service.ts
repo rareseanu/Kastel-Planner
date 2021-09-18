@@ -63,7 +63,6 @@ export class AuthenticationService {
         this.http.post<any>(`${environment.BASE_API_URL}/user/revokeToken`, {}, {withCredentials:true}).subscribe();
         this.stopRefreshTokenTimer();
         this.currentUserSubject.next(null);
-        this.router.navigate(['/']);
     }
 
     private refreshTokenTimeout: any;

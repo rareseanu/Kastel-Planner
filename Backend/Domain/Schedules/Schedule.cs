@@ -12,7 +12,7 @@ namespace Domain.Schedules
         public Duration Duration { get; set; }
 
         // Navigation properties
-        public Guid VolunteerId { get; set; }
+        public Guid? VolunteerId { get; set; }
         public Guid WeeklyLogId { get; set; }
         public Person Volunteer { get; set; }
         public BeneficiaryWeeklyLog BeneficiaryWeeklyLog { get; set; }
@@ -21,7 +21,7 @@ namespace Domain.Schedules
         {
         }
 
-        public Schedule(Guid volunteerId, Guid weeklyLogId, DateTime date,
+        public Schedule(Guid? volunteerId, Guid weeklyLogId, DateTime date,
                 Duration duration)
         {
             Id = Guid.NewGuid();
@@ -31,7 +31,7 @@ namespace Domain.Schedules
             Duration = duration;
         }
 
-        public void UpdateSchedule(Guid volunteerId, Guid weeklyLogId, DateTime date,
+        public void UpdateSchedule(Guid? volunteerId, Guid weeklyLogId, DateTime date,
                 Duration duration)
         {
             VolunteerId = volunteerId;

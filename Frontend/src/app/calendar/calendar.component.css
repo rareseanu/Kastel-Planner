@@ -1,0 +1,38 @@
+table tbody tr td:first-of-type {
+    height:40px;
+    line-height: 40px;
+}
+
+td {
+    padding: 0;
+}
+
+table tbody tr:first-of-type  td:not(:first-of-type)  {
+    position:relative;
+}
+
+hr {
+    color: #dee2e6;
+}
+
+.dayOfWeek {
+    border-radius:50%;
+    display:inline-block;
+    line-height:25px;
+    width: 25px;
+    height:25px;
+    text-align: center;
+}
+
+.currentDay {
+    background-color: rgb(13,110,253);
+    color:white;
+}
+
+thead tr {
+    border-top: 0;
+}
+
+tr td:first-of-type, th:first-of-type {
+    border-left: 0;
+}

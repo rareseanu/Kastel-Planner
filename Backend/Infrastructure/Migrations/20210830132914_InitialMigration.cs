@@ -142,7 +142,7 @@ namespace Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     date = table.Column<DateTime>(type: "date", nullable: false),
                     duration = table.Column<int>(type: "integer", nullable: true),
-                    volunteer_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    volunteer_id = table.Column<Guid>(type: "uuid", nullable: true),
                     weekly_log_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>

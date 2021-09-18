@@ -1,0 +1,26 @@
+<div data-bs-toggle="modal" [attr.data-bs-target]="'#' + title" class="text-white event bg-primary"
+  [style.z-index]="zIndex" [style.left.%]="100 * leftEdge" [style.height.px]="height" [style.top.px]="topEdge"
+  [style.width.%]="widthPercentage * 100">
+  <span style="display: block" class="title">{{beneficiaryFirstName}} {{beneficiaryLastName}}</span>
+  <span style="display: block" class="timeSpan">{{renderHour(startHour)}}-{{renderHour(endHour)}}</span>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="{{title}}" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Schedule</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Beneficiar: {{beneficiaryFirstName}} {{beneficiaryLastName}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

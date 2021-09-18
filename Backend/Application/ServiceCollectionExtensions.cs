@@ -1,4 +1,5 @@
 ﻿using Application.BeneficiaryWeeklyLogs;
+using Application.HostedServices;
 using Application.Labels;
 using Application.Persons;
 using Application.PersonsLabels;
@@ -22,6 +23,8 @@ namespace Application
             services.AddScoped<IPersonsRolesService, PersonsRolesService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IScheduleService, ScheduleService>();
+
+            services.AddHostedService<ScheduleHostedService>();
         }
     }
 }

@@ -9,11 +9,15 @@ import { LoginComponent } from './login';
 import { AccessTokenInterceptor } from './helpers/token.interceptor';
 import { appInitializer } from './helpers/app.initializer';
 import { AuthenticationService } from './shared/authentication.service';
+import { CalendarComponent } from './calendar';
+import { EventComponent } from './calendar/event/event.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    CalendarComponent,
+    EventComponent
   ],
   imports: [
     BrowserModule,

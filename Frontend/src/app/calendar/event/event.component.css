@@ -1,0 +1,7 @@
+.event {
+    border-radius: 5%;
+    position:absolute;
+    border:thin solid #212529;
+    color:black;
+    font-size:13px;
+}

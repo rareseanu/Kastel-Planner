@@ -6,12 +6,6 @@
     background-color: #eee;
 }
 
-.highlighted {
-    margin-top: 10px;
-    box-shadow: 0 4px 12px 0 rgb(0 0 0 / 7%), 0 2px 4px rgb(0 0 0 / 5%);
-    background-color: #fbfbfb;
-}
-
 .avatar {
     vertical-align: middle;
     width: 50px;

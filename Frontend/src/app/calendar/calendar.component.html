@@ -1,0 +1,145 @@
+<div class="table-responsive">
+  <hr class="my-2">
+  <h1 class="display-4 fw-bold"> Calendar </h1>
+  <hr class="my-2">
+  <table class="calendar table table-bordered">
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th class="text-center" width="14%">Monday
+          <br>
+          <span class="dayOfWeek" [ngClass] = "{'currentDay' : getDayOfMonth(0) === currentDay.getDate()}">
+            {{getDayOfMonth(0)}}
+          </span>
+        </th>
+
+        <th class="text-center" width="14%">Tuesday <br>
+          <span [ngClass] = "{'currentDay' : getDayOfMonth(1) === currentDay.getDate()}">
+            {{getDayOfMonth(1)}}
+          </span>
+        </th>
+        <th class="text-center" width="14%">Wednesday <br>
+          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(2) === currentDay.getDate()}">
+            {{getDayOfMonth(2)}}
+          </span>
+        </th>
+        <th class="text-center" width="14%">Thursday <br>
+          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(3) === currentDay.getDate()}">
+            {{getDayOfMonth(3)}}
+          </span>
+        </th>
+        <th class="text-center" width="14%">Friday <br>
+          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(4) === currentDay.getDate()}">
+            {{getDayOfMonth(4)}}
+          </span>
+        </th>
+        <th class="text-center" width="14%">Saturday <br>
+          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(5) === currentDay.getDate()}">
+            {{getDayOfMonth(5)}}
+          </span>
+        </th>
+        <th class="text-center" width="14%">Sunday <br>
+          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(6) === currentDay.getDate()}">
+            {{getDayOfMonth(6)}}
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{getHour(0)}}</td>
+        <td rowspan="24">
+          <ng-container #day></ng-container>
+        </td>
+        <td class="" rowspan="24">
+          <ng-container #day></ng-container>
+        </td>
+        <td class="" rowspan="24">
+          <ng-container #day></ng-container>
+        </td>
+        <td class="" rowspan="24">
+          <ng-container #day></ng-container>
+        </td>
+        <td class="" rowspan="24">
+          <ng-container #day></ng-container>
+        </td>
+        <td class="" rowspan="24">
+          <ng-container #day></ng-container>
+        </td>
+        <td class="" rowspan="24">
+          <ng-container #day></ng-container>
+        </td>
+
+      </tr>
+      <tr>
+        <td>{{getHour(1)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(2)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(3)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(4)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(5)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(6)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(7)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(8)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(9)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(10)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(11)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(12)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(13)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(14)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(15)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(16)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(17)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(18)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(19)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(20)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(21)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(22)}}</td>
+      </tr>
+      <tr>
+        <td>{{getHour(23)}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

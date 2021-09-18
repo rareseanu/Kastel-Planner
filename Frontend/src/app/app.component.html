@@ -1,39 +1,46 @@
-<section class="border p-4 mb-4">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand ms-3" href="/">
-      <img src="https://scontent.fsbz1-2.fna.fbcdn.net/v/t1.6435-9/233577681_2984320091806873_4646231544780989887_n.jpg?_nc_cat=103&_nc_rgb565=1&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=RbRNbtFDnscAX9UxyOA&_nc_ht=scontent.fsbz1-2.fna&oh=a607363c30898584f9fdcba5f383cacf&oe=616121F6
-      " alt="Avatar" class="avatar">
+<nav class="navbar navbar-expand-lg navbar-light bg-white px-0 py-3">
+  <div class="container-xl">
+    <!-- Logo -->
+    <a class="navbar-brand" href="#">
+      <img
+        src="https://scontent.fsbz1-2.fna.fbcdn.net/v/t1.6435-9/233577681_2984320091806873_4646231544780989887_n.jpg?_nc_cat=103&_nc_rgb565=1&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=RbRNbtFDnscAX9UxyOA&_nc_ht=scontent.fsbz1-2.fna&oh=a607363c30898584f9fdcba5f383cacf&oe=616121F6"
+        class="h-8 avatar" alt="...">
+      Planner
     </a>
-    <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Navbar toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse me-3 d-flex justify-content-between" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3 ">
-        <li class="nav-item">
-          <a class="nav-item nav-link" routerLink="login" routerLinkActive="active" *ngIf="!currentUser">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-item nav-link" routerLink="calendar" routerLinkActive="active">Calendar</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-item nav-link" (click)="logout()" *ngIf="currentUser">Logout</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-item nav-link" *ngIf="currentUser">{{currentUser.email}}</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+    <!-- Collapse -->
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <!-- Nav -->
+      <div class="navbar-nav mx-lg-auto">
+        <a class="nav-item nav-link active" href="#" aria-current="page">Home</a>
+        <a class="nav-item nav-link active" routerLink="calendar" routerLinkActive="active">Calendar</a>
 
-  <!-- main content container -->
-  <div class="jumbotron">
-    <div class="container">
-      <div class="row highlighted">
-
-          <router-outlet></router-outlet>
+      </div>
+      <!-- Right navigation -->
+      <!-- Action -->
+      <div class="d-flex align-items-lg-center mt-3 mt-lg-0">
+        <a href="#" class="btn btn-sm btn-primary w-full w-lg-auto" routerLink="login" routerLinkActive="active"
+          *ngIf="!currentUser">
+          Sign In
+        </a>
+        <a href="#" class="btn btn-sm btn-primary w-full w-lg-auto" (click)="logout()" *ngIf="currentUser">
+          Sign Out
+        </a>
       </div>
     </div>
   </div>
+</nav>
 
-</section>
+<!-- main content container -->
+<div class="jumbotron">
+  <div class="container">
+    <div class="row">
+
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
