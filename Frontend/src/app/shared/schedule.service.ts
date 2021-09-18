@@ -33,4 +33,14 @@ export class ScheduleService {
                 catchError(this.handleError)
             );
     }
+
+    updateSchedule(schedule: Schedule) {
+        return this.http.patch<Schedule>(`${environment.BASE_API_URL}/schedules/schedule/${schedule.id}`, schedule)
+            .pipe(
+                tap(data => {
+                    console.log(data);
+                }),
+                catchError(this.handleError)
+            );
+    }
 }

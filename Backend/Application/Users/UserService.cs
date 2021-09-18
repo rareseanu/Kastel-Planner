@@ -16,6 +16,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Application.Users
 {
@@ -23,13 +24,17 @@ namespace Application.Users
     {
         private readonly IUserRepository _userRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IPersonRoleRepository _personRoleRepository;
+
         private readonly JwtConfig _jwtConfig;
 
         public UserService(IUserRepository userRepository, 
-                IRefreshTokenRepository refreshTokenRepository, IOptions<JwtConfig> jwtConfig)
+                IRefreshTokenRepository refreshTokenRepository, IPersonRoleRepository personRoleRepository,
+                    IRoleRepository roleRepository, IOptions<JwtConfig> jwtConfig)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
+            _personRoleRepository = personRoleRepository;
             _jwtConfig = jwtConfig.Value;
         }
 
@@ -68,6 +73,10 @@ namespace Application.Users
                     DateTime.Now.AddDays(7), DateTime.Now, user.Id);
             await _refreshTokenRepository.AddAsync(refreshToken);
 
+            var personRoles = await _personRoleRepository.GetAllByPredicateAsync(pr => pr.PersonId.Equals(user.PersonId),
+                    pr => pr.Role);
+            string[] roles = personRoles.Select(p => p.Role.RoleName.Value).ToArray();
+
             AuthenticateResponse response = new AuthenticateResponse()
             {
                 Id = user.Id,
@@ -75,7 +84,8 @@ namespace Application.Users
                 RefreshToken = token.Value.Value,
                 Expires = refreshToken.ExpiresAt,
                 PersonId = user.PersonId,
-                Email = user.Email.Value
+                Email = user.Email.Value,
+                Roles = roles
             };
 
             return Result.Success(response);
@@ -116,6 +126,10 @@ namespace Application.Users
 
             await _refreshTokenRepository.AddAsync(newRefreshToken);
 
+            var personRoles = await _personRoleRepository.GetAllByPredicateAsync(pr => pr.PersonId.Equals(userWithRefreshToken.PersonId),
+                pr => pr.Role);
+            string[] roles = personRoles.Select(p => p.Role.RoleName.Value).ToArray();
+
             AuthenticateResponse response = new AuthenticateResponse()
             {
                 Id = userWithRefreshToken.Id,
@@ -123,7 +137,8 @@ namespace Application.Users
                 RefreshToken = newToken.Value.Value,
                 Expires = newRefreshToken.ExpiresAt,
                 PersonId = userWithRefreshToken.PersonId,
-                Email = userWithRefreshToken.Email.Value
+                Email = userWithRefreshToken.Email.Value,
+                Roles = roles
             };
 
             return Result.Success(response);
@@ -201,7 +216,7 @@ namespace Application.Users
             var response = new List<UserResponse>();
             var users = await _userRepository.GetAllAsync();
 
-            foreach(User user in users)
+            foreach (User user in users)
             {
                 UserResponse userResponse = new UserResponse()
                 {

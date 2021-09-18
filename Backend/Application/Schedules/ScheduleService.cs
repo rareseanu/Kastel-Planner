@@ -3,6 +3,7 @@ using Application.Schedules.Requests;
 using Application.Schedules.Responses;
 using Domain;
 using Domain.Schedules;
+using Domain.Persons;
 using Domain.Schedules.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,11 @@ namespace Application.Schedules
             {
                 var weeklyLog = await _weeklyLogRepository.GetByIdAsync(schedule.WeeklyLogId);
                 var beneficiary = await _personRepository.GetByIdAsync(weeklyLog.BeneficiaryId);
+                Person volunteer = null;
+                if (schedule.VolunteerId.HasValue)
+                {
+                    volunteer = await _personRepository.GetByIdAsync(schedule.VolunteerId.Value);
+                }
 
                 var scheduleResponse = new ScheduleResponse()
                 {
@@ -79,11 +85,14 @@ namespace Application.Schedules
                     Hours = schedule.Duration.Hours,
                     Minutes = schedule.Duration.Minutes,
                     VolunteerId = schedule.VolunteerId,
+                    VolunteerFirstName = volunteer == null ? null : volunteer.Name.FirstName,
+                    VolunteerLastName = volunteer == null ? null : volunteer.Name.LastName,
                     WeeklyLogId = schedule.WeeklyLogId,
                     BeneficiaryFirstName = beneficiary.Name.FirstName,
                     BeneficiaryLastName = beneficiary.Name.LastName,
                     StartTime = weeklyLog.StartTime,
-                    DayOfWeek = weeklyLog.DayOfWeek.Name
+                    DayOfWeek = weeklyLog.DayOfWeek.Name,
+                    Date = schedule.Date
                 };
 
                 response.Add(scheduleResponse);
@@ -132,13 +141,21 @@ namespace Application.Schedules
 
             await _scheduleRepository.Update(schedule);
 
+            Person volunteer = null;
+            if (schedule.VolunteerId.HasValue)
+            {
+                volunteer = await _personRepository.GetByIdAsync(schedule.VolunteerId.Value);
+            }
+
             var response = new ScheduleResponse()
             {
                 Id = schedule.Id,
                 Hours = schedule.Duration.Hours,
                 Minutes = schedule.Duration.Minutes,
                 VolunteerId = schedule.VolunteerId,
-                WeeklyLogId = schedule.WeeklyLogId
+                WeeklyLogId = schedule.WeeklyLogId,
+                VolunteerFirstName = volunteer == null ? null : volunteer.Name.FirstName,
+                VolunteerLastName = volunteer == null ? null : volunteer.Name.LastName
             };
 
             return Result.Success(response);

@@ -27,7 +27,7 @@
           *ngIf="!currentUser">
           Sign In
         </a>
-        <a href="#" class="btn btn-sm btn-primary w-full w-lg-auto" (click)="logout()" *ngIf="currentUser">
+        <a href="#" class="btn btn-sm btn-primary w-full w-lg-auto" routerLink="login" routerLinkActive="active" (click)="logout()" *ngIf="currentUser">
           Sign Out
         </a>
       </div>

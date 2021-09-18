@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { AuthenticationService } from 'src/app/shared/authentication.service';
+import { Schedule } from 'src/app/shared/schedule.model';
+import { ScheduleService } from 'src/app/shared/schedule.service';
 
 @Component({
     selector: 'event',
@@ -6,6 +9,8 @@ import { Component } from '@angular/core';
     styleUrls: ['./event.component.css']
 })
 export class EventComponent {
+    constructor(private scheduleService: ScheduleService, private authenticationService: AuthenticationService) {}
+
     public title = '';
     public leftEdge = 0;
     public topEdge = 0;
@@ -13,8 +18,7 @@ export class EventComponent {
     public height = 0;
     public zIndex = 0;
 
-    public beneficiaryFirstName: string;
-    public beneficiaryLastName: string;
+    public schedule: Schedule;
     public startHour: number;
     public endHour: number;
 
@@ -33,6 +37,36 @@ export class EventComponent {
             } else {
                 return `${hours}:${minutes}`;
             }
+        }
+    }
+
+    public hasRole(role: string): boolean {
+        return this.authenticationService.hasRole(role);
+    }
+
+    public getCurrentUser() {
+        return this.authenticationService.getCurrentUser;
+    }
+
+    public assignSchedule() {
+        if(this.authenticationService.getCurrentUser) {
+            this.schedule.volunteerId = this.authenticationService.getCurrentUser.personId;
+            this.scheduleService.updateSchedule(this.schedule).subscribe( data => {
+                this.schedule.volunteerLastName = data.volunteerLastName;
+                this.schedule.volunteerFirstName = data.volunteerFirstName;
+            });
+        }
+    }
+
+    public unassignSchedule() {
+        if(this.authenticationService.getCurrentUser) {
+            this.schedule.volunteerId = null;
+            this.schedule.volunteerFirstName = null;
+            this.schedule.volunteerLastName = null;
+            this.scheduleService.updateSchedule(this.schedule).subscribe(data => {
+                this.schedule.volunteerLastName = data.volunteerLastName;
+                this.schedule.volunteerFirstName = data.volunteerFirstName;
+            });
         }
     }
 }

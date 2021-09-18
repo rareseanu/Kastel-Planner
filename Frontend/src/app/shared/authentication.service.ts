@@ -35,10 +35,22 @@ export class AuthenticationService {
         return throwError(errorMessage);
     }
 
+    public isAuthenticated(): boolean {
+        return this.getCurrentUser != null;
+    }
+
+    public hasRole(role: string): boolean {
+        if(this.getCurrentUser && this.getCurrentUser.roles.indexOf(role) > -1) {
+            return true;
+        }
+        return false;
+    }
+    
     login(email: string, password: string): Observable<User> {
         return this.http.post<User>(`${environment.BASE_API_URL}/login`, { email, password }, { withCredentials: true })
             .pipe(
                 tap(data => { 
+                    console.log(data);
                     this.currentUserSubject.next(data);
                     this.startRefreshTokenTimer();
                     console.log("User logged in.");

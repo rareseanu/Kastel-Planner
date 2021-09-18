@@ -87,8 +87,7 @@ export class CalendarComponent {
             component.instance.title = "event" + index++;
             component.instance.startHour = startHour;
             component.instance.endHour = endHour;
-            component.instance.beneficiaryFirstName = event.beneficiaryFirstName;
-            component.instance.beneficiaryLastName = event.beneficiaryLastName;
+            component.instance.schedule = event;
 
             this.components[CalendarComponent.days[event.dayOfWeek]].push(component);
             this.cdr.detectChanges();
