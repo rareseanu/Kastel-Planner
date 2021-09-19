@@ -27,6 +27,7 @@
           *ngIf="!currentUser">
           Sign In
         </a>
+        <span *ngIf="currentUser">{{currentUser.email}}&nbsp;</span>
         <a href="#" class="btn btn-sm btn-primary w-full w-lg-auto" routerLink="login" routerLinkActive="active" (click)="logout()" *ngIf="currentUser">
           Sign Out
         </a>

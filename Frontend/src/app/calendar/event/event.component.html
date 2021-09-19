@@ -22,9 +22,9 @@
         <p>Date: {{schedule.date}}</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button *ngIf="!schedule.volunteerId && hasRole('Volunteer')" (click)="assignSchedule()" type="button" class="btn btn-primary">Assign</button>
-        <button *ngIf="schedule.volunteerId == getCurrentUser()?.personId" (click)="unassignSchedule()" type="button" class="btn btn-primary">Unassign</button>
+        <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+        <button *ngIf="!schedule.volunteerId && hasRole('Volunteer')" (click)="assignSchedule()" type="button" class="btn btn-primary rounded-pill">Assign</button>
+        <button *ngIf="schedule.volunteerId == getCurrentUser()?.personId" (click)="unassignSchedule()" type="button" class="btn btn-primary rounded-pill">Unassign</button>
       </div>
     </div>
   </div>

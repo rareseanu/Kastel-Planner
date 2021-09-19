@@ -11,13 +11,17 @@ import { appInitializer } from './helpers/app.initializer';
 import { AuthenticationService } from './shared/authentication.service';
 import { CalendarComponent } from './calendar';
 import { EventComponent } from './calendar/event/event.component';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { ForgottenPasswordComponent } from './forgotten-password/forgotten-password.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     CalendarComponent,
-    EventComponent
+    EventComponent,
+    PasswordResetComponent,
+    ForgottenPasswordComponent
   ],
   imports: [
     BrowserModule,

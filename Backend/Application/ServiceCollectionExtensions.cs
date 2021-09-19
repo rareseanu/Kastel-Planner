@@ -7,6 +7,7 @@ using Application.PersonsRoles;
 using Application.Roles;
 using Application.Schedules;
 using Application.Users;
+using Application.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -25,6 +26,7 @@ namespace Application
             services.AddScoped<IScheduleService, ScheduleService>();
 
             services.AddHostedService<ScheduleHostedService>();
+            services.AddScoped<IEmailService, EmailService>();
         }
     }
 }

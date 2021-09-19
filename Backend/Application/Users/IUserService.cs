@@ -15,6 +15,8 @@ namespace Application.Users
         Task<Result<AuthenticateResponse>> RefreshToken(string refreshToken);
         Task<Result<RevokeTokenResponse>> RevokeToken(string refreshToken);
         Task<Result<UserResponse>> CreateUserAsync(CreateUserRequest request);
+        Task<Result<UserResponse>> ResetPassword(ResetPasswordRequest request);
+        Task<Result<UserResponse>> ForgotPassword(CreatePasswordResetToken request);
         Task<Result<UserResponse>> UpdateUserAsync(Guid userId, UpdateUserRequest request);
         Task<Result> DeleteUserAsync(Guid userId);
     }
