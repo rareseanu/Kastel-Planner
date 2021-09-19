@@ -31,9 +31,9 @@ export interface LabelFormValues {
 export class LabelFormComponent implements OnInit {
 
   
-  labelsInDropdown : any[];
+  labelsInDropdown : LabelFormValues[];
   labelForm: FormGroup;
-  selectedLabels: any[] = [];;
+  selectedLabels: LabelFormValues[] = [];;
   dropdownSettings = {};
 
   loading = false;
@@ -117,7 +117,7 @@ export class LabelFormComponent implements OnInit {
   
 
   @Output() selectedLabelsClickedEmitter = new EventEmitter();
-  onSelectedLabelsArray(value:string[]){
+  onSelectedLabelsArray(value:LabelFormValues[]){
     this.selectedLabelsClickedEmitter.emit(value);
   }
 

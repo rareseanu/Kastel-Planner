@@ -6,6 +6,8 @@ import { matchingInputsValidator } from './validators';
 
 export interface InsertUserFormValues {
   email: string;
+  personId: string;
+  password: string;
 }
 
 @Component({
@@ -37,7 +39,9 @@ export class UserFormComponent implements OnInit, ControlValueAccessor {
 
   constructor(private registerService: RegisterService,private formBuilder: FormBuilder) {
     this.userForm = this.formBuilder.group({
-      email: []
+      email: [],
+      personId: [],
+      password:[]
     });
 
     this.subscriptions.push(

@@ -126,13 +126,6 @@ export class RegisterService {
                 (response: any) => response)
             
             );
-
-           /* .pipe(
-                tap(data => { 
-                   // console.log(data);
-                }),
-                catchError(this.handleError)
-            );*/
            
         
     }
@@ -140,7 +133,8 @@ export class RegisterService {
     insertPersonLabel(labelId: string, personId: string): Observable<PersonLabel>
     {
         
-        console.log("Label id" + " " +labelId);
+        console.log("Label id from service" + " " +labelId);
+        console.log("person id from service" + " " +personId);
 
         return this.http.post<PersonLabel>(`${environment.BASE_API_URL}/person-label`, {labelId, personId})
             .pipe(
@@ -165,10 +159,10 @@ export class RegisterService {
             );
     }
 
-    insertUserEmail(email: string): Observable<InsertUser>
+    insertUserEmail(email: string, personId: string, password:string): Observable<InsertUser>
     {
     
-        return this.http.post<InsertUser>(`${environment.BASE_API_URL}/weeklylog`, {email})
+        return this.http.post<InsertUser>(`${environment.BASE_API_URL}/user`, {email, personId, password})
             .pipe(
                 tap(data => { 
                     this.userEmailSubject.next(data);
@@ -177,5 +171,7 @@ export class RegisterService {
                 catchError(this.handleError)
             );
     }
+
+
  
 }

@@ -1,7 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PersonLabel } from '../shared/person-label.model';
 import { RegisterService } from '../shared/register.service';
+
+export interface LabelFormValues {
+  id: string;
+  labelName: string;
+}
 
 @Component({
   selector: 'app-register-form',
@@ -38,7 +44,8 @@ export class RegisterFormComponent implements OnInit {
    name:string = '';
    selectedRoleFromParentComponent:string ='';
    selectedDayOfWeekFromParentComponent:string ='';
-   selectedLabelsArrayFromParentComponent: string[] = [];
+
+   selectedLabelsArrayFromParentComponent: LabelFormValues[] = [];
    
 
   ngOnInit(): void {
@@ -55,7 +62,7 @@ export class RegisterFormComponent implements OnInit {
     console.log(this.selectedDayOfWeekFromParentComponent);
   }
 
-  showSelectedLabelsArray(value:string[]){
+  showSelectedLabelsArray(value:LabelFormValues[]){
 this.selectedLabelsArrayFromParentComponent = value;
 console.log(this.selectedLabelsArrayFromParentComponent);
 
@@ -64,59 +71,78 @@ console.log(this.selectedLabelsArrayFromParentComponent);
 
 onSubmit(){
 
- // (data) => { thi.loading = false; this.register.insertPersonLabel( ...... ).subscribe( (data) => { this.registerService.insertPersonRole
+  //inserare persoana
     this.registerService.register(this.registerForm.get('person')?.value.firstName, this.registerForm.get('person')?.value.lastName, this.registerForm.get('person')?.value.phoneNumber, true)
     .subscribe(
       (data) => {
         this.insertedPersonId = data.id;
         console.log("perosn id from register()" + data.id);
-          this.loading = false;
+          this.loading = false;  
 
-          
+
+          //inserare label
+          for (let i=0; i<this.selectedLabelsArrayFromParentComponent.length;i++)
+          {
+            console.log("from register:" + " " + this.selectedLabelsArrayFromParentComponent[i].id);
+            this.registerService.insertPersonLabel (this.selectedLabelsArrayFromParentComponent[i].id, this.insertedPersonId)
+                .subscribe(
+                    (data) => {
+                                this.loading = false;
+                     },
+                    (error) => {
+                              this.error = error;
+                              this.loading = false;
+                    });
+
+          } 
+
+
+          //inserare rol
+
           this.registerService.insertPersonRole (this.selectedRoleFromParentComponent,this.insertedPersonId)
-    .subscribe(
-      (data) => {
-        console.log("perosn id from insertPersonRole" + data.personId);
-        console.log("role id from insertPersonRole" + data.roleId);
-          this.loading = false;
-           //daca rolul persoanei este de beneficiar
-      if(this.selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d')
-         {
-            this.registerService.insertWeeklyLog (this.registerForm.get('beneficiary')?.value.startTime, this.selectedDayOfWeekFromParentComponent, this.insertedPersonId)
-            .subscribe(
-                 (data) => {
+          .subscribe(
+            (data) => {
+              console.log("perosn id from insertPersonRole" + data.personId);
+              console.log("role id from insertPersonRole" + data.roleId);
+                this.loading = false;
+                 //daca rolul persoanei este de beneficiar
+            if(this.selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d')
+               {
+                  this.registerService.insertWeeklyLog (this.registerForm.get('beneficiary')?.value.startTime, this.selectedDayOfWeekFromParentComponent, this.insertedPersonId)
+                  .subscribe(
+                       (data) => {
+            
+                                  this.loading = false;
+                                  },
+                      (error) => {
+                                this.error = error;
+                                this.loading = false;
+              });
+            }
+            //daca rolul persoanei este de voluntar
+            else if (this.selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434')
+            {
+               this.registerService.insertUserEmail (this.registerForm.get('user')?.value.email, this.insertedPersonId, "123456Az*")
+          .subscribe(
+            (data) => {
       
-                            this.loading = false;
-                            },
-                (error) => {
-                          this.error = error;
-                          this.loading = false;
-        });
-      }
-      //daca rolul persoanei este de volntar
-      else if (this.selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434')
-      {
-        this.registerService.insertUserEmail (this.registerForm.get('user')?.value.email)
-    .subscribe(
-      (data) => {
-
-          this.loading = false;
-      },
-      (error) => {
-          this.error = error;
-          this.loading = false;
-      });
-
-      }
-
-
-      },
-      (error) => {
-          this.error = error;
-          this.loading = false;
-      });
- 
+                this.loading = false;
+            },
+            (error) => {
+                this.error = error;
+                this.loading = false;
+            });
       
+            }
+                
+      
+            },
+            (error) => {
+                this.error = error;
+                this.loading = false;
+            });
+          
+          
       },
       (error) => {
           this.error = error;
@@ -135,7 +161,7 @@ onSubmit(){
       (error) => {
           this.error = error;
           this.loading = false;
-      });
+      });*/
 
 
    /*this.registerService.insertPersonLabel ("b8b57560-025f-492c-a7ac-435d86ca18c3","89083b49-bf0d-4be7-bcb2-853836e5081f")
@@ -157,7 +183,76 @@ onSubmit(){
       (error) => {
           this.error = error;
           this.loading = false;
+      });/*
+
+     /* this.registerService.register(this.registerForm.get('person')?.value.firstName, this.registerForm.get('person')?.value.lastName, this.registerForm.get('person')?.value.phoneNumber, true)
+    .subscribe(
+      (data) => {
+        this.insertedPersonId = data.id;
+        console.log("perosn id from register()" + data.id);
+          this.loading = false;
+
+          for (let i=0; i<this.selectedLabelsArrayFromParentComponent.length;i++)
+          {
+            console.log("from register:" + " " + this.selectedLabelsArrayFromParentComponent[i].id);
+            this.registerService.insertPersonLabel (this.selectedLabelsArrayFromParentComponent[i].id, this.insertedPersonId)
+                .subscribe(
+                    (data) => {
+                                this.loading = false;
+                     },
+                    (error) => {
+                              this.error = error;
+                              this.loading = false;
+                    });
+
+          }
+
+
+      },
+      (error) => {
+          this.error = error;
+          this.loading = false;
       });*/
+
+
+     /* this.registerService.insertPersonLabel("b8b57560-025f-492c-a7ac-435d86ca18c4", "a93fb416-d6a6-4a34-a0fd-8e570cac2f54")
+    .subscribe(
+      (data) => {
+    
+          this.loading = false;
+      },
+      (error) => {
+          this.error = error;
+          this.loading = false;
+      });*/
+
+
+
+
+           /* this.registerService.register(this.registerForm.get('person')?.value.firstName, this.registerForm.get('person')?.value.lastName, this.registerForm.get('person')?.value.phoneNumber, true)
+    .subscribe(
+      (data) => {
+        this.insertedPersonId = data.id;
+        console.log("perosn id from register()" + data.id);
+          this.loading = false;
+          this.registerService.insertUserEmail (this.registerForm.get('user')?.value.email, this.insertedPersonId, "123456Az*")
+          .subscribe(
+            (data) => {
+      
+                this.loading = false;
+            },
+            (error) => {
+                this.error = error;
+                this.loading = false;
+            });
+
+
+      },
+      (error) => {
+          this.error = error;
+          this.loading = false;
+      });*/
+
  } 
 
 }
