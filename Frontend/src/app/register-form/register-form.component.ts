@@ -119,8 +119,22 @@ onSubmit(){
                                 this.loading = false;
               });
             }
-            //daca rolul persoanei este de voluntar
+            //daca rolul persoanei este de voluntar sau admin 
             else if (this.selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434')
+            {
+               this.registerService.insertUserEmail (this.registerForm.get('user')?.value.email, this.insertedPersonId, "123456Az*")
+          .subscribe(
+            (data) => {
+      
+                this.loading = false;
+            },
+            (error) => {
+                this.error = error;
+                this.loading = false;
+            });
+      
+            }
+            else (this.selectedRoleFromParentComponent == 'fd42c927-402f-446c-a62a-12e3c8dda3d8')
             {
                this.registerService.insertUserEmail (this.registerForm.get('user')?.value.email, this.insertedPersonId, "123456Az*")
           .subscribe(

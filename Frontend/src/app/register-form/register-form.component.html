@@ -3,7 +3,7 @@
     <app-person-form formControlName="person"></app-person-form>
     <app-label-form formControlName="label" (selectedLabelsClickedEmitter) = 'showSelectedLabelsArray($event)'></app-label-form>
     <app-role-form formControlName="role" (roleClickedEmitter)='showNextRoleComponent($event)'></app-role-form>
-    <app-user-form formControlName="user" *ngIf="selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434'"></app-user-form>
+    <app-user-form formControlName="user" *ngIf="selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434' || selectedRoleFromParentComponent == 'fd42c927-402f-446c-a62a-12e3c8dda3d8'"></app-user-form>
     <app-beneficiary-form 
         formControlName="beneficiary" 
         *ngIf="selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d'"
