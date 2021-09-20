@@ -40,9 +40,10 @@ export class PersonFormComponent implements OnInit, ControlValueAccessor, OnDest
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router) {
+      const PAT_NAME = "^[a-zA-Z]{2,20}$";
       this.personForm = this.formBuilder.group({
-        firstName: [],
-        lastName: [],
+        firstName: ['', [Validators.required, Validators.pattern(PAT_NAME)]],
+        lastName: ['', [Validators.required, Validators.pattern(PAT_NAME)]],
         phoneNumber: []
      });
 
@@ -55,6 +56,7 @@ export class PersonFormComponent implements OnInit, ControlValueAccessor, OnDest
     }
   ngOnInit(): void {
     
+   
   }
 
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Beneficiary } from '../shared/beneficiary.model';
 import { RegisterService } from '../shared/register.service';
@@ -40,8 +40,11 @@ export class BeneficiaryFormComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
   constructor(private registerService: RegisterService, private formBuilder: FormBuilder) {
+
+    const PAT_HOUR = "^(1[0-9]|2[0-4]):[0-5][0-9]:[0-5][0-9]$";
+
     this.beneficiaryForm = this.formBuilder.group({
-      startTime: [],
+      startTime: ['', [Validators.required, Validators.pattern(PAT_HOUR)]],
       dayOfWeek: [], 
       beneficiaryId: []
     });

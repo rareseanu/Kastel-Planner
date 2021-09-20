@@ -1,9 +1,9 @@
 
   <div class="mb-3">
-
+    
 <form [formGroup]="labelForm">
   <ng-multiselect-dropdown
-  [placeholder]="'Person label'"
+  [placeholder]="'Optional: Choose person working ability'"
   [data]="labelsInDropdown"
   [(ngModel)]="selectedLabels"
   [settings]="dropdownSettings"
@@ -12,6 +12,7 @@
 
 >
 </ng-multiselect-dropdown>
+
 </form>
 </div>
 

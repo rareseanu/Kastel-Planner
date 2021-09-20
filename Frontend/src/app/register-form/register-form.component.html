@@ -1,16 +1,45 @@
 <div class="col-sm-8 offset-sm-2">
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <app-person-form formControlName="person"></app-person-form>
+    <app-person-form formControlName="person" [class.error]="registerForm.get('person')?.invalid"></app-person-form>
+    
     <app-label-form formControlName="label" (selectedLabelsClickedEmitter) = 'showSelectedLabelsArray($event)'></app-label-form>
     <app-role-form formControlName="role" (roleClickedEmitter)='showNextRoleComponent($event)'></app-role-form>
     <app-user-form formControlName="user" *ngIf="selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434' || selectedRoleFromParentComponent == 'fd42c927-402f-446c-a62a-12e3c8dda3d8'"></app-user-form>
     <app-beneficiary-form 
         formControlName="beneficiary" 
         *ngIf="selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d'"
-        (dayOfWeekClickedEmitter)='showNextDayOfTheWeekComponent($event)'>
+        (dayOfWeekClickedEmitter)='showNextDayOfTheWeekComponent($event)'
+        >
     </app-beneficiary-form>
+
+
     <div class="d-grid gap-2 col-2 mx-auto">
-      <button class="btn btn-primary">Sign Up</button>
+
+      <button class="btn btn-warning" *ngIf="selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434' || selectedRoleFromParentComponent == 'fd42c927-402f-446c-a62a-12e3c8dda3d8'"
+        [disabled]="registerForm.get('person')?.invalid ||         
+        registerForm.get('beneficiary')?.invalid ||
+        registerForm.get('user')?.invalid" 
+        >
+        
+        
+        Sign Up
+    </button>
+  </div>
+
+  <div class="d-grid gap-2 col-2 mx-auto">
+    
+      <button class="btn btn-primary" *ngIf="selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d'"
+            [disabled]="registerForm.get('person')?.invalid ||       
+            selectedDayOfWeekFromParentComponent == '' ||
+            registerForm.get('user')?.invalid">
+            
+            
+            Sign Up
+        </button>
+
+      
+
+    
   </div>
   </form>
 </div>
@@ -21,7 +50,7 @@
 
 
 <pre>
-  {{registerForm.value| json}}
+  {{registerForm.get('person')?.value.firstName | json}}
  
 </pre>
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PersonLabel } from '../shared/person-label.model';
 import { RegisterService } from '../shared/register.service';
@@ -33,8 +33,8 @@ export class RegisterFormComponent implements OnInit {
     
     {
     this.registerForm = this.formBuilder.group({
-      person: [],
-      label: [],
+      person: new FormControl({ firstName: '', lastName: '', phoneNumber: '' }),
+      label: new FormControl({ id: '', labelName: '' }),
       role: [],
       user: [],
       beneficiary:[]
@@ -70,6 +70,10 @@ console.log(this.selectedLabelsArrayFromParentComponent);
 
 
 onSubmit(){
+
+  if (this.registerForm.invalid) {
+    return;
+  }
 
   //inserare persoana
     this.registerService.register(this.registerForm.get('person')?.value.firstName, this.registerForm.get('person')?.value.lastName, this.registerForm.get('person')?.value.phoneNumber, true)
@@ -162,6 +166,8 @@ onSubmit(){
           this.error = error;
           this.loading = false;
       });
+
+      this.submitted = true;
 
 
       /*
@@ -266,6 +272,21 @@ onSubmit(){
           this.error = error;
           this.loading = false;
       });*/
+
+   /* this.registerService.register(this.registerForm.get('person')?.value.firstName, this.registerForm.get('person')?.value.lastName, this.registerForm.get('person')?.value.phoneNumber, true)
+    .subscribe(
+      (data) => {
+        this.insertedPersonId = data.id;
+        console.log("perosn id from register()" + data.id);
+          this.loading = false;
+
+      },
+      (error) => {
+          this.error = error;
+          this.loading = false;
+      });
+*/
+     
 
  } 
 

@@ -38,8 +38,9 @@ export class UserFormComponent implements OnInit, ControlValueAccessor {
   subscriptions: Subscription[] = [];
 
   constructor(private registerService: RegisterService,private formBuilder: FormBuilder) {
+    const PAT_EMAIL = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z]+$";
     this.userForm = this.formBuilder.group({
-      email: [],
+      email: ['', [Validators.required, Validators.pattern(PAT_EMAIL)]],
       personId: [],
       password:[]
     });

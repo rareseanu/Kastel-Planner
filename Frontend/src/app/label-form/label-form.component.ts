@@ -42,6 +42,7 @@ export class LabelFormComponent implements OnInit {
   error: string;
   subscriptions: Subscription[] = [];
   formControls: any;
+  requiredField: boolean = false;
 
   get labelsFormArray() {
     return this.labelForm.controls.labels as FormArray;
@@ -128,10 +129,11 @@ export class LabelFormComponent implements OnInit {
       idField: 'id',
       textField: 'labelName'
     };
-    
-  
+
+
      
   }
+
 
   onItemSelect(item: any) {
     this.selectedLabels.push(item);

@@ -3,7 +3,15 @@
 <form [formGroup]="beneficiaryForm">
     <div class="mb-3">
         <label for="start-time" class="form-label">Time</label>
-        <input formControlName="startTime" class="form-control" id="start-time" placeholder="hh:mm:ss" />
+        <input formControlName="startTime" class="form-control" id="start-time" placeholder="hh:mm:ss"
+        [ngClass]="{ 'is-invalid': (submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid) }">
+
+        <div class="invalid-feedback"
+        *ngIf="(submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid)">
+        <div *ngIf="beneficiaryForm.controls.startTime.errors?.required">Hour is required</div>
+        <div *ngIf="beneficiaryForm.controls.startTime.errors?.pattern">hh:mm:ss format</div>
+
+         </div>
     </div>
 
     <div class="mb-3">
