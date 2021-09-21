@@ -22,7 +22,10 @@ export class CalendarComponent {
     events: Schedule[];
 
     public currentWeekMonday: Date;
+    public currentWeekSunday: Date;
     public currentDay: Date;
+    public currentMonth: string;
+    public currentYear: any;
 
     public startHour = 8;
 
@@ -33,8 +36,25 @@ export class CalendarComponent {
     lastIndex0Pos: number;
 
     constructor(private resolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef, private scheduleService: ScheduleService) { 
-        this.currentDay = new Date();
+        this.loadWeek(new Date());
+    }
+
+    loadWeek(day: Date) {
+        this.currentDay = day;
         this.currentWeekMonday = this.getMonday(this.currentDay);
+        this.currentWeekSunday = new Date(this.currentWeekMonday.getTime() + (6 * 24 * 60 * 60 * 1000));
+        this.currentMonth = this.currentDay.toLocaleString('default', { month: 'long' });
+        this.currentYear = this.currentDay.getFullYear();
+    }
+
+    loadNextWeek() {
+        this.loadWeek(new Date(this.currentDay.getTime() + (7 * 24 * 60 * 60 * 1000)));
+        this.loadEventComponents();
+    }
+
+    loadPreviousWeek() {
+        this.loadWeek(new Date(this.currentDay.getTime() + (-7 * 24 * 60 * 60 * 1000)));
+        this.loadEventComponents();
     }
 
     getHour(offset: number) {
@@ -50,7 +70,9 @@ export class CalendarComponent {
     }
 
     getDayOfMonth(days: number) {
-        return this.currentWeekMonday.getDate() + days;
+        let newDate = new Date();
+        newDate.setDate(this.currentWeekMonday.getDate() + days);
+        return newDate.getDate();
     }
 
     getMonday(d: Date) {
@@ -65,7 +87,20 @@ export class CalendarComponent {
         for(var day = 0; day < 7; ++day) {
             this.components.push([]);
         }
-        this.scheduleService.getAllSchedules().subscribe(data => {
+        this.scheduleService.getAllSchedules(this.currentWeekMonday, this.currentWeekSunday).subscribe(data => {
+            this.events = data;
+            this.setupEventComponents();
+        });
+    }
+
+    loadEventComponents() {
+        for(let day = 0; day < 7; ++day) {
+            for(let component of this.components[day]) {
+                component.destroy();
+            }
+            this.components[day] = [];
+        }
+        this.scheduleService.getAllSchedules(this.currentWeekMonday, this.currentWeekSunday).subscribe(data => {
             this.events = data;
             this.setupEventComponents();
         });
@@ -78,11 +113,18 @@ export class CalendarComponent {
         for(let event of this.events) {
             const component = containers[CalendarComponent.days[event.dayOfWeek]-1].createComponent(factory);
 
-            let startHour = event.startTime.hours + event.startTime.minutes / 60;
+            let parsedHour = new Date(`2021-01-21 ${event.startTime}`);
+            console.log(parsedHour);
+            let startHour = parsedHour.getHours() + parsedHour.getMinutes() / 60;
             let endHour = startHour + event.minutes / 60;
             let duration = endHour - startHour;
+            console.log(startHour);
 
-            component.instance.topEdge = 40 * startHour + (41 * (24 - this.startHour));
+            if(this.startHour < startHour) {
+                component.instance.topEdge = 41 * (startHour - this.startHour);
+            } else {
+                component.instance.topEdge = 41 * (24 - Math.abs(this.startHour - startHour));
+            }
             component.instance.height = 40 * duration;
             component.instance.title = "event" + index++;
             component.instance.startHour = startHour;

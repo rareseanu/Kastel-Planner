@@ -63,11 +63,14 @@ namespace Application.Schedules
             return Result.Success();
         }
 
-        public async Task<IList<ScheduleResponse>> GetAllSchedulesAsync()
+        public async Task<IList<ScheduleResponse>> GetAllSchedulesAsync(GetSchedulesRequest request)
         {
-            var response = new List<ScheduleResponse>();
+            DateTime endTime = request.EndTime == null ? DateTime.MaxValue : request.EndTime.Value;
 
-            var schedules = await _scheduleRepository.GetAllAsync();
+            var response = new List<ScheduleResponse>();
+            var test = await _scheduleRepository.GetAllAsync();
+            var schedules = request.StartTime == null ? await _scheduleRepository.GetAllAsync()
+                    : await _scheduleRepository.GetAllByPredicateAsync(s => s.Date.Date >= request.StartTime.Value.Date && s.Date.Date <= endTime.Date);
 
             foreach (var schedule in schedules)
             {

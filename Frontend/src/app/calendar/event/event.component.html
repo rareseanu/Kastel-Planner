@@ -19,7 +19,7 @@
         <p>Beneficiary: {{schedule.beneficiaryFirstName}} {{schedule.beneficiaryLastName}}</p>
         <p>Assigned to: {{schedule.volunteerId ? schedule.volunteerFirstName : 'No one'}}</p>
         <p>Time interval: {{renderHour(startHour)}}-{{renderHour(endHour)}}</p>
-        <p>Date: {{schedule.date}}</p>
+        <p>Date: {{schedule.date | date:'dd/MM/yyyy'}}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>

@@ -4,7 +4,7 @@ export class Schedule {
     public dayOfWeek: string;
     public beneficiaryFirstName: string;
     public beneficiaryLastName: string;
-    public startTime: { hours: number, minutes: number};
+    public startTime: string;
     public weeklyLogId: string;
     public volunteerId: string | null;
     public volunteerFirstName: string | null;

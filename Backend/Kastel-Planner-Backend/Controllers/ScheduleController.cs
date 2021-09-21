@@ -1,6 +1,4 @@
-﻿using Application.Labels;
-using Application.Labels.Requests;
-using Application.Schedules;
+﻿using Application.Schedules;
 using Application.Schedules.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,9 +16,10 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [Route("schedules")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] GetSchedulesRequest request)
         {
-            var schedules = await _scheduleService.GetAllSchedulesAsync();
+            
+            var schedules = await _scheduleService.GetAllSchedulesAsync(request);
             return Ok(schedules);
         }
 

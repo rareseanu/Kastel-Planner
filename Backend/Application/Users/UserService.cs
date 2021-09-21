@@ -58,7 +58,7 @@ namespace Application.Users
                 return Result.Failure<AuthenticateResponse>($"User {request.Email} was not found.");
             }
 
-            if(user.Password.PasswordHash == null)
+            if(user.Password == null)
             {
                 return Result.Failure<AuthenticateResponse>("First time log in detected. Please choose a password.");
             }
@@ -221,6 +221,10 @@ namespace Application.Users
         public async Task<Result<UserResponse>> ForgotPassword(CreatePasswordResetToken request)
         {
             Result<Email> userEmailOrError = Email.Create(request.Email);
+            if (userEmailOrError.IsFailure)
+            {
+                return Result.Failure<UserResponse>(userEmailOrError.Error);
+            }
 
             User foundUser = await _userRepository.GetFirstByPredicateAsync(u =>
                     u.Email.Value == userEmailOrError.Value.Value);
@@ -284,6 +288,7 @@ namespace Application.Users
                 Email = foundUser.Email.Value,
                 ResetPasswordToken = token.Token.Value
             };
+            await _resetPasswordTokenRepository.Delete(token);
 
             return Result.Success(userResponse);
         }

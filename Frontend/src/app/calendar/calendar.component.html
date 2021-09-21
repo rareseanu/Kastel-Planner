@@ -1,6 +1,28 @@
 <div class="table-responsive">
   <hr class="my-2">
-  <h1 class="display-4 fw-bold"> Calendar </h1>
+  <div class="row">
+    <div class="col-6">
+      <h3 class="fw-bold"> {{currentMonth}} {{currentYear}} </h3>
+    </div>
+    <div class="col-6">
+      <button type="button" (click)="loadNextWeek()" class="weekNavigation btn btn-primary rounded-circle float-end text-center me-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right"
+          viewBox="0 0 16 16">
+          <path fill-rule="evenodd"
+            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+        </svg>
+      </button>
+      <button (click)="loadPreviousWeek()" type="button"
+        class="weekNavigation btn btn-primary rounded-circle float-end text-center me-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left"
+          viewBox="0 0 16 16">
+          <path fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+        </svg>
+      </button>
+    </div>
+
+  </div>
   <hr class="my-2">
   <table class="calendar table table-bordered">
     <thead>
@@ -8,38 +30,38 @@
         <th>&nbsp;</th>
         <th class="text-center" width="14%">Monday
           <br>
-          <span class="dayOfWeek" [ngClass] = "{'currentDay' : getDayOfMonth(0) === currentDay.getDate()}">
+          <span class="dayOfWeek" [ngClass]="{'currentDay' : getDayOfMonth(0) === currentDay.getDate()}">
             {{getDayOfMonth(0)}}
           </span>
         </th>
 
         <th class="text-center" width="14%">Tuesday <br>
-          <span [ngClass] = "{'currentDay' : getDayOfMonth(1) === currentDay.getDate()}">
+          <span class="dayOfWeek"  [ngClass]="{'currentDay' : getDayOfMonth(1) === currentDay.getDate()}">
             {{getDayOfMonth(1)}}
           </span>
         </th>
         <th class="text-center" width="14%">Wednesday <br>
-          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(2) === currentDay.getDate()}">
+          <span class="dayOfWeek" [ngClass]="{'currentDay' : getDayOfMonth(2) === currentDay.getDate()}">
             {{getDayOfMonth(2)}}
           </span>
         </th>
         <th class="text-center" width="14%">Thursday <br>
-          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(3) === currentDay.getDate()}">
+          <span class="dayOfWeek" [ngClass]="{'currentDay' : getDayOfMonth(3) === currentDay.getDate()}">
             {{getDayOfMonth(3)}}
           </span>
         </th>
         <th class="text-center" width="14%">Friday <br>
-          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(4) === currentDay.getDate()}">
+          <span class="dayOfWeek" [ngClass]="{'currentDay' : getDayOfMonth(4) === currentDay.getDate()}">
             {{getDayOfMonth(4)}}
           </span>
         </th>
         <th class="text-center" width="14%">Saturday <br>
-          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(5) === currentDay.getDate()}">
+          <span class="dayOfWeek" [ngClass]="{'currentDay' : getDayOfMonth(5) === currentDay.getDate()}">
             {{getDayOfMonth(5)}}
           </span>
         </th>
         <th class="text-center" width="14%">Sunday <br>
-          <span class="dayOfWeek"  [ngClass] = "{'currentDay' : getDayOfMonth(6) === currentDay.getDate()}">
+          <span class="dayOfWeek" [ngClass]="{'currentDay' : getDayOfMonth(6) === currentDay.getDate()}">
             {{getDayOfMonth(6)}}
           </span>
         </th>

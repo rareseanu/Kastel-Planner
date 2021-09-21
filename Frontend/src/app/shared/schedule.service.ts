@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, throwError } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
@@ -24,8 +24,16 @@ export class ScheduleService {
         return throwError(errorMessage);
     }
 
-    getAllSchedules(): Observable<Schedule[]> {
-        return this.http.get<Schedule[]>(`${environment.BASE_API_URL}/schedules`)
+    getAllSchedules(startTime?: Date, endTime?: Date): Observable<Schedule[]> {
+        let params = new HttpParams();
+        if(startTime) {
+            params = params.append('startTime', startTime.toISOString());
+        }
+        
+        if(endTime) {
+            params = params.append('endTime', endTime.toISOString());
+        }
+        return this.http.get<Schedule[]>(`${environment.BASE_API_URL}/schedules`, {params: params})
             .pipe(
                 tap(data => {
                     console.log(data);
