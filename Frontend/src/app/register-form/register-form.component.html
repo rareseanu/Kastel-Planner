@@ -1,4 +1,9 @@
-<div class="col-sm-8 offset-sm-2">
+
+
+<div class="col-sm-8 offset-sm-2" style="box-shadow: 10px 10px 10px 10px rgba(167, 157, 115, 0.562);">
+  <div class="register-form-title">
+    <h2>Registration form</h2>
+  </div>  
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <app-person-form formControlName="person" [class.error]="registerForm.get('person')?.invalid"></app-person-form>
     
@@ -19,23 +24,27 @@
         [disabled]="registerForm.get('person')?.invalid ||         
         registerForm.get('beneficiary')?.invalid ||
         registerForm.get('user')?.invalid" 
+        data-toggle="tooltip" data-placement="top" title="Tooltip on top"
         >
-        
-        
         Sign Up
+ 
     </button>
   </div>
 
   <div class="d-grid gap-2 col-2 mx-auto">
     
-      <button class="btn btn-primary" *ngIf="selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d'"
+
+
+
+      <button class="btn btn-warning" *ngIf="selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d'"
             [disabled]="registerForm.get('person')?.invalid ||       
             selectedDayOfWeekFromParentComponent == '' ||
             registerForm.get('user')?.invalid">
             
-            
+   
             Sign Up
         </button>
+
 
       
 

@@ -1,8 +1,11 @@
+<div class="col-sm-8 offset-sm-2" style="margin-top: 50px;">
 <h4>Beneficiary info</h4>
 <h6>Please provide the time and the day of the week when beneficiary is available</h6>
 <form [formGroup]="beneficiaryForm">
+
+
     <div class="mb-3">
-        <label for="start-time" class="form-label">Time</label>
+        <label for="start-time" class="form-label" style="font-weight: bold;">Time</label>
         <input formControlName="startTime" class="form-control" id="start-time" placeholder="hh:mm:ss"
         [ngClass]="{ 'is-invalid': (submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid) }">
 
@@ -15,7 +18,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="day" class="form-label">Day Of The Week</label>
+        <label for="day" class="form-label" style="font-weight: bold;">Day Of The Week</label>
         <select #dayOfWeekSelect 
                 class="form-select"
                 formControlName="dayOfWeek"
@@ -33,5 +36,6 @@
         </select>
     </div>
 </form>
+</div>
 
 {{beneficiaryForm.value| json}}

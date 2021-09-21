@@ -1,8 +1,7 @@
 <div class="col-sm-8 offset-sm-2">
-    <h2>Register</h2>
 <div [formGroup]="personForm">
     <div class="mb-3">
-        <label for="first-name" class="form-label">First Name</label>
+        <label for="first-name" class="form-label" style="font-weight: bold;">First Name</label>
         <input formControlName="firstName" class="form-control" id="first-name"
   [ngClass]="{ 'is-invalid': (submitted && personForm.controls.firstName.errors) || (!personForm.controls.firstName.pristine && personForm.controls.firstName.invalid) }">
 
@@ -17,7 +16,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="last-name">Last Name</label>
+        <label for="last-name" class="form-label" style="font-weight: bold;">Last Name</label>
         <input formControlName="lastName" class="form-control" id="last-name"
 
         [ngClass]="{ 'is-invalid': (submitted && personForm.controls.lastName.errors) || (!personForm.controls.lastName.pristine && personForm.controls.firstName.invalid) }">
@@ -31,7 +30,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="phone-number">Phone Number</label>
+        <label for="phone-number" class="form-label" style="font-weight: bold;">Phone Number</label>
         <input formControlName="phoneNumber" class="form-control" id="phone-number"/>
 
 

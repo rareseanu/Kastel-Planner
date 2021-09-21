@@ -1,2 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
+  
+  .tool-tip [disabled] {
+    pointer-events: none;
+  }
+
+  .register-form-title {
+    font-family: "Roboto", sans-serif;
+    margin:30px auto;
+    background:linear-gradient(to right, #ffe23b 0%, #f3ea97 50%, #f7eed2 99%);
+    margin-bottom: 50px;
+    text-align: center;
+  }
