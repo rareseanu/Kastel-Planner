@@ -5,7 +5,7 @@
     <select 
     #myRoleSelect 
     class="form-select"
-    (click)="selectedHandlerRoleName($event)" 
+    (click)="selectedHandlerRoleName($event);selectedRoleName()" 
     (change)="onRoleSelected(myRoleSelect.value)"
     formControlName="id">
         <option value ="default" disabled selected>Choose person's role</option>

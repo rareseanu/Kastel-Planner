@@ -104,18 +104,38 @@ export class RoleFormComponent implements OnInit {
   }
 
   //methods to get dropdown values
-  dropDownRole: string = '';
-  selectedRole: string ='';
+  dropDownRole: string;
+  status: RoleFormValues;
 
   selectedHandlerRoleName(event : any)
   {
     if(event.target.value != 'default') 
       { this.dropDownRole = event.target.value;}
     else 
-      {this.dropDownRole = '';}
+      {this.dropDownRole = '';
+         
+      }
 
-      //console.log(this.dropDownRole);
+      this.setSelectedRoleName(this.dropDownRole);
   }
+
+  dropDownRoleNanme: string;
+  
+  setSelectedRoleName(value: string): void {
+
+    if (this.rolesInDropdown && value) {
+        let status = this.rolesInDropdown.find(s => s.id == value);
+       if (status)
+         this.dropDownRoleNanme = status.roleName;
+     }
+     else
+        this.dropDownRoleNanme = '';
+   }
+
+   @Output() sendSelectedRoleNameEmmiter = new EventEmitter();
+   selectedRoleName() : void{
+     this.sendSelectedRoleNameEmmiter.emit(this.dropDownRoleNanme);
+   }
 
   @Output() roleClickedEmitter = new EventEmitter();
   onRoleSelected(value:string){
@@ -129,6 +149,7 @@ export class RoleFormComponent implements OnInit {
   ngOnInit(): void {
     this.displayRoles();
     this.onRoleSelected(this.dropDownRole);
+   
   }
 
 }

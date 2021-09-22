@@ -42,6 +42,7 @@ export class RegisterFormComponent implements OnInit {
    }
 
    name:string = '';
+   selectedRoleName= '';
    selectedRoleFromParentComponent:string ='';
    selectedDayOfWeekFromParentComponent:string ='';
 
@@ -55,6 +56,11 @@ export class RegisterFormComponent implements OnInit {
   showNextRoleComponent(value:string) {
     this.selectedRoleFromParentComponent = value;
     console.log(this.selectedRoleFromParentComponent);
+  }
+
+  showSelectedRoleName(value:string) : void {
+    this.selectedRoleName = value;
+    console.log("dsdas" + this.selectedRoleName);
   }
 
   showNextDayOfTheWeekComponent(value:string) {

@@ -8,11 +8,11 @@
     <app-person-form formControlName="person" [class.error]="registerForm.get('person')?.invalid"></app-person-form>
     
     <app-label-form formControlName="label" (selectedLabelsClickedEmitter) = 'showSelectedLabelsArray($event)'></app-label-form>
-    <app-role-form formControlName="role" (roleClickedEmitter)='showNextRoleComponent($event)'></app-role-form>
-    <app-user-form formControlName="user" *ngIf="selectedRoleFromParentComponent == '73acf2bb-7bca-4ab2-b3ca-c4dbe71a198d' || selectedRoleFromParentComponent == 'f974b6f0-0bd3-4f27-aac2-17b9c4f082f4'"></app-user-form>
+    <app-role-form formControlName="role" (roleClickedEmitter)='showNextRoleComponent($event)' (sendSelectedRoleNameEmmiter)='showSelectedRoleName($event)'></app-role-form>
+    <app-user-form formControlName="user" *ngIf="selectedRoleName == 'Admin' || selectedRoleName == 'Volunteer'"></app-user-form>
     <app-beneficiary-form 
         formControlName="beneficiary" 
-        *ngIf="selectedRoleFromParentComponent == 'dc3b93f0-b60b-4659-b966-60350c7639db'"
+        *ngIf="selectedRoleName == 'Beneficiary'"
         (dayOfWeekClickedEmitter)='showNextDayOfTheWeekComponent($event)'
         >
     </app-beneficiary-form>
@@ -20,7 +20,7 @@
 
     <div class="d-grid gap-2 col-2 mx-auto">
 
-      <button class="btn btn-warning" *ngIf="selectedRoleFromParentComponent == '73acf2bb-7bca-4ab2-b3ca-c4dbe71a198d' || selectedRoleFromParentComponent == 'f974b6f0-0bd3-4f27-aac2-17b9c4f082f4'"
+      <button class="btn btn-warning" *ngIf="selectedRoleName == 'Admin' || selectedRoleName == 'Volunteer'"
         [disabled]="registerForm.get('person')?.invalid ||         
         registerForm.get('beneficiary')?.invalid ||
         registerForm.get('user')?.invalid" 
@@ -35,7 +35,7 @@
   
 
 
-      <button class="btn btn-warning" *ngIf="selectedRoleFromParentComponent == 'dc3b93f0-b60b-4659-b966-60350c7639db'"
+      <button class="btn btn-warning" *ngIf="selectedRoleName == 'Beneficiary'"
             [disabled]="registerForm.get('person')?.invalid ||       
             selectedDayOfWeekFromParentComponent == '' ||
             registerForm.get('user')?.invalid">
@@ -49,6 +49,5 @@
   </div>
   </form>
 </div>
-
 
 
