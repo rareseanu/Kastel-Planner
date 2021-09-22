@@ -5,7 +5,7 @@
 
 
     <div class="mb-3">
-        <label for="start-time" class="form-label" style="font-weight: bold;">Time</label>
+        <div class="form-group required"><label for="start-time" class="form-label" style="font-weight: bold;">Time</label></div>
         <input formControlName="startTime" class="form-control" id="start-time" placeholder="hh:mm:ss"
         [ngClass]="{ 'is-invalid': (submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid) }">
 
@@ -18,7 +18,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="day" class="form-label" style="font-weight: bold;">Day Of The Week</label>
+        <div class="form-group required"> <label for="day" class="form-label" style="font-weight: bold;">Day Of The Week</label></div>
         <select #dayOfWeekSelect 
                 class="form-select"
                 formControlName="dayOfWeek"
@@ -37,5 +37,3 @@
     </div>
 </form>
 </div>
-
-{{beneficiaryForm.value| json}}

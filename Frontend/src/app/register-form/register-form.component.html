@@ -1,9 +1,9 @@
-
-
 <div class="col-sm-8 offset-sm-2" style="box-shadow: 10px 10px 10px 10px rgba(167, 157, 115, 0.562);">
   <div class="register-form-title">
     <h2>Registration form</h2>
   </div>  
+
+  <p style="text-align: center; margin-bottom: 50px;">Fields marked with an asterisk (*) are required</p>
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <app-person-form formControlName="person" [class.error]="registerForm.get('person')?.invalid"></app-person-form>
     
@@ -32,8 +32,7 @@
   </div>
 
   <div class="d-grid gap-2 col-2 mx-auto">
-    
-
+  
 
 
       <button class="btn btn-warning" *ngIf="selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d'"
@@ -46,21 +45,10 @@
         </button>
 
 
-      
-
     
   </div>
   </form>
 </div>
 
-<p>Currently Role Selected: {{ selectedRoleFromParentComponent}}</p>
-<p> {{selectedLabelsArrayFromParentComponent| json}} </p>
-
-
-
-<pre>
-  {{registerForm.get('person')?.value.firstName | json}}
- 
-</pre>
 
 

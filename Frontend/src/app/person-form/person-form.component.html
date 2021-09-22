@@ -1,14 +1,13 @@
 <div class="col-sm-8 offset-sm-2">
 <div [formGroup]="personForm">
     <div class="mb-3">
-        <label for="first-name" class="form-label" style="font-weight: bold;">First Name</label>
+        <div class="form-group required"><label for="first-name" class="form-label" style="font-weight: bold;"> First Name</label></div>
         <input formControlName="firstName" class="form-control" id="first-name"
   [ngClass]="{ 'is-invalid': (submitted && personForm.controls.firstName.errors) || (!personForm.controls.firstName.pristine && personForm.controls.firstName.invalid) }">
 
         <div class="invalid-feedback"
         *ngIf="(submitted && personForm.controls.firstName.errors) || (!personForm.controls.firstName.pristine && personForm.controls.firstName.invalid)">
         <div *ngIf="personForm.controls.firstName.errors?.required">First Name is required</div>
-        <div *ngIf="personForm.controls.firstName.errors?.pattern">Only letters without space, between 2 and 20 characters</div>
 
          </div>
     
@@ -16,7 +15,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="last-name" class="form-label" style="font-weight: bold;">Last Name</label>
+        <div class="form-group required"><label for="last-name" class="form-label" style="font-weight: bold;">Last Name</label></div>
         <input formControlName="lastName" class="form-control" id="last-name"
 
         [ngClass]="{ 'is-invalid': (submitted && personForm.controls.lastName.errors) || (!personForm.controls.lastName.pristine && personForm.controls.firstName.invalid) }">
@@ -24,7 +23,6 @@
         <div class="invalid-feedback"
         *ngIf="(submitted && personForm.controls.lastName.errors) || (!personForm.controls.lastName.pristine && personForm.controls.lastName.invalid)">
         <div *ngIf="personForm.controls.lastName.errors?.required">Last Name is required</div>
-        <div *ngIf="personForm.controls.lastName.errors?.pattern">Only letters without space, between 2 and 20 characters</div>
 
          </div>
     </div>

@@ -4,7 +4,7 @@
 <form [formGroup]="userForm">
 
     <div class="mb-3">
-        <label for="email" class="form-label" style="font-weight: bold;">Email</label>
+        <div class="form-group required"><label for="email" class="form-label" style="font-weight: bold;">Email</label></div>
         <input formControlName="email" class="form-control" id="email" 
         [ngClass]="{ 'is-invalid': (submitted && userForm.controls.email.errors) || (!userForm.controls.email.pristine && userForm.controls.email.invalid) }">
 
@@ -15,7 +15,6 @@
 
          </div>
     </div>
-
 
 </form>
 </div>
