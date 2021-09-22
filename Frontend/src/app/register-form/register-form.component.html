@@ -9,10 +9,10 @@
     
     <app-label-form formControlName="label" (selectedLabelsClickedEmitter) = 'showSelectedLabelsArray($event)'></app-label-form>
     <app-role-form formControlName="role" (roleClickedEmitter)='showNextRoleComponent($event)'></app-role-form>
-    <app-user-form formControlName="user" *ngIf="selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434' || selectedRoleFromParentComponent == 'fd42c927-402f-446c-a62a-12e3c8dda3d8'"></app-user-form>
+    <app-user-form formControlName="user" *ngIf="selectedRoleFromParentComponent == '73acf2bb-7bca-4ab2-b3ca-c4dbe71a198d' || selectedRoleFromParentComponent == 'f974b6f0-0bd3-4f27-aac2-17b9c4f082f4'"></app-user-form>
     <app-beneficiary-form 
         formControlName="beneficiary" 
-        *ngIf="selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d'"
+        *ngIf="selectedRoleFromParentComponent == 'dc3b93f0-b60b-4659-b966-60350c7639db'"
         (dayOfWeekClickedEmitter)='showNextDayOfTheWeekComponent($event)'
         >
     </app-beneficiary-form>
@@ -20,7 +20,7 @@
 
     <div class="d-grid gap-2 col-2 mx-auto">
 
-      <button class="btn btn-warning" *ngIf="selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434' || selectedRoleFromParentComponent == 'fd42c927-402f-446c-a62a-12e3c8dda3d8'"
+      <button class="btn btn-warning" *ngIf="selectedRoleFromParentComponent == '73acf2bb-7bca-4ab2-b3ca-c4dbe71a198d' || selectedRoleFromParentComponent == 'f974b6f0-0bd3-4f27-aac2-17b9c4f082f4'"
         [disabled]="registerForm.get('person')?.invalid ||         
         registerForm.get('beneficiary')?.invalid ||
         registerForm.get('user')?.invalid" 
@@ -35,7 +35,7 @@
   
 
 
-      <button class="btn btn-warning" *ngIf="selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d'"
+      <button class="btn btn-warning" *ngIf="selectedRoleFromParentComponent == 'dc3b93f0-b60b-4659-b966-60350c7639db'"
             [disabled]="registerForm.get('person')?.invalid ||       
             selectedDayOfWeekFromParentComponent == '' ||
             registerForm.get('user')?.invalid">

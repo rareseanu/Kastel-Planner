@@ -130,6 +130,7 @@ onSubmit(){
           .subscribe(
             (data) => {
       
+      
                 this.loading = false;
             },
             (error) => {
@@ -143,6 +144,7 @@ onSubmit(){
                this.registerService.insertUserEmail (this.registerForm.get('user')?.value.email, this.insertedPersonId, "123456Az*")
           .subscribe(
             (data) => {
+          
       
                 this.loading = false;
             },
@@ -159,7 +161,7 @@ onSubmit(){
                 this.error = error;
                 this.loading = false;
             });
-          
+            this.router.navigate(['/reset-password']);
           
       },
       (error) => {
