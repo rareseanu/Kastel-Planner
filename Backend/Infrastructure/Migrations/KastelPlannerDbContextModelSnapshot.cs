@@ -151,6 +151,27 @@ namespace Infrastructure.Migrations
                     b.ToTable("refresh_token");
                 });
 
+            modelBuilder.Entity("Domain.ResetPasswordTokens.ResetPasswordToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("reset_password_token");
+                });
+
             modelBuilder.Entity("Domain.Roles.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -174,7 +195,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("date");
 
-                    b.Property<Guid>("VolunteerId")
+                    b.Property<Guid?>("VolunteerId")
                         .HasColumnType("uuid")
                         .HasColumnName("volunteer_id");
 
@@ -357,6 +378,37 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.ResetPasswordTokens.ResetPasswordToken", b =>
+                {
+                    b.HasOne("Domain.Users.User", "User")
+                        .WithMany("ResetPasswordTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.RefreshTokens.ValueObjects.Token", "Token", b1 =>
+                        {
+                            b1.Property<Guid>("ResetPasswordTokenId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("token");
+
+                            b1.HasKey("ResetPasswordTokenId");
+
+                            b1.ToTable("reset_password_token");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ResetPasswordTokenId");
+                        });
+
+                    b.Navigation("Token");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Roles.Role", b =>
                 {
                     b.OwnsOne("Domain.Roles.ValueObjects.RoleName", "RoleName", b1 =>
@@ -384,9 +436,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Persons.Person", "Volunteer")
                         .WithMany("Schedules")
-                        .HasForeignKey("VolunteerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("VolunteerId");
 
                     b.HasOne("Domain.BeneficiaryWeeklyLogs.BeneficiaryWeeklyLog", "BeneficiaryWeeklyLog")
                         .WithMany("Schedules")
@@ -505,6 +555,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Users.User", b =>
                 {
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("ResetPasswordTokens");
                 });
 #pragma warning restore 612, 618
         }

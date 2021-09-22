@@ -11,7 +11,7 @@ namespace Application.Schedules
 {
     public interface IScheduleService
     {
-        Task<IList<ScheduleResponse>> GetAllSchedulesAsync();
+        Task<IList<ScheduleResponse>> GetAllSchedulesAsync(GetSchedulesRequest request);
         Task<Result<ScheduleResponse>> GetScheduleByAsync(Guid id);
         Task<Result<ScheduleResponse>> CreateScheduleAsync(CreateScheduleRequest request);
         Task<Result<ScheduleResponse>> UpdateScheduleAsync(Guid scheduleId, UpdateScheduleRequest request);

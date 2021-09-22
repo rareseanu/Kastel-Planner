@@ -26,6 +26,7 @@ namespace Kastel_Planner_Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
             services.AddDatabase(Configuration.GetConnectionString("DefaultConnection"));
             services.AddCors(options =>
             {
@@ -41,6 +42,8 @@ namespace Kastel_Planner_Backend
             services.AddRepositories();
             services.AddServices();
             services.AddControllers();
+            services.AddMvc()
+            .AddNewtonsoftJson();
 
             services.AddAuthentication(options =>
             {

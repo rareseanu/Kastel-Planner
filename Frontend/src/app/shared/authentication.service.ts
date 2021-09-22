@@ -35,10 +35,22 @@ export class AuthenticationService {
         return throwError(errorMessage);
     }
 
+    public isAuthenticated(): boolean {
+        return this.getCurrentUser != null;
+    }
+
+    public hasRole(role: string): boolean {
+        if(this.getCurrentUser && this.getCurrentUser.roles.indexOf(role) > -1) {
+            return true;
+        }
+        return false;
+    }
+    
     login(email: string, password: string): Observable<User> {
         return this.http.post<User>(`${environment.BASE_API_URL}/login`, { email, password }, { withCredentials: true })
             .pipe(
                 tap(data => { 
+                    console.log(data);
                     this.currentUserSubject.next(data);
                     this.startRefreshTokenTimer();
                     console.log("User logged in.");
@@ -63,7 +75,6 @@ export class AuthenticationService {
         this.http.post<any>(`${environment.BASE_API_URL}/user/revokeToken`, {}, {withCredentials:true}).subscribe();
         this.stopRefreshTokenTimer();
         this.currentUserSubject.next(null);
-        this.router.navigate(['/']);
     }
 
     private refreshTokenTimeout: any;
@@ -80,5 +91,25 @@ export class AuthenticationService {
 
     private stopRefreshTokenTimer() {
         clearTimeout(this.refreshTokenTimeout);
+    }
+
+    forgotPassword(email: string) {
+        return this.http.post<User>(`${environment.BASE_API_URL}/forgot-password`, {email})
+            .pipe(
+                tap(data => {
+                    console.log("Forgot password action.");
+                }),
+                catchError(this.handleError)
+            );
+    }
+
+    resetPassword(token: string, email: string, password: string): Observable<User> {
+        return this.http.post<User>(`${environment.BASE_API_URL}/reset-password`, {token, email, password})
+            .pipe(
+                tap(data => {
+                    console.log("Reset password action.");
+                }),
+                catchError(this.handleError)
+            );
     }
 }

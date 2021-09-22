@@ -1,26 +1,39 @@
-<div class="col-sm-8 offset-sm-2">
+<div class="col-sm-8 offset-sm-2" style="max-width: 30rem;margin:auto">
     <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-    <h2>Login</h2>
+    <hr class="my-2">
+    <h3 class="fw-bold">Sign In</h3>
+    <hr class="my-2">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="mb3">
-            <label for="email">Email</label>
+        <div class="mb-3">
+            <label class="form-label" for="email">Email</label>
             <input type="text" formControlName="email" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                [ngClass]="{ 'is-invalid': submitted && f.email.errors }" placeholder="Email address" />
             <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                 <div *ngIf="f.email.errors.required">Login is required</div>
             </div>
         </div>
-        <div class="mb3">
-            <label for="password">Password</label>
+        <div class="mb-3">
+            <label class="form-label col-6" for="password">Password</label>
+            <a class="text-decoration-none col-6" href="#" routerLink="../forgot-password" routerLinkActive="active">
+                Forgot your password?
+            </a>
             <input type="password" formControlName="password" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Password"/>
             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                 <div *ngIf="f.password.errors.required">Password is required</div>
             </div>
         </div>
-        <button [disabled]="loading" class="btn btn-primary">
+        <div class="mb-3">
+            <div class="form-check">
+                <input checked="true" class="form-check-input" type="checkbox" name="check_example" id="check_example">
+                <label class="form-check-label" for="check_example">
+                    Keep me logged in
+                </label>
+            </div>
+        </div>
+        <button [disabled]="loading" class="btn btn-primary w-100">
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-            Login
+            Continue
         </button>
     </form>
 </div>

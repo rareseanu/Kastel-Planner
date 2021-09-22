@@ -16,20 +16,30 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Linq;
+using Domain.ResetPasswordTokens;
+using Application.Utils;
 namespace Application.Users
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IPersonRoleRepository _personRoleRepository;
+        private readonly IResetPasswordTokenRepository _resetPasswordTokenRepository;
+        private readonly IEmailService _emailService;
+
         private readonly JwtConfig _jwtConfig;
 
-        public UserService(IUserRepository userRepository, 
-                IRefreshTokenRepository refreshTokenRepository, IOptions<JwtConfig> jwtConfig)
+        public UserService(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, 
+                IPersonRoleRepository personRoleRepository, IResetPasswordTokenRepository resetPasswordTokenRepository,
+                    IEmailService emailService, IOptions<JwtConfig> jwtConfig)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
+            _personRoleRepository = personRoleRepository;
+            _resetPasswordTokenRepository = resetPasswordTokenRepository;
+            _emailService = emailService;
             _jwtConfig = jwtConfig.Value;
         }
 
@@ -48,6 +58,11 @@ namespace Application.Users
                 return Result.Failure<AuthenticateResponse>($"User {request.Email} was not found.");
             }
 
+            if(user.Password == null)
+            {
+                return Result.Failure<AuthenticateResponse>("First time log in detected. Please choose a password.");
+            }
+
             Result<Password> userPasswordOrError = Password.Create(request.Password, user.Password.PasswordSalt);
             if (userPasswordOrError.IsFailure)
             {
@@ -59,7 +74,7 @@ namespace Application.Users
                 return Result.Failure<AuthenticateResponse>("Incorrect password.");
             }
 
-            Result<Token> token = Token.Create(GenerateRefreshToken());
+            Result<Token> token = Token.Create(GenerateToken());
             if(token.IsFailure)
             {
                 return Result.Failure<AuthenticateResponse>(token.Error);
@@ -68,6 +83,10 @@ namespace Application.Users
                     DateTime.Now.AddDays(7), DateTime.Now, user.Id);
             await _refreshTokenRepository.AddAsync(refreshToken);
 
+            var personRoles = await _personRoleRepository.GetAllByPredicateAsync(pr => pr.PersonId.Equals(user.PersonId),
+                    pr => pr.Role);
+            string[] roles = personRoles.Select(p => p.Role.RoleName.Value).ToArray();
+
             AuthenticateResponse response = new AuthenticateResponse()
             {
                 Id = user.Id,
@@ -75,7 +94,8 @@ namespace Application.Users
                 RefreshToken = token.Value.Value,
                 Expires = refreshToken.ExpiresAt,
                 PersonId = user.PersonId,
-                Email = user.Email.Value
+                Email = user.Email.Value,
+                Roles = roles
             };
 
             return Result.Success(response);
@@ -106,7 +126,7 @@ namespace Application.Users
                 return Result.Failure<AuthenticateResponse>("Expired refresh token.");
             }
 
-            Result<Token> newToken = Token.Create(GenerateRefreshToken());
+            Result<Token> newToken = Token.Create(GenerateToken());
             if (newToken.IsFailure)
             {
                 return Result.Failure<AuthenticateResponse>(newToken.Error);
@@ -116,6 +136,10 @@ namespace Application.Users
 
             await _refreshTokenRepository.AddAsync(newRefreshToken);
 
+            var personRoles = await _personRoleRepository.GetAllByPredicateAsync(pr => pr.PersonId.Equals(userWithRefreshToken.PersonId),
+                pr => pr.Role);
+            string[] roles = personRoles.Select(p => p.Role.RoleName.Value).ToArray();
+
             AuthenticateResponse response = new AuthenticateResponse()
             {
                 Id = userWithRefreshToken.Id,
@@ -123,7 +147,8 @@ namespace Application.Users
                 RefreshToken = newToken.Value.Value,
                 Expires = newRefreshToken.ExpiresAt,
                 PersonId = userWithRefreshToken.PersonId,
-                Email = userWithRefreshToken.Email.Value
+                Email = userWithRefreshToken.Email.Value,
+                Roles = roles
             };
 
             return Result.Success(response);
@@ -164,21 +189,106 @@ namespace Application.Users
                 return Result.Failure<UserResponse>($"Email {request.Email} is already taken.");
             }
 
-            Result<Password> userPasswordOrError = Password.Create(request.Password);
-            var result = Result.Combine(userEmailOrError, userPasswordOrError);
-            if (result.IsFailure)
+            if (userEmailOrError.IsFailure)
             {
-                return Result.Failure<UserResponse>(result.Error);
+                return Result.Failure<UserResponse>(userEmailOrError.Error);
             }
 
-            User user = new User(request.PersonId, userEmailOrError.Value, userPasswordOrError.Value);
+            User user = new User(request.PersonId, userEmailOrError.Value, null);
+
+            Result<Token> token = Token.Create(GenerateToken());
+            if (token.IsFailure)
+            {
+                return Result.Failure<UserResponse>(token.Error);
+            }
+            ResetPasswordToken resetToken = new ResetPasswordToken(token.Value, DateTime.Now.AddMinutes(30), user.Id);
+
             await _userRepository.AddAsync(user);
+            await _resetPasswordTokenRepository.AddAsync(resetToken);
+            
             UserResponse userResponse = new UserResponse()
             {
                 Id = user.Id,
                 PersonId = user.PersonId,
-                Email = user.Email.Value
+                Email = user.Email.Value,
+                ResetPasswordToken = resetToken.Token.Value
             };
+            _emailService.Send(user.Email.Value, "Kastel Planner - New Account", resetToken.Token.Value);
+
+            return Result.Success(userResponse);
+        }
+
+        public async Task<Result<UserResponse>> ForgotPassword(CreatePasswordResetToken request)
+        {
+            Result<Email> userEmailOrError = Email.Create(request.Email);
+            if (userEmailOrError.IsFailure)
+            {
+                return Result.Failure<UserResponse>(userEmailOrError.Error);
+            }
+
+            User foundUser = await _userRepository.GetFirstByPredicateAsync(u =>
+                    u.Email.Value == userEmailOrError.Value.Value);
+            if (foundUser == null)
+            {
+                return Result.Failure<UserResponse>($"Email {request.Email} not found.");
+            }
+
+            Result<Token> token = Token.Create(GenerateToken());
+            if (token.IsFailure)
+            {
+                return Result.Failure<UserResponse>(token.Error);
+            }
+            ResetPasswordToken resetToken = new ResetPasswordToken(token.Value, DateTime.Now.AddMinutes(30), foundUser.Id);
+            await _resetPasswordTokenRepository.AddAsync(resetToken);
+
+            UserResponse userResponse = new UserResponse()
+            {
+                Id = foundUser.Id,
+                PersonId = foundUser.PersonId,
+                Email = foundUser.Email.Value,
+                ResetPasswordToken = resetToken.Token.Value
+            };
+            _emailService.Send(foundUser.Email.Value, "Kastel Planner - Forgotten Password", resetToken.Token.Value);
+
+            return Result.Success(userResponse);
+
+        }
+
+        public async Task<Result<UserResponse>> ResetPassword(ResetPasswordRequest request)
+        {
+            Result<Email> userEmailOrError = Email.Create(request.Email);
+
+            User foundUser = await _userRepository.GetFirstByPredicateAsync(u =>
+                    u.Email.Value == userEmailOrError.Value.Value);
+            if (foundUser == null)
+            {
+                return Result.Failure<UserResponse>($"Email {request.Email} not found.");
+            }
+
+            ResetPasswordToken token = await _resetPasswordTokenRepository.GetFirstByPredicateAsync(t =>
+                    t.Token.Value.Equals(request.Token));
+            if (token == null || DateTime.Now > token.ExpiresAt || !token.UserId.Equals(foundUser.Id))
+            {
+                return Result.Failure<UserResponse>("Invalid token.");
+            }
+
+            Result<Password> userPasswordOrError = Password.Create(request.Password);
+            if (userPasswordOrError.IsFailure)
+            {
+                return Result.Failure<UserResponse>(userPasswordOrError.Error);
+            }
+
+            foundUser.UpdateUser(foundUser.PersonId, foundUser.Email, userPasswordOrError.Value);
+            await _userRepository.Update(foundUser);
+
+            UserResponse userResponse = new UserResponse()
+            {
+                Id = foundUser.Id,
+                PersonId = foundUser.PersonId,
+                Email = foundUser.Email.Value,
+                ResetPasswordToken = token.Token.Value
+            };
+            await _resetPasswordTokenRepository.Delete(token);
 
             return Result.Success(userResponse);
         }
@@ -201,7 +311,7 @@ namespace Application.Users
             var response = new List<UserResponse>();
             var users = await _userRepository.GetAllAsync();
 
-            foreach(User user in users)
+            foreach (User user in users)
             {
                 UserResponse userResponse = new UserResponse()
                 {
@@ -283,7 +393,7 @@ namespace Application.Users
             return jwtTokenHandler.WriteToken(token);
         }
 
-        private string GenerateRefreshToken()
+        private string GenerateToken()
         {
             var randomBytes = new byte[32];
             using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())

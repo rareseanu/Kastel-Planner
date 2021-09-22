@@ -1,4 +1,5 @@
 ﻿using Application.BeneficiaryWeeklyLogs;
+using Application.HostedServices;
 using Application.Labels;
 using Application.Persons;
 using Application.PersonsLabels;
@@ -6,6 +7,7 @@ using Application.PersonsRoles;
 using Application.Roles;
 using Application.Schedules;
 using Application.Users;
+using Application.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -22,6 +24,9 @@ namespace Application
             services.AddScoped<IPersonsRolesService, PersonsRolesService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IScheduleService, ScheduleService>();
+
+            services.AddHostedService<ScheduleHostedService>();
+            services.AddScoped<IEmailService, EmailService>();
         }
     }
 }

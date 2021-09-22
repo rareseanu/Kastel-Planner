@@ -106,7 +106,8 @@ namespace Infrastructure.Migrations
             var weeklyLogs = new BeneficiaryWeeklyLog[]
             {
                 CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("John")).Id,
-                    "Monday", new TimeSpan(15, 30, 0))
+                    "Monday", new TimeSpan(1, 30, 0))
+
             };
             await weeklyLogDbSet.AddRangeAsync(weeklyLogs);
             await context.SaveChangesAsync();
@@ -114,10 +115,10 @@ namespace Infrastructure.Migrations
             var schedules = new Schedule[]
             {
                 new Schedule(
-                    personDbSet.Single(i => i.Name.FirstName.Equals("Bob")).Id,
-                    weeklyLogDbSet.Single(i => i.Person.Name.FirstName.Equals("John")).Id,
+                    null,
+                    weeklyLogDbSet.FirstOrDefault(i => i.Person.Name.FirstName.Equals("John")).Id,
                     DateTime.Now,
-                    Duration.Create(1, 30).Value
+                    Duration.Create(2, 0).Value
                 )
             };
             await scheduleDbSet.AddRangeAsync(schedules);

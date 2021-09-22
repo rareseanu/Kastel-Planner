@@ -1,6 +1,5 @@
 ﻿using Application.Users;
 using Application.Users.Requests;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -59,7 +58,41 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("user/login")]
+        [Route("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+            var result = await _userService.ResetPassword(request);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpPost]
+        [Route("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] CreatePasswordResetToken request)
+        {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+            var result = await _userService.ForgotPassword(request);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpPost]
+        [Route("login")]
         public async Task<IActionResult> Login([FromBody] AuthenticateRequest request)
         {
             var result = await _userService.Authenticate(request);
