@@ -1,0 +1,39 @@
+<div class="col-sm-8 offset-sm-2" style="margin-top: 50px;">
+<h4>Beneficiary info</h4>
+<h6>Please provide the time and the day of the week when beneficiary is available</h6>
+<form [formGroup]="beneficiaryForm">
+
+
+    <div class="mb-3">
+        <div class="form-group required"><label for="start-time" class="form-label" style="font-weight: bold;">Time</label></div>
+        <input formControlName="startTime" class="form-control" id="start-time" placeholder="hh:mm:ss"
+        [ngClass]="{ 'is-invalid': (submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid) }">
+
+        <div class="invalid-feedback"
+        *ngIf="(submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid)">
+        <div *ngIf="beneficiaryForm.controls.startTime.errors?.required">Hour is required</div>
+        <div *ngIf="beneficiaryForm.controls.startTime.errors?.pattern">hh:mm:ss format</div>
+
+         </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="form-group required"> <label for="day" class="form-label" style="font-weight: bold;">Day Of The Week</label></div>
+        <select #dayOfWeekSelect 
+                class="form-select"
+                formControlName="dayOfWeek"
+                id = "day"
+                (click)="selectedHandlerDayOfWeek($event)" 
+                (change)="onDayOfWeekSelected(dayOfWeekSelect.value)">      
+            <option value ="default" disabled selected>Please select beneficiary disponibility</option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+        </select>
+    </div>
+</form>
+</div>

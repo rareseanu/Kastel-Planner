@@ -7,3 +7,16 @@ body {
 hr {
     color: #dee2e6;
 }
+
+  
+  .register-form-title {
+    font-family: "Roboto", sans-serif;
+    margin:30px auto;
+    background:linear-gradient(to right, #ffe23b 0%, #f3ea97 50%, #f7eed2 99%);
+    margin-bottom: 50px;
+    text-align: center;
+  }
+  .form-group.required .form-label:after {
+    content:"*";
+    color:red;
+  }

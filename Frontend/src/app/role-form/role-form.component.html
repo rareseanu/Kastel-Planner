@@ -1,0 +1,17 @@
+<div class="col-sm-8 offset-sm-2">
+<form [formGroup]="roleForm">
+    <div class="mb-3">
+        <div class="form-group required"><label for="myRoleSelect" class="form-label" style="font-weight: bold;">Person role</label></div>
+    <select 
+    #myRoleSelect 
+    class="form-select"
+    (click)="selectedHandlerRoleName($event)" 
+    (change)="onRoleSelected(myRoleSelect.value)"
+    formControlName="id">
+        <option value ="default" disabled selected>Choose person's role</option>
+        <option *ngFor="let r of rolesInDropdown" [value] = "r.id">{{r.roleName}}
+        </option>
+    </select>
+</div>
+</form>
+</div>

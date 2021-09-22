@@ -1,0 +1,20 @@
+<div class="col-sm-8 offset-sm-2" style="margin-top: 50px;">
+    <h4>User info</h4>
+    <h6>Please provide an email address for your user account</h6>
+<form [formGroup]="userForm">
+
+    <div class="mb-3">
+        <div class="form-group required"><label for="email" class="form-label" style="font-weight: bold;">Email</label></div>
+        <input formControlName="email" class="form-control" id="email" 
+        [ngClass]="{ 'is-invalid': (submitted && userForm.controls.email.errors) || (!userForm.controls.email.pristine && userForm.controls.email.invalid) }">
+
+        <div class="invalid-feedback"
+        *ngIf="(submitted && userForm.controls.email.errors) || (!userForm.controls.email.pristine && userForm.controls.email.invalid)">
+        <div *ngIf="userForm.controls.email.errors?.required">Email is required</div>
+        <div *ngIf="userForm.controls.email.errors?.pattern">Email format: email@name.domain</div>
+
+         </div>
+    </div>
+
+</form>
+</div>

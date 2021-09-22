@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -13,7 +13,13 @@ import { CalendarComponent } from './calendar';
 import { EventComponent } from './calendar/event/event.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { ForgottenPasswordComponent } from './forgotten-password/forgotten-password.component';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { RegisterFormComponent } from './register-form/register-form.component';
+import { PersonFormComponent } from './person-form/person-form.component';
+import { LabelFormComponent } from './label-form/label-form.component';
+import { RoleFormComponent } from './role-form/role-form.component';
+import { UserFormComponent } from './user-form/user-form.component';
+import { BeneficiaryFormComponent } from './beneficiary-form/beneficiary-form.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,13 +27,22 @@ import { ForgottenPasswordComponent } from './forgotten-password/forgotten-passw
     CalendarComponent,
     EventComponent,
     PasswordResetComponent,
-    ForgottenPasswordComponent
+    ForgottenPasswordComponent,
+    RegisterFormComponent,
+    PersonFormComponent,
+    LabelFormComponent,
+    RoleFormComponent,
+    UserFormComponent,
+    BeneficiaryFormComponent
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService]},

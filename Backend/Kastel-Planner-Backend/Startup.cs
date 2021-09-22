@@ -25,6 +25,7 @@ namespace Kastel_Planner_Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc().AddNewtonsoftJson();
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
             services.AddDatabase(Configuration.GetConnectionString("DefaultConnection"));
@@ -32,11 +33,12 @@ namespace Kastel_Planner_Backend
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
-                    builder.AllowAnyHeader();
-                    builder.AllowCredentials();
-                    builder.AllowAnyMethod();
-                    builder.AllowAnyHeader();                 
+
+                     builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
+                     builder.AllowAnyHeader();
+                     builder.AllowCredentials();
+                     builder.AllowAnyMethod();
+                     builder.AllowAnyHeader(); 
                 });
             });
             services.AddRepositories();

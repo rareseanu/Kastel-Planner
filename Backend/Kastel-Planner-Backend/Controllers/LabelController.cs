@@ -15,6 +15,7 @@ namespace Kastel_Planner_Backend.Controllers
             _labelService = labelService;
         }
 
+        [HttpGet]
         [Route("labels")]
         public async Task<IActionResult> Index()
         {
