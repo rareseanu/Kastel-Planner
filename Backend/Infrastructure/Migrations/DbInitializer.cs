@@ -81,7 +81,8 @@ namespace Infrastructure.Migrations
 
             var labels = new Label[]
             {
-                CreateLabel("Disabilities")
+                CreateLabel("Physical disabilities"),
+                CreateLabel("Mental health disorders")
             };
             await labelDbSet.AddRangeAsync(labels);
             await context.SaveChangesAsync();
@@ -91,13 +92,13 @@ namespace Infrastructure.Migrations
                 new PersonLabel
                 (
                     personDbSet.Single(i => i.Name.FirstName.Equals("Bob")).Id,
-                    labelDbSet.Single(i => i.LabelName.Value.Equals("Disabilities")).Id
+                    labelDbSet.Single(i => i.LabelName.Value.Equals("Physical disabilities")).Id
                     
                 ),
                 new PersonLabel
                 (
                     personDbSet.Single(i => i.Name.FirstName.Equals("John")).Id,
-                    labelDbSet.Single(i => i.LabelName.Value.Equals("Disabilities")).Id
+                    labelDbSet.Single(i => i.LabelName.Value.Equals("Mental health disorders")).Id
                 )
             };
             await personLabelDbSet.AddRangeAsync(personLabels);

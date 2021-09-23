@@ -19,7 +19,7 @@
         <a class="nav-item nav-link active" href="#" aria-current="page">Home</a>
         <a class="nav-item nav-link active" routerLink="calendar" routerLinkActive="active">Calendar</a>
         <a class="nav-item nav-link active" *ngIf="!currentUser" routerLink="reset-password" routerLinkActive="active">Password Reset</a>
-        <a class="nav-item nav-link" routerLink="register" routerLinkActive="active" *ngIf="!currentUser">Register</a>
+        <a class="nav-item nav-link active" routerLink="register" routerLinkActive="active" *ngIf="currentUser">Register</a>
         <a class="nav-item nav-link" *ngIf="currentUser">{{currentUser.email}}</a>
 
       </div>

@@ -116,7 +116,7 @@ onSubmit(){
               console.log("role id from insertPersonRole" + data.roleId);
                 this.loading = false;
                  //daca rolul persoanei este de beneficiar
-            if(this.selectedRoleFromParentComponent == 'ee352552-8ca0-4c7d-8907-ac7f7d95926d')
+            if(this.selectedRoleName == 'Beneficiary')
                {
                   this.registerService.insertWeeklyLog (this.registerForm.get('beneficiary')?.value.startTime, this.selectedDayOfWeekFromParentComponent, this.insertedPersonId)
                   .subscribe(
@@ -130,7 +130,7 @@ onSubmit(){
               });
             }
             //daca rolul persoanei este de voluntar sau admin 
-            else if (this.selectedRoleFromParentComponent == '49e177fb-7d43-41e9-b8f5-d7851c811434')
+            else if (this.selectedRoleName == 'Volunteer')
             {
                this.registerService.insertUserEmail (this.registerForm.get('user')?.value.email, this.insertedPersonId, "123456Az*")
           .subscribe(
@@ -145,7 +145,7 @@ onSubmit(){
             });
       
             }
-            else (this.selectedRoleFromParentComponent == 'fd42c927-402f-446c-a62a-12e3c8dda3d8')
+            else (this.selectedRoleName == 'Admin')
             {
                this.registerService.insertUserEmail (this.registerForm.get('user')?.value.email, this.insertedPersonId, "123456Az*")
           .subscribe(
