@@ -42,8 +42,48 @@ export class ScheduleService {
             );
     }
 
+    getScheduleById(scheduleId: string):Observable<Schedule> {
+        return this.http.get<Schedule>(`${environment.BASE_API_URL}/schedules/${scheduleId}`)
+        .pipe(
+            tap(data => {
+                console.log(data);
+            }),
+            catchError(this.handleError)
+        );
+    }
+
+    getSchedulesByPersonId(personId: string):Observable<Schedule[]> {
+        return this.http.get<Schedule[]>(`${environment.BASE_API_URL}/schedules-by-id/${personId}`)
+        .pipe(
+            tap(data => {
+                console.log(data);
+            }),
+            catchError(this.handleError)
+        );
+    }
+
     updateSchedule(schedule: Schedule) {
         return this.http.patch<Schedule>(`${environment.BASE_API_URL}/schedules/schedule/${schedule.id}`, schedule)
+            .pipe(
+                tap(data => {
+                    console.log(data);
+                }),
+                catchError(this.handleError)
+            );
+    }
+
+    getScheduleByPersonIdAndInterval(personId: string, startDate?: Date, endDate?: Date): Observable<Schedule[]> {
+        let params = new HttpParams();
+        if(startDate) {
+            console.log(startDate);
+
+            params = params.append('startTime', startDate.toISOString());
+        }
+        
+        if(endDate) {
+            params = params.append('endTime', endDate.toISOString());
+        }
+        return this.http.get<Schedule[]>(`${environment.BASE_API_URL}/schedules-by-id/${personId}`, {params: params})
             .pipe(
                 tap(data => {
                     console.log(data);

@@ -13,6 +13,7 @@ namespace Application.Schedules
     {
         Task<IList<ScheduleResponse>> GetAllSchedulesAsync(GetSchedulesRequest request);
         Task<Result<ScheduleResponse>> GetScheduleByAsync(Guid id);
+        Task<Result<IList<ScheduleResponse>>> GetAllSchedulesByPersonId(Guid personId, GetSchedulesRequest request);
         Task<Result<ScheduleResponse>> CreateScheduleAsync(CreateScheduleRequest request);
         Task<Result<ScheduleResponse>> UpdateScheduleAsync(Guid scheduleId, UpdateScheduleRequest request);
         Task<Result> DeleteScheduleAsync(Guid scheduleId);

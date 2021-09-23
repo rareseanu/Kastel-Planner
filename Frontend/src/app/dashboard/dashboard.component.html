@@ -1,0 +1,44 @@
+<hr class="my-2">
+<h3 class="fw-bold"> Dashboard </h3>
+<hr class="my-2">
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-nowrap">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Roles</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Is Active</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let person of persons">
+                    <td data-label="Name">
+                        <span>{{person.firstName}}</span>
+                    </td>
+                    <td data-label="Job Title">
+                        <span>{{person.lastName}}</span>
+                    </td>
+                    <td data-label="Roles">
+                        <ng-container *ngFor="let role of person.roles">
+                            <span class="badge bg-soft-info text-primary">{{role.roleName}}</span>
+                        </ng-container>
+                    </td>
+                    <td data-label="Lead Score">
+                        <span>{{person.phoneNumber}}</span>
+                    </td>
+                    <td data-label="Company">
+                        <span *ngIf="person.isActive" class="badge bg-soft-success text-success">Active</span>
+                        <span *ngIf="!person.isActive" class="badge bg-soft-danger text-danger">Inactive</span>
+                        <!-- <span class="badge bg-soft-info text-primary">Inactive</span> -->
+                    </td>
+                    <td data-label="">
+                        <a routerLink="../person/{{person.id}}" routerLinkActive="active" class="text-primary text-decoration-none me-2">Edit</a>
+                        <a routerLink="../person/{{person.id}}" routerLinkActive="active" class="text-danger text-decoration-none">Delete</a>
+                    </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

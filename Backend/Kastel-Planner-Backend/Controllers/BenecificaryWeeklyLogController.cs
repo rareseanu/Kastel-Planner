@@ -22,6 +22,24 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(weeklyLogs);
         }
 
+        [Route("weekly-logs-by-id/{personId}")]
+        public async Task<IActionResult> GetWeeklyLogsByPersonId([FromRoute] Guid personId)
+        {
+            if (personId == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            var result = await _weeklyService.GetAllWeeklyLogsByPersonId(personId);
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+
+        }
+
         [Route("weeklylogs/{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {

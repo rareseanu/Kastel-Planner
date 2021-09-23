@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500&display=swap');
+@import "~@ng-select/ng-select/themes/default.theme.css";
 body {
     font-family: 'Inter', sans-serif !important;
 }
@@ -8,15 +9,23 @@ hr {
     color: #dee2e6;
 }
 
-  
-  .register-form-title {
-    font-family: "Roboto", sans-serif;
-    margin:30px auto;
-    background:linear-gradient(to right, #ffe23b 0%, #f3ea97 50%, #f7eed2 99%);
-    margin-bottom: 50px;
-    text-align: center;
-  }
   .form-group.required .form-label:after {
     content:"*";
     color:red;
   }
+.ng-select.custom .ng-value-label, .ng-value-icon {
+    color: #007bff!important;
+    background-color: #efeffe !important;
+}
+
+.bg-soft-success {
+    background-color: #ccf5e7 !important;
+}
+
+.bg-soft-danger {
+    background-color: #ffd6e0 !important;
+}
+
+.bg-soft-info {
+    background-color: #efeffe !important;
+}

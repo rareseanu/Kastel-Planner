@@ -1,7 +1,8 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgSelectModule } from '@ng-select/ng-select';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +21,12 @@ import { LabelFormComponent } from './label-form/label-form.component';
 import { RoleFormComponent } from './role-form/role-form.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { BeneficiaryFormComponent } from './beneficiary-form/beneficiary-form.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { PersonDetailsComponent } from './person-details/person-details.component';
+import { ScheduleDetailsComponent } from './schedule-details/schedule-details.component';
+import { WeeklyLogComponent } from './weekly-log/weekly-log.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,8 +40,11 @@ import { BeneficiaryFormComponent } from './beneficiary-form/beneficiary-form.co
     LabelFormComponent,
     RoleFormComponent,
     UserFormComponent,
-    BeneficiaryFormComponent
-    
+    BeneficiaryFormComponent,
+    DashboardComponent,
+    PersonDetailsComponent,
+    ScheduleDetailsComponent,
+    WeeklyLogComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +52,8 @@ import { BeneficiaryFormComponent } from './beneficiary-form/beneficiary-form.co
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    NgSelectModule
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService]},

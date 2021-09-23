@@ -24,7 +24,11 @@ export class EventComponent {
 
     renderHour(hour: number) {
         let hours = Math.floor(hour);
-        let minutes = (hour - hours) * 60;
+        let minutes = Math.floor((hour - hours) * 60);
+        if(hours > 24) {
+            hours = hours % 24;
+        }
+
         if(hours < 10) {
             if(minutes < 10) {
                 return `0${hours}:0${minutes}`;

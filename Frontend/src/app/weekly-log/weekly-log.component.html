@@ -1,0 +1,30 @@
+<hr class="my-2">
+<h3 class="fw-bold"> Weekly Log </h3>
+<hr class="my-2">
+<div *ngIf="error" class="alert alert-danger">{{error}}</div>
+<h4 class="fw-bold">Weekly Log Details</h4>
+
+<form *ngIf="weeklyLog" [formGroup]="weeklyLogEditForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <label class="form-label" for="startTime">Start time</label>
+        <input [(ngModel)]="weeklyLog.startTime" type="time" formControlName="startTime" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.startTime.errors }" placeholder="Start time" />
+        <div *ngIf="submitted && f.startTime.errors" class="invalid-feedback">
+            <div *ngIf="f.startTime.errors.required">Start time is required.</div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="dayOfWeek">Day of week</label>
+        <select class="form-select" (change)="changeDay($event)" formControlName="dayOfWeek">
+            <option value="" disabled>Choose a day</option>
+            <option *ngFor="let day of days" value="{{day}}">{{day}}</option>
+         </select>
+        <div *ngIf="submitted && f.dayOfWeek.errors" class="invalid-feedback">
+            <div *ngIf="f.dayOfWeek.errors.required">Day of week is required.</div>
+        </div>
+    </div>
+    <button [disabled]="loading" class="btn btn-primary">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Update
+    </button>
+</form>

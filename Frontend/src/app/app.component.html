@@ -17,6 +17,7 @@
       <!-- Nav -->
       <div class="navbar-nav mx-lg-auto">
         <a class="nav-item nav-link active" href="#" aria-current="page">Home</a>
+        <a class="nav-item nav-link active" routerLink="dashboard" routerLinkActive="active">Dashboard</a>
         <a class="nav-item nav-link active" routerLink="calendar" routerLinkActive="active">Calendar</a>
         <a class="nav-item nav-link active" *ngIf="!currentUser" routerLink="reset-password" routerLinkActive="active">Password Reset</a>
         <a class="nav-item nav-link active" routerLink="register" routerLinkActive="active" *ngIf="currentUser">Register</a>

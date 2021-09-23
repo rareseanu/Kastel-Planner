@@ -50,7 +50,6 @@ export class AuthenticationService {
         return this.http.post<User>(`${environment.BASE_API_URL}/login`, { email, password }, { withCredentials: true })
             .pipe(
                 tap(data => { 
-                    console.log(data);
                     this.currentUserSubject.next(data);
                     this.startRefreshTokenTimer();
                     console.log("User logged in.");

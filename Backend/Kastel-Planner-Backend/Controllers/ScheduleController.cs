@@ -23,6 +23,24 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(schedules);
         }
 
+        [Route("schedules-by-id/{personId}")]
+        public async Task<IActionResult> GetSchedulesById([FromRoute] Guid personId, [FromQuery] GetSchedulesRequest request)
+        {
+            if (personId == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            var result = await _scheduleService.GetAllSchedulesByPersonId(personId, request);
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+
+        }
+
         [Route("schedules/{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {

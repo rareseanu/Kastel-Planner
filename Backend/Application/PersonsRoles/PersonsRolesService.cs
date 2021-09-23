@@ -12,17 +12,38 @@ namespace Application.PersonsRoles
     public class PersonsRolesService : IPersonsRolesService
     {
         private readonly IPersonRoleRepository _personRoleRepository;
+        private readonly IPersonRepository _personRepository;
         private Guid roleId, personId;
 
-        public PersonsRolesService(IPersonRoleRepository personRoleRepository)
+        public PersonsRolesService(IPersonRoleRepository personRoleRepository, IPersonRepository personRepository)
         {
             _personRoleRepository = personRoleRepository;
+            _personRepository = personRepository;
         }
 
         public async Task<Result<PersonsRolesResponse>> CreatePersonRoleAsync(CreatePersonsRolesRequest request)
         {
             roleId = request.RoleId;
             personId = request.PersonId;
+
+            var person = await _personRepository.GetByIdAsync(request.PersonId);
+            if(person == null)
+            {
+                return Result.Failure<PersonsRolesResponse>($"Person with Id {request.PersonId} was not found");
+            }
+            var oldPersonRole = await _personRoleRepository.GetFirstByPredicateAsync(pr => pr.PersonId == person.Id && pr.RoleId == request.RoleId);
+            if(oldPersonRole != null)
+            {
+                var personRoleAlreadyExistingResponse = new PersonsRolesResponse()
+                {
+
+                    Id = oldPersonRole.Id,
+                    RoleId = oldPersonRole.RoleId,
+                    PersonId = oldPersonRole.PersonId
+                };
+
+                return Result.Success(personRoleAlreadyExistingResponse);
+            }
 
             var personRole = new PersonRole(roleId, personId);
 

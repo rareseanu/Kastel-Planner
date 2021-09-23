@@ -52,7 +52,6 @@ namespace Application.Schedules
         public async Task<Result> DeleteScheduleAsync(Guid scheduleId)
         {
             var schedule = await _scheduleRepository.GetByIdAsync(scheduleId);
-
             if (schedule == null)
             {
                 return Result.Failure($"Schedule with Id {scheduleId} was not found");
@@ -63,12 +62,54 @@ namespace Application.Schedules
             return Result.Success();
         }
 
+        public async Task<Result<IList<ScheduleResponse>>> GetAllSchedulesByPersonId(Guid personId, GetSchedulesRequest request)
+        {
+            var volunteer = await _personRepository.GetByIdAsync(personId);
+            if (volunteer == null)
+            {
+                return Result.Failure<IList<ScheduleResponse>>($"Person with Id {personId} was not found");
+            }
+
+            DateTime endTime = request.EndTime == null ? DateTime.MaxValue : request.EndTime.Value;
+
+            var schedules = request.StartTime == null ? await _scheduleRepository.GetAllByPredicateAsync(s => s.VolunteerId.Equals(personId))
+                : await _scheduleRepository.GetAllByPredicateAsync(s => s.Date.Date >= request.StartTime.Value.Date && s.Date.Date <= endTime.Date
+                    && s.VolunteerId.Equals(personId));
+
+            var response = new List<ScheduleResponse>();
+
+            foreach (var schedule in schedules)
+            {
+                var weeklyLog = await _weeklyLogRepository.GetByIdAsync(schedule.WeeklyLogId);
+                var beneficiary = await _personRepository.GetByIdAsync(weeklyLog.BeneficiaryId);
+
+                var scheduleResponse = new ScheduleResponse()
+                {
+                    Id = schedule.Id,
+                    Hours = schedule.Duration.Hours,
+                    Minutes = schedule.Duration.Minutes,
+                    VolunteerId = schedule.VolunteerId,
+                    VolunteerFirstName = volunteer == null ? null : volunteer.Name.FirstName,
+                    VolunteerLastName = volunteer == null ? null : volunteer.Name.LastName,
+                    WeeklyLogId = schedule.WeeklyLogId,
+                    BeneficiaryFirstName = beneficiary.Name.FirstName,
+                    BeneficiaryLastName = beneficiary.Name.LastName,
+                    StartTime = weeklyLog.StartTime,
+                    DayOfWeek = weeklyLog.DayOfWeek.Name,
+                    Date = schedule.Date
+                };
+
+                response.Add(scheduleResponse);
+            }
+
+            return Result.Success<IList<ScheduleResponse>>(response);
+        }
+
         public async Task<IList<ScheduleResponse>> GetAllSchedulesAsync(GetSchedulesRequest request)
         {
             DateTime endTime = request.EndTime == null ? DateTime.MaxValue : request.EndTime.Value;
 
             var response = new List<ScheduleResponse>();
-            var test = await _scheduleRepository.GetAllAsync();
             var schedules = request.StartTime == null ? await _scheduleRepository.GetAllAsync()
                     : await _scheduleRepository.GetAllByPredicateAsync(s => s.Date.Date >= request.StartTime.Value.Date && s.Date.Date <= endTime.Date);
 
@@ -113,16 +154,31 @@ namespace Application.Schedules
                 return Result.Failure<ScheduleResponse>($"Schedule with Id {id} was not found");
             }
 
-            var response = new ScheduleResponse()
+            var weeklyLog = await _weeklyLogRepository.GetByIdAsync(schedule.WeeklyLogId);
+            var beneficiary = await _personRepository.GetByIdAsync(weeklyLog.BeneficiaryId);
+            Person volunteer = null;
+            if (schedule.VolunteerId.HasValue)
+            {
+                volunteer = await _personRepository.GetByIdAsync(schedule.VolunteerId.Value);
+            }
+
+            var scheduleResponse = new ScheduleResponse()
             {
                 Id = schedule.Id,
                 Hours = schedule.Duration.Hours,
                 Minutes = schedule.Duration.Minutes,
                 VolunteerId = schedule.VolunteerId,
-                WeeklyLogId = schedule.WeeklyLogId
+                VolunteerFirstName = volunteer == null ? null : volunteer.Name.FirstName,
+                VolunteerLastName = volunteer == null ? null : volunteer.Name.LastName,
+                WeeklyLogId = schedule.WeeklyLogId,
+                BeneficiaryFirstName = beneficiary.Name.FirstName,
+                BeneficiaryLastName = beneficiary.Name.LastName,
+                StartTime = weeklyLog.StartTime,
+                DayOfWeek = weeklyLog.DayOfWeek.Name,
+                Date = schedule.Date
             };
 
-            return Result.Success(response);
+            return Result.Success(scheduleResponse);
         }
 
         public async Task<Result<ScheduleResponse>> UpdateScheduleAsync(Guid scheduleId, UpdateScheduleRequest request)

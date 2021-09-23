@@ -1,11 +1,14 @@
-﻿using Application.Persons.Requests;
+﻿using Application.Labels.Responses;
+using Application.Persons.Requests;
 using Application.Persons.Responses;
 using Application.RepositoryInterfaces;
+using Application.Roles.Responses;
 using Domain;
 using Domain.Persons;
 using Domain.Persons.ValueObjects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Persons
@@ -13,11 +16,15 @@ namespace Application.Persons
     public class PersonService : IPersonService
     {
         private readonly IPersonRepository _personRepository;
+        private readonly IPersonRoleRepository _roleRepository;
+        private readonly IPersonLabelRepository _labelRepository;
         private bool isActive;
 
-        public PersonService(IPersonRepository personRepository)
+        public PersonService(IPersonRepository personRepository, IPersonRoleRepository roleRepository, IPersonLabelRepository labelRepository)
         {
             _personRepository = personRepository;
+            _roleRepository = roleRepository;
+            _labelRepository = labelRepository;
         }
 
         public async Task<Result<PersonResponse>> CreatePersonAsync(CreatePersonRequest request)
@@ -70,17 +77,30 @@ namespace Application.Persons
         {
             var response = new List<PersonResponse>();
 
-            var persons = await _personRepository.GetAllAsync();
+            var persons = await _personRepository.GetAllAsync(p => p.User, p => p.PersonRoles, p => p.PersonLabels);
 
             foreach (var person in persons)
             {
+                var roles = await _roleRepository.GetAllByPredicateAsync(r => r.PersonId.Equals(person.Id), r => r.Role);
+                var labels = await _labelRepository.GetAllByPredicateAsync(l => l.PersonId.Equals(person.Id), l => l.Label);
+
                 var personResponse = new PersonResponse()
                 {
                     Id = person.Id,
                     FirstName = person.Name.FirstName,
                     LastName = person.Name.LastName,
                     PhoneNumber = person.PhoneNumber.Number,
-                    IsActive = person.IsActive
+                    IsActive = person.IsActive,
+                    Roles = roles.Select(r => new RoleResponse() {
+                        Id = r.Role.Id,
+                        RoleName = r.Role.RoleName.Value
+                    }).ToArray(),
+                    Labels = labels.Select(r => new LabelResponse()
+                    {
+                        Id = r.Label.Id,
+                        LabelName = r.Label.LabelName.Value
+                    }).ToArray(),
+
                 };
 
                 response.Add(personResponse);
@@ -98,13 +118,26 @@ namespace Application.Persons
                 return Result.Failure<PersonResponse>($"Person with Id {id} was not found");
             }
 
+            var roles = await _roleRepository.GetAllByPredicateAsync(r => r.PersonId.Equals(person.Id), r => r.Role);
+            var labels = await _labelRepository.GetAllByPredicateAsync(l => l.PersonId.Equals(person.Id), l => l.Label);
+
             var response = new PersonResponse()
             {
                 Id = person.Id,
                 FirstName = person.Name.FirstName,
                 LastName = person.Name.LastName,
                 PhoneNumber = person.PhoneNumber.Number,
-                IsActive = person.IsActive
+                IsActive = person.IsActive,
+                Roles = roles.Select(r => new RoleResponse()
+                {
+                    Id = r.Role.Id,
+                    RoleName = r.Role.RoleName.Value
+                }).ToArray(),
+                Labels = labels.Select(r => new LabelResponse()
+                {
+                    Id = r.Label.Id,
+                    LabelName = r.Label.LabelName.Value
+                }).ToArray(),
             };
 
             return Result.Success(response);

@@ -114,11 +114,9 @@ export class CalendarComponent {
             const component = containers[CalendarComponent.days[event.dayOfWeek]-1].createComponent(factory);
 
             let parsedHour = new Date(`2021-01-21 ${event.startTime}`);
-            console.log(parsedHour);
             let startHour = parsedHour.getHours() + parsedHour.getMinutes() / 60;
             let endHour = startHour + event.minutes / 60;
             let duration = endHour - startHour;
-            console.log(startHour);
 
             if(this.startHour < startHour) {
                 component.instance.topEdge = 41 * (startHour - this.startHour);
@@ -142,8 +140,6 @@ export class CalendarComponent {
             this.lastIndex0Pos = 0;
             
             for(let c of componentArray) {
-                c.instance.leftEdge = baseLeft * temp;
-                c.instance.zIndex = temp;
                 
                 let endHourFirst = componentArray[this.lastIndex0Pos].instance.endHour * 60;
                 let startHourCurrent = componentArray[temp].instance.startHour * 60;

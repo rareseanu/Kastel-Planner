@@ -11,6 +11,7 @@ namespace Application.BeneficiaryWeeklyLogs
     {
         Task<IList<BeneficiaryWeeklyLogResponse>> GetAllWeeklyLogsAsync();
         Task<Result<BeneficiaryWeeklyLogResponse>> GetWeeklyLogByAsync(Guid id);
+        Task<Result<IList<BeneficiaryWeeklyLogResponse>>> GetAllWeeklyLogsByPersonId(Guid personId);
         Task<Result<BeneficiaryWeeklyLogResponse>> CreateWeeklyLogAsync(CreateBeneficiaryWeeklyLogRequest request);
         Task<Result<BeneficiaryWeeklyLogResponse>> UpdateWeeklyLogAsync(Guid weeklyLogId, UpdateBeneficiaryWeeklyLog request);
         Task<Result> DeleteWeeklyLogAsync(Guid weeklyLogId);

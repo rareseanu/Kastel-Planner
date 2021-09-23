@@ -12,12 +12,14 @@ namespace Application.BeneficiaryWeeklyLogs
     public class BeneficiaryWeeklyLogService : IBeneficiaryWeeklyLogService
     {
         private readonly IBeneficiaryWeeklyLogRepository _weeklyLogRepository;
+        private IPersonRepository _personRepository;
         private TimeSpan startTime;
         private Guid benecifiaryId;
 
-        public BeneficiaryWeeklyLogService(IBeneficiaryWeeklyLogRepository weeklyLogRepository)
+        public BeneficiaryWeeklyLogService(IBeneficiaryWeeklyLogRepository weeklyLogRepository, IPersonRepository personRepository)
         {
             _weeklyLogRepository = weeklyLogRepository;
+            _personRepository = personRepository;
         }
 
         public async Task<Result<BeneficiaryWeeklyLogResponse>> CreateWeeklyLogAsync(CreateBeneficiaryWeeklyLogRequest request)
@@ -82,6 +84,33 @@ namespace Application.BeneficiaryWeeklyLogs
             }
 
             return response;
+        }
+
+        public async Task<Result<IList<BeneficiaryWeeklyLogResponse>>> GetAllWeeklyLogsByPersonId(Guid personId)
+        {
+            var beneficiary = await _personRepository.GetByIdAsync(personId);
+            if (beneficiary == null)
+            {
+                return Result.Failure<IList<BeneficiaryWeeklyLogResponse>>($"Person with Id {personId} was not found");
+            }
+
+            var weeklyLogs = await _weeklyLogRepository.GetAllByPredicateAsync(s => s.BeneficiaryId.Equals(personId));
+            var response = new List<BeneficiaryWeeklyLogResponse>();
+
+            foreach (var weeklyLog in weeklyLogs)
+            {
+                var weeklyLogResponse = new BeneficiaryWeeklyLogResponse()
+                {
+                    Id = weeklyLog.Id,
+                    StartTime = weeklyLog.StartTime,
+                    DayOfWeek = weeklyLog.DayOfWeek,
+                    BeneficiaryId = personId
+                };
+
+                response.Add(weeklyLogResponse);
+            }
+
+            return Result.Success<IList<BeneficiaryWeeklyLogResponse>>(response);
         }
 
         public async Task<Result<BeneficiaryWeeklyLogResponse>> GetWeeklyLogByAsync(Guid id)

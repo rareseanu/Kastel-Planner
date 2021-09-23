@@ -1,0 +1,28 @@
+<hr class="my-2">
+<h3 class="fw-bold"> Schedule </h3>
+<hr class="my-2">
+<div *ngIf="error" class="alert alert-danger">{{error}}</div>
+<h4 class="fw-bold">Schedule Details</h4>
+
+<form *ngIf="schedule" [formGroup]="scheduleEditForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <label class="form-label" for="duration">Duration</label>
+        <input [(ngModel)]="schedule.minutes" type="text" formControlName="duration" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.duration.errors }" placeholder="Duration in minutes" />
+        <div *ngIf="submitted && f.duration.errors" class="invalid-feedback">
+            <div *ngIf="f.duration.errors.required">Duration is required.</div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="date">Date</label>
+        <input [(ngModel)]="schedule.date" type="date" formControlName="date" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.date.errors }" />
+        <div *ngIf="submitted && f.date.errors" class="invalid-feedback">
+            <div *ngIf="f.date.errors.required">Date is required.</div>
+        </div>
+    </div>
+    <button [disabled]="loading" class="btn btn-primary">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Update
+    </button>
+</form>

@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CalendarComponent } from './calendar';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { ForgottenPasswordComponent } from './forgotten-password/forgotten-password.component';
 import { AuthGuard } from './helpers/auth.guard';
 import { LoginComponent } from './login';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { RegisterFormComponent } from './register-form/register-form.component';
+import { PersonDetailsComponent } from './person-details/person-details.component';
+import { ScheduleDetailsComponent } from './schedule-details/schedule-details.component';
+import { WeeklyLogComponent } from './weekly-log/weekly-log.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -13,6 +17,10 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgottenPasswordComponent},
   { path: 'reset-password', component: PasswordResetComponent},
   { path: 'register', component: RegisterFormComponent},
+  { path: 'dashboard', component: DashboardComponent},
+  { path: 'person/:id', component: PersonDetailsComponent},
+  { path: 'schedule/:id', component: ScheduleDetailsComponent},
+  { path: 'weekly-log/:id', component: WeeklyLogComponent},
   { path: '*', redirectTo: '/'}
 ]
 

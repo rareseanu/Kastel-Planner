@@ -5,7 +5,8 @@
       <h3 class="fw-bold"> {{currentMonth}} {{currentYear}} </h3>
     </div>
     <div class="col-6">
-      <button type="button" (click)="loadNextWeek()" class="weekNavigation btn btn-primary rounded-circle float-end text-center me-1">
+      <button type="button" (click)="loadNextWeek()"
+        class="weekNavigation btn btn-primary rounded-circle float-end text-center me-1">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right"
           viewBox="0 0 16 16">
           <path fill-rule="evenodd"
@@ -36,7 +37,7 @@
         </th>
 
         <th class="text-center" width="14%">Tuesday <br>
-          <span class="dayOfWeek"  [ngClass]="{'currentDay' : getDayOfMonth(1) === currentDay.getDate()}">
+          <span class="dayOfWeek" [ngClass]="{'currentDay' : getDayOfMonth(1) === currentDay.getDate()}">
             {{getDayOfMonth(1)}}
           </span>
         </th>

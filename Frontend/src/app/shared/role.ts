@@ -1,4 +1,4 @@
-export enum Role {
-    Volunteer = 'Volunteer',
-    Admin = 'Admin'
+export class Role {
+    public roleName: string;
+    public id: string;
 }
