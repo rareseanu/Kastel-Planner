@@ -213,7 +213,7 @@ namespace Application.Users
                 Email = user.Email.Value,
                 ResetPasswordToken = resetToken.Token.Value
             };
-            _emailService.Send(user.Email.Value, "Kastel Planner - New Account", resetToken.Token.Value);
+            _emailService.Send(user.Email.Value, "Kastel Planner - New Account", $"Token: {resetToken.Token.Value} https://localhost:4200/password-reset");
 
             return Result.Success(userResponse);
         }

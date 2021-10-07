@@ -55,4 +55,14 @@ export class WeeklyLogService {
                 catchError(this.handleError)
             );
     }
+
+    createWeeklyLog(startTime: string, dayOfWeek: string, beneficiaryId: string): Observable<WeeklyLog> {
+        return this.http.post<WeeklyLog>(`${environment.BASE_API_URL}/weeklylog`, {startTime, dayOfWeek, beneficiaryId})
+            .pipe(
+                tap(data => {
+                    console.log(data);
+                }),
+                catchError(this.handleError)
+            );
+    }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './shared/authentication.service';
+import { ToastService } from './toast/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private toastService: ToastService
   ) {
   }
 
@@ -24,6 +26,7 @@ export class AppComponent implements OnInit {
   logout() {
     console.log("LOGOUT");
     this.authenticationService.logout();
+    this.toastService.success("Logged out successfully.");
   }
 
 }

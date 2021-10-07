@@ -9,5 +9,6 @@ export class Schedule {
     public volunteerId: string | null;
     public volunteerFirstName: string | null;
     public volunteerLastName: string | null;
+    public beneficiaryId: string;
     public date: Date;
 }

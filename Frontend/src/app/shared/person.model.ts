@@ -6,7 +6,7 @@ export class Person {
     public firstName: '';
     public lastName: '';
     public phoneNumber: '';
-    public isActive: '';
+    public isActive: boolean;
     public roles: Role[];
     public labels: Label[];
 }

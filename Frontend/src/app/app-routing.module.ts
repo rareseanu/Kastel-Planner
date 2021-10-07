@@ -16,11 +16,11 @@ const routes: Routes = [
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard], data: {roles: ['Admin', 'Volunteer']}},
   { path: 'forgot-password', component: ForgottenPasswordComponent},
   { path: 'reset-password', component: PasswordResetComponent},
-  { path: 'register', component: RegisterFormComponent},
-  { path: 'dashboard', component: DashboardComponent},
-  { path: 'person/:id', component: PersonDetailsComponent},
-  { path: 'schedule/:id', component: ScheduleDetailsComponent},
-  { path: 'weekly-log/:id', component: WeeklyLogComponent},
+  { path: 'register', component: RegisterFormComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
+  { path: 'person/:id', component: PersonDetailsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
+  { path: 'schedule/:id', component: ScheduleDetailsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
+  { path: 'weekly-log/:id', component: WeeklyLogComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
   { path: '*', redirectTo: '/'}
 ]
 

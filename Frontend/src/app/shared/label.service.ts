@@ -24,6 +24,16 @@ export class LabelService {
         return throwError(errorMessage);
     }
 
+    addLabelToPerson(labelId: string, personId: string) {
+        return this.http.post(`${environment.BASE_API_URL}/person-label`, {labelId, personId})
+            .pipe(
+                tap(data => {
+                    console.log(data);
+                }),
+                catchError(this.handleError)
+            );
+    }
+
     getAllLabels(): Observable<Label[]> {
         return this.http.get<Label[]>(`${environment.BASE_API_URL}/labels`)
             .pipe(

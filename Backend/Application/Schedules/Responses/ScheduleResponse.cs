@@ -18,6 +18,7 @@ namespace Application.Schedules.Responses
         public Guid WeeklyLogId { get; set; }
         public string BeneficiaryFirstName { get; set; }
         public string BeneficiaryLastName { get; set; }
+        public Guid BeneficiaryId { get; set; }
         public TimeSpan StartTime { get; set; }
         public string DayOfWeek { get; set; }
     }

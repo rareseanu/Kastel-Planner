@@ -48,7 +48,7 @@
         Update
     </button>
 </form>
-
+<hr>
 <div class="mt-3" *ngIf="isVolunteer">
     <h4 class="fw-bold">Schedules</h4>
     <div class="table-responsive">
@@ -149,19 +149,12 @@
                     <td data-label="Company">
                         <span>{{schedule.minutes}}</span>
                     </td>
-                    <td data-label="">
-                        <a routerLink="../../schedule/{{schedule.id}}" routerLinkActive="active"
-                            class="text-primary text-decoration-none me-2">Edit</a>
-                        <a (click)="deleteSchedule(schedule)" class="text-danger text-decoration-none">Delete</a>
-
-                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
-
-<div class="mt-3" *ngIf="isBeneficiary">
+<div class="mt-3 mb-3" *ngIf="isBeneficiary">
     <h4 class="fw-bold">Weekly Logs</h4>
     <div class="table-responsive">
         <table class="table table-hover table-nowrap">
@@ -180,8 +173,46 @@
                     <td data-label="Job Title">
                         <span>{{weeklyLog.dayOfWeek.name}}</span>
                     </td>
+                    <td data-label="">
+                        <a routerLink="../../weekly-log/{{weeklyLog.id}}" routerLinkActive="active" class="text-success text-decoration-none">Edit</a>
+                    </td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <h4 class="fw-bold">New weekly log</h4>
+    <div>
+        <form [formGroup]="weeklyLogForm" (ngSubmit)="onSubmitNewWeeklyLog()">
+            <div class="mb-3">
+                <label class="form-label" for="startTime">Start time</label>
+                <input type="time" formControlName="startTime" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && wf.startTime.errors }" placeholder="Start time" />
+                <div *ngIf="submitted && wf.startTime.errors" class="invalid-feedback">
+                    <div *ngIf="wf.startTime.errors.required">Start time is required.</div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="dayOfWeek">Day of week</label>
+                <select class="form-select" (change)="changeDay($event)" formControlName="dayOfWeek">
+                    <option value="" disabled>Choose a day</option>
+                    <option *ngFor="let day of days" value="{{day}}">{{day}}</option>
+                 </select>
+                <div *ngIf="submitted && wf.dayOfWeek.errors" class="invalid-feedback">
+                    <div *ngIf="wf.dayOfWeek.errors.required">Day of week is required.</div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="minutes">Minutes</label>
+                <input type="number" formControlName="minutes" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && wf.minutes.errors }" placeholder="Duration" />
+                <div *ngIf="submitted && wf.minutes.errors" class="invalid-feedback">
+                    <div *ngIf="wf.minutes.errors.required">Duration is required.</div>
+                </div>
+            </div>
+            <button [disabled]="loading" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Create
+            </button>
+        </form>
     </div>
 </div>

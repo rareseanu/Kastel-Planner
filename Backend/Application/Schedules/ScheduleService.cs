@@ -94,6 +94,7 @@ namespace Application.Schedules
                     WeeklyLogId = schedule.WeeklyLogId,
                     BeneficiaryFirstName = beneficiary.Name.FirstName,
                     BeneficiaryLastName = beneficiary.Name.LastName,
+                    BeneficiaryId = beneficiary.Id,
                     StartTime = weeklyLog.StartTime,
                     DayOfWeek = weeklyLog.DayOfWeek.Name,
                     Date = schedule.Date
@@ -134,6 +135,7 @@ namespace Application.Schedules
                     WeeklyLogId = schedule.WeeklyLogId,
                     BeneficiaryFirstName = beneficiary.Name.FirstName,
                     BeneficiaryLastName = beneficiary.Name.LastName,
+                    BeneficiaryId = beneficiary.Id,
                     StartTime = weeklyLog.StartTime,
                     DayOfWeek = weeklyLog.DayOfWeek.Name,
                     Date = schedule.Date

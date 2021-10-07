@@ -62,6 +62,16 @@ export class ScheduleService {
         );
     }
 
+    createSchedule(date: Date, duration: number, volunteerId: string, weeklyLogId: string) {
+        return this.http.post<Schedule>(`${environment.BASE_API_URL}/schedule`, {date, minutes: duration, volunteerId, weeklyLogId})
+        .pipe(
+            tap(data => {
+                console.log(data);
+            }),
+            catchError(this.handleError)
+        );
+    }
+
     updateSchedule(schedule: Schedule) {
         return this.http.patch<Schedule>(`${environment.BASE_API_URL}/schedules/schedule/${schedule.id}`, schedule)
             .pipe(

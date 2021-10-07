@@ -3,6 +3,7 @@ import { EventComponent } from './event/event.component';
 
 import { ScheduleService } from '../shared/schedule.service';
 import { Schedule } from '../shared/schedule.model';
+import { PersonService } from '../shared/person.service';
 
 @Component({
     templateUrl: 'calendar.component.html',
@@ -35,7 +36,8 @@ export class CalendarComponent {
     lastIndex0: ComponentRef<any>;
     lastIndex0Pos: number;
 
-    constructor(private resolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef, private scheduleService: ScheduleService) { 
+    constructor(private resolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef, private scheduleService: ScheduleService,
+            private personService: PersonService) { 
         this.loadWeek(new Date());
     }
 
@@ -128,57 +130,124 @@ export class CalendarComponent {
             component.instance.startHour = startHour;
             component.instance.endHour = endHour;
             component.instance.schedule = event;
+            console.log(event.beneficiaryId)
+            this.personService.getById(event.beneficiaryId).subscribe(data => {
+                component.instance.beneficiary = data;
+            });
 
             this.components[CalendarComponent.days[event.dayOfWeek]].push(component);
             this.cdr.detectChanges();
         }
         for(let componentArray of this.components) {
-            let temp = 0;
+            componentArray.sort((a, b) => {
+                let aHour = a.instance.startHour;
+                let aHourEnd = a.instance.endHour;
+                let bHour = b.instance.startHour;
+                let bHourEnd = a.instance.endHour;
+                if(aHour > bHour) {
+                    return 1;
+                } else if(aHour < bHour) {
+                    return -1;
+                } else {
+                    if(aHourEnd > bHourEnd) {
+                        return 1;
+                    } else if(aHourEnd < bHourEnd) {
+                        return -1
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+            console.log(componentArray);
+
+            let temp = 0;            
+            let temp2 = 0;
+            let wasEqual = false;
             let baseLeft = 1 / (componentArray.length);
     
             this.lastIndex0 = componentArray[0];
             this.lastIndex0Pos = 0;
             
             for(let c of componentArray) {
-                
-                let endHourFirst = componentArray[this.lastIndex0Pos].instance.endHour * 60;
+                let lastNotEqual = -1;
                 let startHourCurrent = componentArray[temp].instance.startHour * 60;
-    
-                if(componentArray.length == 1) {
+                if(temp == 0) {
                     c.instance.widthPercentage = 1;
-                } else {
-                    if(temp != this.components.length) {
-                        c.instance.widthPercentage = baseLeft * 1.7;
-                    } else {
-                        c.instance.widthPercentage = baseLeft;
-                    }
-                }
-    
-                if(startHourCurrent >= endHourFirst) {
                     c.instance.leftEdge = 0;
-                    c.instance.widthPercentage = 1;
-                    c.instance.zIndex = componentArray[0].instance.zIndex;
-                    this.lastIndex0 =  c.instance;
-                    this.lastIndex0Pos = temp;
-    
-                    let tempBaseLeft = 1 / (temp - 1);
-                    for(let i = 0; i < this.lastIndex0Pos - 1; ++i) {
-                        componentArray[i].instance.widthPercentage = tempBaseLeft * 1.7;
-                        componentArray[i].instance.leftEdge = 1 / (temp - 1) * i;
-                        componentArray[i].instance.zIndex = i;
-                        
+                } else {
+                    for(let x = 0; x < temp; ++x) {
+                        if(startHourCurrent == componentArray[x].instance.startHour * 60) {
+                            temp2 = 0;
+                            for(let x2 = x; x2 <= temp; ++x2) {
+                                let baseLeft2 = 1 / (temp - x + 1);
+                                componentArray[x2].instance.widthPercentage = baseLeft2 * componentArray[x-1].instance.widthPercentage;
+                                componentArray[x2].instance.leftEdge = baseLeft2 * temp2;
+                                if(x2 == x) {
+                                    componentArray[x2].instance.leftEdge += 0.05;
+                                }
+                                componentArray[x2].instance.zIndex = componentArray[x].instance.zIndex;
+                                ++temp2;
+                            }
+                            componentArray[temp2-1].instance.widthPercentage -= 0.05;
+                            wasEqual = true;
+                        } else {
+                            lastNotEqual = x;
+                        }
                     }
-                    componentArray[this.lastIndex0Pos - 2].instance.widthPercentage = tempBaseLeft;
-    
-                    if(componentArray[temp-1].instance.zIndex == 0) {
-                        componentArray[temp-1].instance.widthPercentage = componentArray[this.lastIndex0Pos].instance.widthPercentage;
-                    } else {
-                        componentArray[temp-1].instance.widthPercentage = tempBaseLeft;
+                    if(!wasEqual) {
+                        for(let x = 0; x < temp; ++x) {
+                            if(startHourCurrent != componentArray[x].instance.startHour * 60) {
+                                c.instance.zIndex = componentArray[x].instance.zIndex + 1;
+                                if(startHourCurrent > componentArray[x].instance.startHour * 60 && startHourCurrent < componentArray[x].instance.endHour * 60) {
+                                    c.instance.leftEdge = componentArray[x].instance.leftEdge + 0.05;
+                                    c.instance.widthPercentage = componentArray[x].instance.widthPercentage - 0.05;
+                                }
+                            }
+                        }
                     }
                 }
                 ++temp;
-    
             }
+            // for(let c of componentArray) {
+                
+            //     let endHourFirst = componentArray[this.lastIndex0Pos].instance.endHour * 60;
+            //     let startHourCurrent = componentArray[temp].instance.startHour * 60;
+    
+            //     if(componentArray.length == 1) {
+            //         c.instance.widthPercentage = 1;
+            //     } else {
+            //         if(temp != this.components.length) {
+            //             c.instance.widthPercentage = baseLeft * 1.7;
+            //         } else {
+            //             c.instance.widthPercentage = baseLeft;
+            //         }
+            //     }
+    
+            //     if(startHourCurrent >= endHourFirst) {
+            //         c.instance.leftEdge = 0;
+            //         c.instance.widthPercentage = 1;
+            //         c.instance.zIndex = componentArray[0].instance.zIndex;
+            //         this.lastIndex0 =  c.instance;
+            //         this.lastIndex0Pos = temp;
+    
+            //         let tempBaseLeft = 1 / (temp - 1);
+            //         for(let i = 0; i < this.lastIndex0Pos - 1; ++i) {
+            //             componentArray[i].instance.widthPercentage = tempBaseLeft * 1.7;
+            //             componentArray[i].instance.leftEdge = 1 / (temp - 1) * i;
+            //             componentArray[i].instance.zIndex = i;
+                        
+            //         }
+            //         componentArray[this.lastIndex0Pos - 2].instance.widthPercentage = tempBaseLeft;
+    
+            //         if(componentArray[temp-1].instance.zIndex == 0) {
+            //             componentArray[temp-1].instance.widthPercentage = componentArray[this.lastIndex0Pos].instance.widthPercentage;
+            //         } else {
+            //             componentArray[temp-1].instance.widthPercentage = tempBaseLeft;
+            //         }
+            //     }
+            //     ++temp;
+    
+            // }
         }
 
         this.cdr.detectChanges();

@@ -1,6 +1,16 @@
 <hr class="my-2">
 <h3 class="fw-bold"> Dashboard </h3>
 <hr class="my-2">
+
+<button class="btn btn-danger" (click)="danger()">
+    Danger
+</button>
+<button class="btn btn-info" (click)="info()">
+    Info
+</button>
+<button class="btn btn-success" (click)="success()">
+    Success
+</button>
 <div class="table-responsive">
     <table class="table table-bordered table-hover table-nowrap">
         <thead class="thead-light">
@@ -36,7 +46,8 @@
                     </td>
                     <td data-label="">
                         <a routerLink="../person/{{person.id}}" routerLinkActive="active" class="text-primary text-decoration-none me-2">Edit</a>
-                        <a routerLink="../person/{{person.id}}" routerLinkActive="active" class="text-danger text-decoration-none">Delete</a>
+                        <a *ngIf="person.isActive" (click)="toggleIsActive(person)" class="text-danger text-decoration-none">Disable</a>
+                        <a *ngIf="!person.isActive" (click)="toggleIsActive(person)" class="text-success text-decoration-none">Enable</a>
                     </td>
             </tr>
         </tbody>

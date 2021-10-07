@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthenticationService } from '../shared/authentication.service'
+import { ToastService } from '../toast/toast.service';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private toastService: ToastService
     ) {
     }
 
@@ -47,6 +49,7 @@ export class LoginComponent implements OnInit {
                 (data) => {
                     this.loading = false;
                     this.router.navigate(['/calendar']);
+                    this.toastService.success("You have successfully logged in!");
                 },
                 (error) => {
                     this.error = error;

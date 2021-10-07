@@ -41,15 +41,25 @@ namespace Infrastructure.Migrations
 
             var persons = new Person[]
             {
-                CreatePerson("Bob", "Bob", "0123456789"),
-                CreatePerson("John", "John", "9876543210")
+                CreatePerson("Bob", "Admin", "0123456789"),
+                CreatePerson("Andrei", "Voluntar", "0761234586"),
+                CreatePerson("Cristina", "Voluntar", "0754182715"),
+                CreatePerson("Matei", "Voluntar", "0724501825"),
+                CreatePerson("Alexandru", "Beneficiar", ""),
+                CreatePerson("Elena", "Beneficiar", "0761281745"),
+                CreatePerson("Dragos", "Beneficiar", "0776401925"),
+                CreatePerson("Roxana", "Beneficiar", ""),
+
             };
             await personDbSet.AddRangeAsync(persons);
             await context.SaveChangesAsync();
 
             var users = new User[]
             {
-                CreateUser(personDbSet.Single(i => i.Name.FirstName.Equals("Bob")).Id, "bob@gmail.com", "bob123456")
+                CreateUser(personDbSet.Single(i => i.Name.FirstName.Equals("Bob")).Id, "bob@gmail.com", "bob123456"),
+                CreateUser(personDbSet.Single(i => i.Name.FirstName.Equals("Andrei")).Id, "voluntar1@gmail.com", "voluntar123"),
+                CreateUser(personDbSet.Single(i => i.Name.FirstName.Equals("Cristina")).Id, "voluntar2@gmail.com", "voluntar123"),
+                CreateUser(personDbSet.Single(i => i.Name.FirstName.Equals("Matei")).Id, "voluntar3@gmail.com", "voluntar123")
             };
             await usersDbSet.AddRangeAsync(users);
             await context.SaveChangesAsync();
@@ -67,13 +77,43 @@ namespace Infrastructure.Migrations
             {
                 new PersonRole
                 (
-                    roleDbSet.Single(i => i.RoleName.Value.Equals("Volunteer")).Id,
+                    roleDbSet.Single(i => i.RoleName.Value.Equals("Admin")).Id,
                     personDbSet.Single(i => i.Name.FirstName.Equals("Bob")).Id
                 ),
                 new PersonRole
                 (
+                    roleDbSet.Single(i => i.RoleName.Value.Equals("Volunteer")).Id,
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Cristina")).Id
+                ),
+                new PersonRole
+                (
+                    roleDbSet.Single(i => i.RoleName.Value.Equals("Volunteer")).Id,
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Andrei")).Id
+                ),
+                new PersonRole
+                (
+                    roleDbSet.Single(i => i.RoleName.Value.Equals("Volunteer")).Id,
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Matei")).Id
+                ),
+                new PersonRole
+                (
                     roleDbSet.Single(i => i.RoleName.Value.Equals("Beneficiary")).Id,
-                    personDbSet.Single(i => i.Name.FirstName.Equals("John")).Id
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Alexandru")).Id
+                ),
+                new PersonRole
+                (
+                    roleDbSet.Single(i => i.RoleName.Value.Equals("Beneficiary")).Id,
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Elena")).Id
+                ),
+                new PersonRole
+                (
+                    roleDbSet.Single(i => i.RoleName.Value.Equals("Beneficiary")).Id,
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Dragos")).Id
+                ),
+                new PersonRole
+                (
+                    roleDbSet.Single(i => i.RoleName.Value.Equals("Beneficiary")).Id,
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Roxana")).Id
                 )
             };
             await personRoleDbSet.AddRangeAsync(personRoles);
@@ -91,14 +131,19 @@ namespace Infrastructure.Migrations
             {
                 new PersonLabel
                 (
-                    personDbSet.Single(i => i.Name.FirstName.Equals("Bob")).Id,
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Andrei")).Id,
                     labelDbSet.Single(i => i.LabelName.Value.Equals("Physical disabilities")).Id
                     
                 ),
                 new PersonLabel
                 (
-                    personDbSet.Single(i => i.Name.FirstName.Equals("John")).Id,
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Andrei")).Id,
                     labelDbSet.Single(i => i.LabelName.Value.Equals("Mental health disorders")).Id
+                ),
+                new PersonLabel
+                (
+                    personDbSet.Single(i => i.Name.FirstName.Equals("Dragos")).Id,
+                    labelDbSet.Single(i => i.LabelName.Value.Equals("Physical disabilities")).Id
                 )
             };
             await personLabelDbSet.AddRangeAsync(personLabels);
@@ -106,8 +151,22 @@ namespace Infrastructure.Migrations
 
             var weeklyLogs = new BeneficiaryWeeklyLog[]
             {
-                CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("John")).Id,
-                    "Monday", new TimeSpan(1, 30, 0))
+                CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Alexandru")).Id,
+                    "Friday", new TimeSpan(13, 30, 0)),
+                CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Elena")).Id,
+                    "Friday", new TimeSpan(15, 0, 0)),
+                CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Dragos")).Id,
+                    "Friday", new TimeSpan(11, 20, 0)),
+                CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Roxana")).Id,
+                    "Wednesday", new TimeSpan(15, 30, 0)),
+                CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Roxana")).Id,
+                    "Thursday", new TimeSpan(12, 0, 0)),
+                CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Dragos")).Id,
+                    "Monday", new TimeSpan(13, 30, 0)),
+                CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Alexandru")).Id,
+                    "Monday", new TimeSpan(15, 30, 0)),
+                CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Elena")).Id,
+                    "Tuesday", new TimeSpan(14, 0, 0))
 
             };
             await weeklyLogDbSet.AddRangeAsync(weeklyLogs);
@@ -117,8 +176,62 @@ namespace Infrastructure.Migrations
             {
                 new Schedule(
                     null,
-                    weeklyLogDbSet.FirstOrDefault(i => i.Person.Name.FirstName.Equals("John")).Id,
-                    DateTime.Now,
+                    weeklyLogs[0].Id,
+                    new DateTime(DateTime.Now.Year, 9, 24),
+                    Duration.Create(2, 0).Value
+                ),
+                new Schedule(
+                    null,
+                    weeklyLogs[6].Id,
+                    new DateTime(DateTime.Now.Year, 9, 20),
+                    Duration.Create(2, 0).Value
+                ),
+                new Schedule(
+                    null,
+                    weeklyLogs[0].Id,
+                    new DateTime(DateTime.Now.Year, 9, 17),
+                    Duration.Create(2, 0).Value
+                ),
+                new Schedule(
+                    null,
+                    weeklyLogs[7].Id,
+                    new DateTime(DateTime.Now.Year, 9, 14),
+                    Duration.Create(2, 0).Value
+                ),
+                new Schedule(
+                    null,
+                    weeklyLogs[1].Id,
+                    new DateTime(DateTime.Now.Year, 9, 24),
+                    Duration.Create(2, 0).Value
+                ),
+                new Schedule(
+                    null,
+                    weeklyLogs[7].Id,
+                    new DateTime(DateTime.Now.Year, 9, 21),
+                    Duration.Create(2, 0).Value
+                ),
+                new Schedule(
+                    null,
+                    weeklyLogs[2].Id,
+                    new DateTime(DateTime.Now.Year, 9, 24),
+                    Duration.Create(2, 0).Value
+                ),
+                new Schedule(
+                    null,
+                    weeklyLogs[5].Id,
+                    new DateTime(DateTime.Now.Year, 9, 20),
+                    Duration.Create(2, 0).Value
+                ),
+                new Schedule(
+                    null,
+                    weeklyLogs[3].Id,
+                    new DateTime(DateTime.Now.Year, 9, 22),
+                    Duration.Create(2, 0).Value
+                ),
+                new Schedule(
+                    null,
+                    weeklyLogs[4].Id,
+                    new DateTime(DateTime.Now.Year, 9, 23),
                     Duration.Create(2, 0).Value
                 )
             };

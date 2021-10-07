@@ -28,10 +28,31 @@ export class PersonDetailsComponent implements OnInit {
     labels: Label[];
     loginForm: FormGroup;
     reportForm: FormGroup;
+    weeklyLogForm: FormGroup;
     loading = false;
     submitted = false;
     returnUrl: string;
     error: string;
+
+    days: any = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ]
+
+    static daysRecord: Record<string, number> = {
+        "Monday": 1,
+        "Tuesday": 2,
+        "Wednesday": 3,
+        "Thursday": 4,
+        "Friday": 5,
+        "Saturday": 6,
+        "Sunday": 7
+    };
 
     constructor(private personService: PersonService, private route: ActivatedRoute, private formBuilder: FormBuilder,
             private roleService: RoleService, private labelService: LabelService, private scheduleService: ScheduleService,
@@ -40,6 +61,40 @@ export class PersonDetailsComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadPerson();
+        console.log(this.getDateForThisWeek('Monday'));
+    }
+
+    getDateForThisWeek(dayOfWeek: string) {
+        var curr = new Date;
+        var monday = curr.getDate() - curr.getDay();
+        return new Date(curr.setDate(monday + PersonDetailsComponent.daysRecord[dayOfWeek]));
+    }
+
+    onSubmitNewWeeklyLog() {
+        this.submitted = true;
+
+        if(this.weeklyLogForm.invalid) {
+            return;
+        }
+
+        this.loading = true;
+        this.weeklyLogService.createWeeklyLog(this.wf.startTime.value, this.wf.dayOfWeek.value, this.person.id)
+            .subscribe(response => {
+                this.loading = false;
+                this.scheduleService.createSchedule(this.getDateForThisWeek(this.wf.dayOfWeek.value), this.wf.minutes.value,
+                    '', response.id)
+                        .subscribe(schedule => {
+                            
+                        });
+                this.weeklyLogService.getWeeklyLogById(response.id)
+                    .subscribe(weeklyLog => {
+                        this.weeklyLogs.push(weeklyLog);
+                    })
+            },
+            (error) => {
+                this.error = error;
+                this.loading = false;
+            });
     }
 
     onSubmitReportForm() {
@@ -64,6 +119,7 @@ export class PersonDetailsComponent implements OnInit {
 
     get f() { return this.loginForm.controls; }
     get rf() { return this.reportForm.controls; }
+    get wf() { return this.weeklyLogForm.controls; }
 
     onSubmit() {
         this.submitted = true;
@@ -77,6 +133,17 @@ export class PersonDetailsComponent implements OnInit {
         this.personService.updatePerson(this.person).subscribe(response => {
             for(let role of this.person.roles) {
                 this.roleService.addRoleToPerson(role.id, this.person.id)
+                .subscribe(
+                    (data) => {
+                        this.loading = false;
+                    },
+                    (error) => {
+                        this.error = error;
+                        this.loading = false;
+                    });
+            }
+            for(let label of this.person.labels) {
+                this.labelService.addLabelToPerson(label.id, this.person.id)
                 .subscribe(
                     (data) => {
                         this.loading = false;
@@ -103,6 +170,10 @@ export class PersonDetailsComponent implements OnInit {
         });
     }
 
+    changeDay(e: any) {
+        this.weeklyLogForm.controls.dayOfWeek.setValue(e.target.value);
+    }
+
     loadPerson() {
         const personId = this.route.snapshot.paramMap.get('id');
 
@@ -126,7 +197,12 @@ export class PersonDetailsComponent implements OnInit {
                         if(this.isBeneficiary) {
                             this.weeklyLogService.getWeeklyLogsByPersonId(personId).subscribe(weeklyLogs => {
                                 this.weeklyLogs = weeklyLogs;
-                            })
+                            });
+                            this.weeklyLogForm = this.formBuilder.group({
+                                startTime: ['', Validators.required],
+                                dayOfWeek: ['', Validators.required],
+                                minutes: [0, Validators.required]
+                            });
                         }
 
                         this.isVolunteer = this.person.roles.some(r => r.roleName === 'Volunteer');

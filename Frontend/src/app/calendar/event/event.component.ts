@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from 'src/app/shared/authentication.service';
+import { Person } from 'src/app/shared/person.model';
 import { Schedule } from 'src/app/shared/schedule.model';
 import { ScheduleService } from 'src/app/shared/schedule.service';
+import { ToastService } from 'src/app/toast/toast.service';
 
 @Component({
     selector: 'event',
@@ -9,7 +11,8 @@ import { ScheduleService } from 'src/app/shared/schedule.service';
     styleUrls: ['./event.component.css']
 })
 export class EventComponent {
-    constructor(private scheduleService: ScheduleService, private authenticationService: AuthenticationService) {}
+    constructor(private scheduleService: ScheduleService, private authenticationService: AuthenticationService,
+        private toastService: ToastService) {}
 
     public title = '';
     public leftEdge = 0;
@@ -21,6 +24,7 @@ export class EventComponent {
     public schedule: Schedule;
     public startHour: number;
     public endHour: number;
+    public beneficiary: Person;
 
     renderHour(hour: number) {
         let hours = Math.floor(hour);
@@ -58,6 +62,7 @@ export class EventComponent {
             this.scheduleService.updateSchedule(this.schedule).subscribe( data => {
                 this.schedule.volunteerLastName = data.volunteerLastName;
                 this.schedule.volunteerFirstName = data.volunteerFirstName;
+                this.toastService.info("Schedule assigned.");
             });
         }
     }
@@ -70,6 +75,7 @@ export class EventComponent {
             this.scheduleService.updateSchedule(this.schedule).subscribe(data => {
                 this.schedule.volunteerLastName = data.volunteerLastName;
                 this.schedule.volunteerFirstName = data.volunteerFirstName;
+                this.toastService.info("Schedule unassigned.");
             });
         }
     }
