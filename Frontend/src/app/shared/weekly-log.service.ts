@@ -24,8 +24,26 @@ export class WeeklyLogService {
         return throwError(errorMessage);
     }
 
+    getAllWeeklyLogs(startTime?: Date, endTime?: Date): Observable<WeeklyLog[]> {
+        let params = new HttpParams();
+        if(startTime) {
+            params = params.append('startTime', startTime.toISOString());
+        }
+        
+        if(endTime) {
+            params = params.append('endTime', endTime.toISOString());
+        }
+        return this.http.get<WeeklyLog[]>(`${environment.BASE_API_URL}/beneficiaryWeeklyLog`, {params: params})
+            .pipe(
+                tap(data => {
+                    console.log(data);
+                }),
+                catchError(this.handleError)
+            );
+    }
+
     getWeeklyLogById(weeklyLogId: string) : Observable<WeeklyLog> {
-        return this.http.get<WeeklyLog>(`${environment.BASE_API_URL}/weeklyLogs/${weeklyLogId}`)
+        return this.http.get<WeeklyLog>(`${environment.BASE_API_URL}/beneficiaryWeeklyLog/${weeklyLogId}`)
         .pipe(
             tap(data => {
                 console.log(data);
@@ -35,7 +53,7 @@ export class WeeklyLogService {
     }
 
     getWeeklyLogsByPersonId(personId: string):Observable<WeeklyLog[]> {
-        return this.http.get<WeeklyLog[]>(`${environment.BASE_API_URL}/weekly-logs-by-id/${personId}`)
+        return this.http.get<WeeklyLog[]>(`${environment.BASE_API_URL}/beneficiaryWeeklyLog/weekly-logs-by-id/${personId}`)
         .pipe(
             tap(data => {
                 console.log(data);
@@ -46,8 +64,8 @@ export class WeeklyLogService {
 
     updateWeeklyLog(weeklyLog: WeeklyLog): Observable<WeeklyLog> {
         console.log(weeklyLog.dayOfWeek.name);
-        return this.http.patch<WeeklyLog>(`${environment.BASE_API_URL}/weeklylogs/weeklylog/${weeklyLog.id}`, 
-                {startTime: weeklyLog.startTime, dayOfWeek: weeklyLog.dayOfWeek.name, id: weeklyLog.id, beneficiaryId: weeklyLog.beneficiaryId})
+        return this.http.patch<WeeklyLog>(`${environment.BASE_API_URL}/beneficiaryWeeklyLog/${weeklyLog.id}`, 
+                {startTime: weeklyLog.startTime, dayOfWeek: weeklyLog.dayOfWeek.name, beneficiaryId: weeklyLog.beneficiaryId, minutes: weeklyLog.duration})
             .pipe(
                 tap(data => {
                     console.log(data);
@@ -56,8 +74,8 @@ export class WeeklyLogService {
             );
     }
 
-    createWeeklyLog(startTime: string, dayOfWeek: string, beneficiaryId: string): Observable<WeeklyLog> {
-        return this.http.post<WeeklyLog>(`${environment.BASE_API_URL}/weeklylog`, {startTime, dayOfWeek, beneficiaryId})
+    createWeeklyLog(startTime: string, dayOfWeek: string, minutes: number, beneficiaryId: string): Observable<WeeklyLog> {
+        return this.http.post<WeeklyLog>(`${environment.BASE_API_URL}/beneficiaryWeeklyLog`, {startTime, dayOfWeek, minutes, beneficiaryId})
             .pipe(
                 tap(data => {
                     console.log(data);

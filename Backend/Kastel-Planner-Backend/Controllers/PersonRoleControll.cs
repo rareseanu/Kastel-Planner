@@ -3,15 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Application.BeneficiaryWeeklyLogs;
 using System;
 using System.Threading.Tasks;
-using Application.Persons;
-using Application.Persons.Requests;
-using Application.PersonsLabels;
-using Application.PersonsLabels.Requests;
 using Application.PersonsRoles;
 using Application.PersonsRoles.Requests;
 
 namespace Kastel_Planner_Backend.Controllers
 {
+    [Route("api/[controller]")]
     public class PersonRoleController : Controller
     {
         private readonly IPersonsRolesService _personsRolesService;
@@ -21,14 +18,14 @@ namespace Kastel_Planner_Backend.Controllers
             _personsRolesService = personsRolesService;
         }
 
-        [Route("persons-roles")]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var personsRoles = await _personsRolesService.GetAllPersonsRolesAsync();
             return Ok(personsRoles);
         }
 
-        [Route("persons-roles/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -46,7 +43,6 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("person-role")]
         public async Task<IActionResult> Create([FromBody] CreatePersonsRolesRequest request)
         {
             if(request == null)
@@ -64,8 +60,7 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
 
-        [HttpDelete]
-        [Route("person-role/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -82,8 +77,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(null);
         }
 
-        [HttpPatch]
-        [Route("persons-roles/person-role/{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdatePersonsRolesRequest request)
         {
             if (id == Guid.Empty)

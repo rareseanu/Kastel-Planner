@@ -33,10 +33,7 @@ namespace Kastel_Planner_Backend
             {
                 options.AddDefaultPolicy(builder =>
                 {
-
-
-                   
-                     builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
+                     builder.SetIsOriginAllowed(origin => true);
                      builder.AllowAnyHeader();
                      builder.AllowCredentials();
                      builder.AllowAnyMethod();
@@ -76,12 +73,7 @@ namespace Kastel_Planner_Backend
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                // TODO: Production error page.
-            }
 
-            app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseCors();

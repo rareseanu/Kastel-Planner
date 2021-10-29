@@ -1,7 +1,7 @@
 ﻿using Domain.Base;
 using System.Collections.Generic;
 
-namespace Domain.Schedules.ValueObjects
+namespace Domain.BeneficiaryWeeklyLogs.ValueObjects
 {
     public sealed class Duration : ValueObject
     {

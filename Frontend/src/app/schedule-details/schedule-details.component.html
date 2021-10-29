@@ -7,7 +7,7 @@
 <form *ngIf="schedule" [formGroup]="scheduleEditForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
         <label class="form-label" for="duration">Duration</label>
-        <input [(ngModel)]="schedule.minutes" type="text" formControlName="duration" class="form-control"
+        <input [(ngModel)]="schedule.weeklyLog.duration" type="text" formControlName="duration" class="form-control"
             [ngClass]="{ 'is-invalid': submitted && f.duration.errors }" placeholder="Duration in minutes" />
         <div *ngIf="submitted && f.duration.errors" class="invalid-feedback">
             <div *ngIf="f.duration.errors.required">Duration is required.</div>

@@ -3,6 +3,7 @@ import { AuthenticationService } from 'src/app/shared/authentication.service';
 import { Person } from 'src/app/shared/person.model';
 import { Schedule } from 'src/app/shared/schedule.model';
 import { ScheduleService } from 'src/app/shared/schedule.service';
+import { WeeklyLog } from 'src/app/shared/weekly-log.model';
 import { ToastService } from 'src/app/toast/toast.service';
 
 @Component({
@@ -20,11 +21,22 @@ export class EventComponent {
     public widthPercentage = 1;
     public height = 0;
     public zIndex = 0;
+    public zIndexBackup = 0;
 
-    public schedule: Schedule;
+    public weeklyLog: WeeklyLog;
     public startHour: number;
     public endHour: number;
     public beneficiary: Person;
+    public date: Date;
+
+    mouseEnter() {
+        this.zIndexBackup = this.zIndex;
+        this.zIndex = 999;
+    }
+
+    mouseLeave() {
+        this.zIndex = this.zIndexBackup;
+    }
 
     renderHour(hour: number) {
         let hours = Math.floor(hour);
@@ -58,25 +70,19 @@ export class EventComponent {
 
     public assignSchedule() {
         if(this.authenticationService.getCurrentUser) {
-            this.schedule.volunteerId = this.authenticationService.getCurrentUser.personId;
-            this.scheduleService.updateSchedule(this.schedule).subscribe( data => {
-                this.schedule.volunteerLastName = data.volunteerLastName;
-                this.schedule.volunteerFirstName = data.volunteerFirstName;
+            this.scheduleService.createSchedule(this.date, this.authenticationService.getCurrentUser.personId, this.weeklyLog.id).subscribe(data => {
+                this.weeklyLog.Schedule = data;
                 this.toastService.info("Schedule assigned.");
-            });
+            })
         }
     }
 
     public unassignSchedule() {
-        if(this.authenticationService.getCurrentUser) {
-            this.schedule.volunteerId = null;
-            this.schedule.volunteerFirstName = null;
-            this.schedule.volunteerLastName = null;
-            this.scheduleService.updateSchedule(this.schedule).subscribe(data => {
-                this.schedule.volunteerLastName = data.volunteerLastName;
-                this.schedule.volunteerFirstName = data.volunteerFirstName;
+        if(this.authenticationService.getCurrentUser && this.weeklyLog.Schedule) {
+            this.scheduleService.deleteSchedule(this.weeklyLog.Schedule?.id).subscribe(data => {
                 this.toastService.info("Schedule unassigned.");
             });
+            this.weeklyLog.Schedule = null;
         }
     }
 }

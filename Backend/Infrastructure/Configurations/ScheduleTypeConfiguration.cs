@@ -10,13 +10,6 @@ namespace Infrastructure.Configurations
         {
             builder.ToTable("schedule");
 
-            builder.OwnsOne(s => s.Duration, duration =>
-            {
-                duration.Property(d => d.Minutes)
-                    .HasColumnName("duration")
-                    .IsRequired();
-            });
-
             builder.Property(s => s.Date)
                 .HasColumnName("date")
                 .HasColumnType("date")

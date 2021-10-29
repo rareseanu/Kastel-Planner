@@ -11,7 +11,7 @@
     Hello, world! This is a toast message.
   </div>
 </div>
-<div class="col-sm-8 offset-sm-2" style="max-width: 30rem;margin:auto">
+<div class="col-sm-8 offset-sm-2 shadow-form" style="max-width: 30rem;margin:auto">
   <hr class="my-2">
   <h3 class="fw-bold">Registration Form</h3>
   <hr class="my-2">
@@ -38,8 +38,7 @@
 
     </button>
     <button class="btn btn-sm btn-primary w-100" *ngIf="selectedRoleName == 'Beneficiary'" [disabled]="registerForm.get('person')?.invalid ||       
-            selectedDayOfWeekFromParentComponent == '' ||
-            registerForm.get('user')?.invalid">
+            selectedDayOfWeekFromParentComponent == ''">
 
 
       Sign Up

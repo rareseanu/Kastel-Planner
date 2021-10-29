@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PersonLabel } from '../shared/person-label.model';
 import { RegisterService } from '../shared/register.service';
+import { WeeklyLogService } from '../shared/weekly-log.service';
 import { ToastService } from '../toast/toast.service';
 
 export interface LabelFormValues {
@@ -29,7 +30,8 @@ export class RegisterFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private registerService: RegisterService,
-    private toastService: ToastService) {
+    private toastService: ToastService,
+    private weeklyLogService: WeeklyLogService) {
     this.registerForm = this.formBuilder.group({
       person: new FormControl({ firstName: '', lastName: '', phoneNumber: '' }),
       label: new FormControl({ id: '', labelName: '' }),
@@ -114,7 +116,7 @@ export class RegisterFormComponent implements OnInit {
                 this.loading = false;
                 //daca rolul persoanei este de beneficiar
                 if (this.selectedRoleName == 'Beneficiary') {
-                  this.registerService.insertWeeklyLog(this.registerForm.get('beneficiary')?.value.startTime, this.selectedDayOfWeekFromParentComponent, this.insertedPersonId)
+                  this.weeklyLogService.createWeeklyLog(this.registerForm.get('beneficiary')?.value.startTime, this.selectedDayOfWeekFromParentComponent, this.registerForm.get('beneficiary')?.value.duration, this.insertedPersonId)
                     .subscribe(
                       (data) => {
                         this.toastService.success("User created successfully!");
@@ -168,7 +170,7 @@ export class RegisterFormComponent implements OnInit {
         });
 
     this.submitted = true;
-
+    this.toastService.success("User created successfully!");
 
   }
 

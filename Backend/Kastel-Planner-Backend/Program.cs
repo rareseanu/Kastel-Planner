@@ -3,6 +3,7 @@ using Application.Users.Requests;
 using Infrastructure.Context;
 using Infrastructure.Migrations;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -37,6 +38,7 @@ namespace Kastel_Planner_Backend
             try
             {
                 var context = services.GetRequiredService<KastelPlannerDbContext>();
+                context.Database.Migrate();
                 await DbInitializer.Initialize(context);
             }
             catch (Exception ex)

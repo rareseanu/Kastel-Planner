@@ -1,4 +1,5 @@
 ﻿using Domain.BeneficiaryWeeklyLogs;
+using Domain.BeneficiaryWeeklyLogs.ValueObjects;
 using Domain.Labels;
 using Domain.Labels.ValueObjects;
 using Domain.Persons;
@@ -8,7 +9,6 @@ using Domain.PersonsRoles;
 using Domain.Roles;
 using Domain.Roles.ValueObjects;
 using Domain.Schedules;
-using Domain.Schedules.ValueObjects;
 using Domain.Users;
 using Domain.Users.ValueObjects;
 using Infrastructure.Context;
@@ -152,21 +152,21 @@ namespace Infrastructure.Migrations
             var weeklyLogs = new BeneficiaryWeeklyLog[]
             {
                 CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Alexandru")).Id,
-                    "Friday", new TimeSpan(13, 30, 0)),
+                    "Friday", new TimeSpan(13, 30, 0), Duration.Create(2, 0).Value),
                 CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Elena")).Id,
-                    "Friday", new TimeSpan(15, 0, 0)),
+                    "Friday", new TimeSpan(15, 0, 0), Duration.Create(2, 0).Value),
                 CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Dragos")).Id,
-                    "Friday", new TimeSpan(11, 20, 0)),
+                    "Friday", new TimeSpan(11, 20, 0), Duration.Create(2, 0).Value),
                 CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Roxana")).Id,
-                    "Wednesday", new TimeSpan(15, 30, 0)),
+                    "Wednesday", new TimeSpan(15, 30, 0), Duration.Create(2, 0).Value),
                 CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Roxana")).Id,
-                    "Thursday", new TimeSpan(12, 0, 0)),
+                    "Thursday", new TimeSpan(12, 0, 0), Duration.Create(2, 0).Value),
                 CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Dragos")).Id,
-                    "Monday", new TimeSpan(13, 30, 0)),
+                    "Monday", new TimeSpan(13, 30, 0), Duration.Create(2, 0).Value),
                 CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Alexandru")).Id,
-                    "Monday", new TimeSpan(15, 30, 0)),
+                    "Monday", new TimeSpan(15, 30, 0), Duration.Create(2, 0).Value),
                 CreateWeeklyLogForBeneficiary(personDbSet.Single(i => i.Name.FirstName.Equals("Elena")).Id,
-                    "Tuesday", new TimeSpan(14, 0, 0))
+                    "Tuesday", new TimeSpan(14, 0, 0), Duration.Create(2, 0).Value)
 
             };
             await weeklyLogDbSet.AddRangeAsync(weeklyLogs);
@@ -177,62 +177,52 @@ namespace Infrastructure.Migrations
                 new Schedule(
                     null,
                     weeklyLogs[0].Id,
-                    new DateTime(DateTime.Now.Year, 9, 24),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 18)
                 ),
                 new Schedule(
                     null,
                     weeklyLogs[6].Id,
-                    new DateTime(DateTime.Now.Year, 9, 20),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 18)
                 ),
                 new Schedule(
                     null,
                     weeklyLogs[0].Id,
-                    new DateTime(DateTime.Now.Year, 9, 17),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 15)
                 ),
                 new Schedule(
                     null,
                     weeklyLogs[7].Id,
-                    new DateTime(DateTime.Now.Year, 9, 14),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 12)
                 ),
                 new Schedule(
                     null,
                     weeklyLogs[1].Id,
-                    new DateTime(DateTime.Now.Year, 9, 24),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 22)
                 ),
                 new Schedule(
                     null,
                     weeklyLogs[7].Id,
-                    new DateTime(DateTime.Now.Year, 9, 21),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 19)
                 ),
                 new Schedule(
                     null,
                     weeklyLogs[2].Id,
-                    new DateTime(DateTime.Now.Year, 9, 24),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 22)
                 ),
                 new Schedule(
                     null,
                     weeklyLogs[5].Id,
-                    new DateTime(DateTime.Now.Year, 9, 20),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 18)
                 ),
                 new Schedule(
                     null,
                     weeklyLogs[3].Id,
-                    new DateTime(DateTime.Now.Year, 9, 22),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 20)
                 ),
                 new Schedule(
                     null,
                     weeklyLogs[4].Id,
-                    new DateTime(DateTime.Now.Year, 9, 23),
-                    Duration.Create(2, 0).Value
+                    new DateTime(DateTime.Now.Year, 10, 21)
                 )
             };
             await scheduleDbSet.AddRangeAsync(schedules);
@@ -272,10 +262,11 @@ namespace Infrastructure.Migrations
             return label;
         }
 
-        private static BeneficiaryWeeklyLog CreateWeeklyLogForBeneficiary(Guid beneficiaryId, string dayOfWeek, TimeSpan startTime)
+        private static BeneficiaryWeeklyLog CreateWeeklyLogForBeneficiary(Guid beneficiaryId, string dayOfWeek, TimeSpan startTime,
+                Duration duration)
         {
             DayOfWeek day = DayOfWeek.Create(dayOfWeek).Value;
-            BeneficiaryWeeklyLog beneficiaryWeeklyLog = new BeneficiaryWeeklyLog(beneficiaryId, startTime, day);
+            BeneficiaryWeeklyLog beneficiaryWeeklyLog = new BeneficiaryWeeklyLog(beneficiaryId, startTime, day, duration);
 
             return beneficiaryWeeklyLog;
         }

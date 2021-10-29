@@ -6,23 +6,24 @@ using System.Threading.Tasks;
 
 namespace Kastel_Planner_Backend.Controllers
 {
-    public class BenecificaryWeeklyLogController : Controller
+    [Route("api/[controller]")]
+    public class BeneficiaryWeeklyLogController : Controller
     {
         private readonly IBeneficiaryWeeklyLogService _weeklyService;
 
-        public BenecificaryWeeklyLogController(IBeneficiaryWeeklyLogService weeklyService)
+        public BeneficiaryWeeklyLogController(IBeneficiaryWeeklyLogService weeklyService)
         {
             _weeklyService = weeklyService;
         }
 
-        [Route("weeklylogs")]
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index([FromQuery] GetBeneficiaryWeeklyLogRequest request)
         {
-            var weeklyLogs = await _weeklyService.GetAllWeeklyLogsAsync();
+            var weeklyLogs = await _weeklyService.GetAllWeeklyLogsAsync(request);
             return Ok(weeklyLogs);
         }
 
-        [Route("weekly-logs-by-id/{personId}")]
+        [HttpGet("weekly-logs-by-id/{personId}")]
         public async Task<IActionResult> GetWeeklyLogsByPersonId([FromRoute] Guid personId)
         {
             if (personId == Guid.Empty)
@@ -40,7 +41,7 @@ namespace Kastel_Planner_Backend.Controllers
 
         }
 
-        [Route("weeklylogs/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -57,8 +58,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPost]
-        [Route("weeklylog")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> Create([FromBody] CreateBeneficiaryWeeklyLogRequest request)
         {
             if(request == null)
@@ -75,9 +75,7 @@ namespace Kastel_Planner_Backend.Controllers
             return CreatedAtAction(nameof(Details), new { id = result.Value.Id }, result.Value);
         }
 
-
-        [HttpDelete]
-        [Route("weeklylog/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -94,8 +92,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(null);
         }
 
-        [HttpPatch]
-        [Route("weeklylogs/weeklylog/{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdateBeneficiaryWeeklyLog request)
         {
             if (id == Guid.Empty)

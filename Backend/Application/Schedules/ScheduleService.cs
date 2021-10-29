@@ -4,10 +4,10 @@ using Application.Schedules.Responses;
 using Domain;
 using Domain.Schedules;
 using Domain.Persons;
-using Domain.Schedules.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.BeneficiaryWeeklyLogs.Responses;
 
 namespace Application.Schedules
 {
@@ -27,21 +27,13 @@ namespace Application.Schedules
 
         public async Task<Result<ScheduleResponse>> CreateScheduleAsync(CreateScheduleRequest request)
         {
-            Result<Duration> durationNameOrError = Duration.Create(request.Hours, request.Minutes);
-            if (durationNameOrError.IsFailure)
-            {
-                return Result.Failure<ScheduleResponse>(durationNameOrError.Error);
-            }
-
-            var schedule = new Schedule(request.VolunteerId, request.WeeklyLogId, request.Date, durationNameOrError.Value);
+            var schedule = new Schedule(request.VolunteerId, request.WeeklyLogId, request.Date);
 
             await _scheduleRepository.AddAsync(schedule);
 
             var response = new ScheduleResponse()
             {
                 Id = schedule.Id,
-                Hours = schedule.Duration.Hours,
-                Minutes = schedule.Duration.Minutes,
                 VolunteerId = schedule.VolunteerId,
                 WeeklyLogId = schedule.WeeklyLogId
             };
@@ -83,21 +75,26 @@ namespace Application.Schedules
                 var weeklyLog = await _weeklyLogRepository.GetByIdAsync(schedule.WeeklyLogId);
                 var beneficiary = await _personRepository.GetByIdAsync(weeklyLog.BeneficiaryId);
 
+                var weeklyLogResponse = new BeneficiaryWeeklyLogResponse()
+                {
+                    Id = weeklyLog.Id,
+                    StartTime = weeklyLog.StartTime,
+                    DayOfWeek = weeklyLog.DayOfWeek,
+                    BeneficiaryId = weeklyLog.BeneficiaryId,
+                    BeneficiaryFirstName = beneficiary.Name.FirstName,
+                    BeneficiaryLastName = beneficiary.Name.LastName,
+                    Duration = weeklyLog.Duration.Minutes
+                };
+
                 var scheduleResponse = new ScheduleResponse()
                 {
                     Id = schedule.Id,
-                    Hours = schedule.Duration.Hours,
-                    Minutes = schedule.Duration.Minutes,
                     VolunteerId = schedule.VolunteerId,
                     VolunteerFirstName = volunteer == null ? null : volunteer.Name.FirstName,
                     VolunteerLastName = volunteer == null ? null : volunteer.Name.LastName,
                     WeeklyLogId = schedule.WeeklyLogId,
-                    BeneficiaryFirstName = beneficiary.Name.FirstName,
-                    BeneficiaryLastName = beneficiary.Name.LastName,
-                    BeneficiaryId = beneficiary.Id,
-                    StartTime = weeklyLog.StartTime,
-                    DayOfWeek = weeklyLog.DayOfWeek.Name,
-                    Date = schedule.Date
+                    Date = schedule.Date,
+                    WeeklyLog = weeklyLogResponse
                 };
 
                 response.Add(scheduleResponse);
@@ -117,31 +114,37 @@ namespace Application.Schedules
             foreach (var schedule in schedules)
             {
                 var weeklyLog = await _weeklyLogRepository.GetByIdAsync(schedule.WeeklyLogId);
-                var beneficiary = await _personRepository.GetByIdAsync(weeklyLog.BeneficiaryId);
                 Person volunteer = null;
+                var beneficiary = await _personRepository.GetByIdAsync(weeklyLog.BeneficiaryId);
+
                 if (schedule.VolunteerId.HasValue)
                 {
                     volunteer = await _personRepository.GetByIdAsync(schedule.VolunteerId.Value);
                 }
 
+                var weeklyLogResponse = new BeneficiaryWeeklyLogResponse()
+                {
+                    Id = weeklyLog.Id,
+                    StartTime = weeklyLog.StartTime,
+                    DayOfWeek = weeklyLog.DayOfWeek,
+                    BeneficiaryId = weeklyLog.BeneficiaryId,
+                    BeneficiaryFirstName = beneficiary.Name.FirstName,
+                    BeneficiaryLastName = beneficiary.Name.LastName,
+                    Duration = weeklyLog.Duration.Minutes
+                };
+
                 var scheduleResponse = new ScheduleResponse()
                 {
                     Id = schedule.Id,
-                    Hours = schedule.Duration.Hours,
-                    Minutes = schedule.Duration.Minutes,
                     VolunteerId = schedule.VolunteerId,
                     VolunteerFirstName = volunteer == null ? null : volunteer.Name.FirstName,
                     VolunteerLastName = volunteer == null ? null : volunteer.Name.LastName,
                     WeeklyLogId = schedule.WeeklyLogId,
-                    BeneficiaryFirstName = beneficiary.Name.FirstName,
-                    BeneficiaryLastName = beneficiary.Name.LastName,
-                    BeneficiaryId = beneficiary.Id,
-                    StartTime = weeklyLog.StartTime,
-                    DayOfWeek = weeklyLog.DayOfWeek.Name,
-                    Date = schedule.Date
+                    Date = schedule.Date,
+                    WeeklyLog = weeklyLogResponse
                 };
 
-                response.Add(scheduleResponse);
+            response.Add(scheduleResponse);
             }
 
             return response;
@@ -157,27 +160,34 @@ namespace Application.Schedules
             }
 
             var weeklyLog = await _weeklyLogRepository.GetByIdAsync(schedule.WeeklyLogId);
-            var beneficiary = await _personRepository.GetByIdAsync(weeklyLog.BeneficiaryId);
             Person volunteer = null;
+            var beneficiary = await _personRepository.GetByIdAsync(weeklyLog.BeneficiaryId);
+
             if (schedule.VolunteerId.HasValue)
             {
                 volunteer = await _personRepository.GetByIdAsync(schedule.VolunteerId.Value);
             }
 
+            var weeklyLogResponse = new BeneficiaryWeeklyLogResponse()
+            {
+                Id = weeklyLog.Id,
+                StartTime = weeklyLog.StartTime,
+                DayOfWeek = weeklyLog.DayOfWeek,
+                BeneficiaryId = weeklyLog.BeneficiaryId,
+                BeneficiaryFirstName = beneficiary.Name.FirstName,
+                BeneficiaryLastName = beneficiary.Name.LastName,
+                Duration = weeklyLog.Duration.Minutes
+            };
+
             var scheduleResponse = new ScheduleResponse()
             {
                 Id = schedule.Id,
-                Hours = schedule.Duration.Hours,
-                Minutes = schedule.Duration.Minutes,
                 VolunteerId = schedule.VolunteerId,
                 VolunteerFirstName = volunteer == null ? null : volunteer.Name.FirstName,
                 VolunteerLastName = volunteer == null ? null : volunteer.Name.LastName,
                 WeeklyLogId = schedule.WeeklyLogId,
-                BeneficiaryFirstName = beneficiary.Name.FirstName,
-                BeneficiaryLastName = beneficiary.Name.LastName,
-                StartTime = weeklyLog.StartTime,
-                DayOfWeek = weeklyLog.DayOfWeek.Name,
-                Date = schedule.Date
+                Date = schedule.Date,
+                WeeklyLog = weeklyLogResponse
             };
 
             return Result.Success(scheduleResponse);
@@ -185,12 +195,6 @@ namespace Application.Schedules
 
         public async Task<Result<ScheduleResponse>> UpdateScheduleAsync(Guid scheduleId, UpdateScheduleRequest request)
         {
-            Result<Duration> durationNameOrError = Duration.Create(request.Hours, request.Minutes);
-            if (durationNameOrError.IsFailure)
-            {
-                return Result.Failure<ScheduleResponse>(durationNameOrError.Error);
-            }
-
             var schedule = await _scheduleRepository.GetByIdAsync(scheduleId);
 
             if (schedule == null)
@@ -198,7 +202,7 @@ namespace Application.Schedules
                 return Result.Failure<ScheduleResponse>($"Schedule with Id {scheduleId} was not found");
             }
 
-            schedule.UpdateSchedule(request.VolunteerId, request.WeeklyLogId, request.Date, durationNameOrError.Value);
+            schedule.UpdateSchedule(request.VolunteerId, request.WeeklyLogId, request.Date);
 
             await _scheduleRepository.Update(schedule);
 
@@ -211,8 +215,6 @@ namespace Application.Schedules
             var response = new ScheduleResponse()
             {
                 Id = schedule.Id,
-                Hours = schedule.Duration.Hours,
-                Minutes = schedule.Duration.Minutes,
                 VolunteerId = schedule.VolunteerId,
                 WeeklyLogId = schedule.WeeklyLogId,
                 VolunteerFirstName = volunteer == null ? null : volunteer.Name.FirstName,

@@ -1,7 +1,7 @@
-<div data-bs-toggle="modal" [attr.data-bs-target]="'#' + title" class="text-white event bg-primary"
+<div (mouseenter) = "mouseEnter()" (mouseleave)="mouseLeave()" data-bs-toggle="modal" [attr.data-bs-target]="'#' + title" class="text-white event bg-primary"
   [style.z-index]="zIndex" [style.left.%]="100 * leftEdge" [style.height.px]="height" [style.top.px]="topEdge"
   [style.width.%]="widthPercentage * 100">
-  <span style="display: block" class="title">{{schedule.beneficiaryFirstName}} {{schedule.beneficiaryLastName}}</span>
+  <span style="display: block" class="title">{{weeklyLog.beneficiaryFirstName}} {{weeklyLog.beneficiaryLastName}}</span>
   <span style="display: block" class="timeSpan">{{renderHour(startHour)}}-{{renderHour(endHour)}}</span>
 
 </div>
@@ -16,10 +16,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Beneficiary: {{schedule.beneficiaryFirstName}} {{schedule.beneficiaryLastName}}</p>
-        <p>Assigned to: {{schedule.volunteerId ? schedule.volunteerFirstName : 'No one'}}</p>
+        <p>Beneficiary: {{weeklyLog.beneficiaryFirstName}} {{weeklyLog.beneficiaryLastName}}</p>
+        <p>Assigned to: {{weeklyLog.Schedule ? weeklyLog.Schedule.volunteerFirstName : 'No one'}}</p>
         <p>Time interval: {{renderHour(startHour)}}-{{renderHour(endHour)}}</p>
-        <p>Date: {{schedule.date | date:'dd/MM/yyyy'}}</p>
+        <p>Date: {{date | date:'dd/MM/yyyy'}}</p>
         <p class="d-flex align-items-center" *ngIf="beneficiary">
           Labels: <ng-container *ngFor="let label of beneficiary.labels">
           <span class="badge bg-soft-info text-primary">{{label.labelName}}</span>
@@ -27,8 +27,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
-        <button *ngIf="!schedule.volunteerId && hasRole('Volunteer')" (click)="assignSchedule()" type="button" class="btn btn-primary rounded-pill">Assign</button>
-        <button *ngIf="schedule.volunteerId == getCurrentUser()?.personId" (click)="unassignSchedule()" type="button" class="btn btn-primary rounded-pill">Unassign</button>
+        <button *ngIf="!weeklyLog.Schedule && hasRole('Volunteer')" (click)="assignSchedule()" type="button" class="btn btn-primary rounded-pill">Assign</button>
+        <button *ngIf="weeklyLog.Schedule?.volunteerId == getCurrentUser()?.personId" (click)="unassignSchedule()" type="button" class="btn btn-primary rounded-pill">Unassign</button>
       </div>
     </div>
   </div>

@@ -12,6 +12,13 @@ namespace Infrastructure.Configurations
         {
             builder.ToTable("weekly_log");
 
+            builder.OwnsOne(s => s.Duration, duration =>
+            {
+                duration.Property(d => d.Minutes)
+                    .HasColumnName("duration")
+                    .IsRequired();
+            });
+
             builder.Property(w => w.StartTime)
                 .HasColumnName("start_time")
                 .IsRequired();

@@ -25,7 +25,7 @@ export class PersonService {
     }
 
     getAllPersons(): Observable<Person[]> {
-        return this.http.get<Person[]>(`${environment.BASE_API_URL}/persons`)
+        return this.http.get<Person[]>(`${environment.BASE_API_URL}/person`)
             .pipe(
                 tap(data => {
                     console.log(data);
@@ -36,7 +36,7 @@ export class PersonService {
 
     updatePerson(person: Person) {
         console.log(person);
-        return this.http.patch<Person>(`${environment.BASE_API_URL}/persons/person/${person.id}`, person)
+        return this.http.patch<Person>(`${environment.BASE_API_URL}/person/${person.id}`, person)
             .pipe(
                 tap(data => {
                     console.log(data);
@@ -46,7 +46,7 @@ export class PersonService {
     }
 
     getById(id: string): Observable<Person> {
-        return this.http.get<Person>(`${environment.BASE_API_URL}/persons/${id}`)
+        return this.http.get<Person>(`${environment.BASE_API_URL}/person/${id}`)
             .pipe(
                 tap(data => {
                     console.log(data);

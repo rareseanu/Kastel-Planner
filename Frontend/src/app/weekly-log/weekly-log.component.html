@@ -23,6 +23,14 @@
             <div *ngIf="f.dayOfWeek.errors.required">Day of week is required.</div>
         </div>
     </div>
+    <div class="mb-3">
+        <label class="form-label" for="duration">Duration</label>
+        <input [(ngModel)]="weeklyLog.duration" type="number" formControlName="duration" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.duration.errors }" placeholder="Minutes" />
+        <div *ngIf="submitted && f.duration.errors" class="invalid-feedback">
+            <div *ngIf="f.duration.errors.required">Duration is required.</div>
+        </div>
+    </div>
     <button [disabled]="loading" class="btn btn-primary">
         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
         Update

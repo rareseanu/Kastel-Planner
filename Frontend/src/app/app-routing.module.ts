@@ -10,8 +10,10 @@ import { RegisterFormComponent } from './register-form/register-form.component';
 import { PersonDetailsComponent } from './person-details/person-details.component';
 import { ScheduleDetailsComponent } from './schedule-details/schedule-details.component';
 import { WeeklyLogComponent } from './weekly-log/weekly-log.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
+  { path: 'home', component: HomeComponent},
   { path: 'login', component: LoginComponent},
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard], data: {roles: ['Admin', 'Volunteer']}},
   { path: 'forgot-password', component: ForgottenPasswordComponent},
@@ -21,7 +23,7 @@ const routes: Routes = [
   { path: 'person/:id', component: PersonDetailsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
   { path: 'schedule/:id', component: ScheduleDetailsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
   { path: 'weekly-log/:id', component: WeeklyLogComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
-  { path: '*', redirectTo: '/'}
+  { path: '**', redirectTo: 'home'}
 ]
 
 

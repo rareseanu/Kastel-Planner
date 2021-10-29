@@ -29,7 +29,7 @@ export class ScheduleDetailsComponent implements OnInit {
             this.scheduleService.getScheduleById(scheduleId).subscribe(data => {
                 this.schedule = data;
                 this.scheduleEditForm = this.formBuilder.group({
-                    duration: [this.schedule.minutes, Validators.required],
+                    duration: [this.schedule.weeklyLog.duration, Validators.required],
                     date: [this.schedule.date, Validators.required]
                 });
             });

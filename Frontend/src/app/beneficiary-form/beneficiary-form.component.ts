@@ -8,6 +8,7 @@ export interface BeneiciaryFormValues {
   startTime: string;
   dayOfWeek: string;
   beneficiaryId: string;
+  duration: string;
 }
 
 @Component({
@@ -46,7 +47,8 @@ export class BeneficiaryFormComponent implements OnInit {
     this.beneficiaryForm = this.formBuilder.group({
       startTime: ['', [Validators.required, Validators.pattern(PAT_HOUR)]],
       dayOfWeek: [], 
-      beneficiaryId: []
+      beneficiaryId: [],
+      duration: [0, [Validators.required]]
     });
 
     this.subscriptions.push(

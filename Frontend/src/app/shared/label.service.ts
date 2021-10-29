@@ -25,7 +25,7 @@ export class LabelService {
     }
 
     addLabelToPerson(labelId: string, personId: string) {
-        return this.http.post(`${environment.BASE_API_URL}/person-label`, {labelId, personId})
+        return this.http.post(`${environment.BASE_API_URL}/personLabel`, {labelId, personId})
             .pipe(
                 tap(data => {
                     console.log(data);
@@ -35,7 +35,7 @@ export class LabelService {
     }
 
     getAllLabels(): Observable<Label[]> {
-        return this.http.get<Label[]>(`${environment.BASE_API_URL}/labels`)
+        return this.http.get<Label[]>(`${environment.BASE_API_URL}/label`)
             .pipe(
                 tap(data => {
                     console.log(data);

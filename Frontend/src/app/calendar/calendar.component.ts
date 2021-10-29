@@ -4,6 +4,8 @@ import { EventComponent } from './event/event.component';
 import { ScheduleService } from '../shared/schedule.service';
 import { Schedule } from '../shared/schedule.model';
 import { PersonService } from '../shared/person.service';
+import { WeeklyLogService } from '../shared/weekly-log.service';
+import { WeeklyLog } from '../shared/weekly-log.model';
 
 @Component({
     templateUrl: 'calendar.component.html',
@@ -20,7 +22,7 @@ export class CalendarComponent {
         "Saturday": 6,
         "Sunday": 7
     };
-    events: Schedule[];
+    events: WeeklyLog[];
 
     public currentWeekMonday: Date;
     public currentWeekSunday: Date;
@@ -37,7 +39,7 @@ export class CalendarComponent {
     lastIndex0Pos: number;
 
     constructor(private resolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef, private scheduleService: ScheduleService,
-            private personService: PersonService) { 
+            private personService: PersonService, private weeklyLogService: WeeklyLogService) { 
         this.loadWeek(new Date());
     }
 
@@ -89,7 +91,7 @@ export class CalendarComponent {
         for(var day = 0; day < 7; ++day) {
             this.components.push([]);
         }
-        this.scheduleService.getAllSchedules(this.currentWeekMonday, this.currentWeekSunday).subscribe(data => {
+        this.weeklyLogService.getAllWeeklyLogs(this.currentWeekMonday, this.currentWeekSunday).subscribe(data => {
             this.events = data;
             this.setupEventComponents();
         });
@@ -102,7 +104,7 @@ export class CalendarComponent {
             }
             this.components[day] = [];
         }
-        this.scheduleService.getAllSchedules(this.currentWeekMonday, this.currentWeekSunday).subscribe(data => {
+        this.weeklyLogService.getAllWeeklyLogs(this.currentWeekMonday, this.currentWeekSunday).subscribe(data => {
             this.events = data;
             this.setupEventComponents();
         });
@@ -113,11 +115,11 @@ export class CalendarComponent {
         let index = 0;
         let containers = this.eventContainers.toArray();
         for(let event of this.events) {
-            const component = containers[CalendarComponent.days[event.dayOfWeek]-1].createComponent(factory);
-
+            const component = containers[CalendarComponent.days[event.dayOfWeek.name]-1].createComponent(factory);
+            
             let parsedHour = new Date(`2021-01-21 ${event.startTime}`);
             let startHour = parsedHour.getHours() + parsedHour.getMinutes() / 60;
-            let endHour = startHour + event.minutes / 60;
+            let endHour = startHour + event.duration / 60;
             let duration = endHour - startHour;
 
             if(this.startHour < startHour) {
@@ -129,13 +131,14 @@ export class CalendarComponent {
             component.instance.title = "event" + index++;
             component.instance.startHour = startHour;
             component.instance.endHour = endHour;
-            component.instance.schedule = event;
-            console.log(event.beneficiaryId)
+            component.instance.weeklyLog = event;
+            component.instance.date = new Date();
+            component.instance.date.setDate(this.currentWeekMonday.getDate() + CalendarComponent.days[event.dayOfWeek.name] - 1);
             this.personService.getById(event.beneficiaryId).subscribe(data => {
                 component.instance.beneficiary = data;
             });
 
-            this.components[CalendarComponent.days[event.dayOfWeek]].push(component);
+            this.components[CalendarComponent.days[event.dayOfWeek.name]].push(component);
             this.cdr.detectChanges();
         }
         for(let componentArray of this.components) {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kastel_Planner_Backend.Controllers
 {
+    [Route("api/[controller]")]
     public class ScheduleController : Controller
     {
         private readonly IScheduleService _scheduleService;
@@ -15,7 +16,7 @@ namespace Kastel_Planner_Backend.Controllers
             _scheduleService = scheduleService;
         }
 
-        [Route("schedules")]
+        [HttpGet]
         public async Task<IActionResult> Index([FromQuery] GetSchedulesRequest request)
         {
             
@@ -23,7 +24,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(schedules);
         }
 
-        [Route("schedules-by-id/{personId}")]
+        [HttpGet("schedules-by-id/{personId}")]
         public async Task<IActionResult> GetSchedulesById([FromRoute] Guid personId, [FromQuery] GetSchedulesRequest request)
         {
             if (personId == Guid.Empty)
@@ -41,7 +42,7 @@ namespace Kastel_Planner_Backend.Controllers
 
         }
 
-        [Route("schedules/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -59,7 +60,6 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("schedule")]
         public async Task<IActionResult> Create([FromBody] CreateScheduleRequest request)
         {
             if(request == null)
@@ -75,10 +75,7 @@ namespace Kastel_Planner_Backend.Controllers
             return CreatedAtAction(nameof(Details), new { id = result.Value.Id}, result.Value);
         }
 
-    
-
-        [HttpDelete]
-        [Route("schedule/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -95,8 +92,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(null);
         }
 
-        [HttpPatch]
-        [Route("schedules/schedule/{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdateScheduleRequest request)
         {
             if(id == Guid.Empty)

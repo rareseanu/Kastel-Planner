@@ -27,6 +27,7 @@ import { ScheduleDetailsComponent } from './schedule-details/schedule-details.co
 import { WeeklyLogComponent } from './weekly-log/weekly-log.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastComponent } from './toast/toast.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { ToastComponent } from './toast/toast.component';
     PersonDetailsComponent,
     ScheduleDetailsComponent,
     WeeklyLogComponent,
-    ToastComponent
+    ToastComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

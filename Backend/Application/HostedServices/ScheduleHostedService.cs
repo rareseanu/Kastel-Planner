@@ -1,6 +1,5 @@
 ﻿using Application.RepositoryInterfaces;
 using Domain.Schedules;
-using Domain.Schedules.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -58,16 +57,7 @@ namespace Application.HostedServices
                 DateTime nextWeeklyLog = currentDate.AddDays(daysUntilNextWeeklyLog);
                 Schedule previousSchedule = await scheduleRepository.GetFirstByPredicateAsync(s => 
                         s.WeeklyLogId.Equals(weeklyLog.Id));
-                var newDuration = Duration.Create(previousSchedule.Duration.Hours, previousSchedule.Duration.Minutes);
 
-                if (newDuration.IsSuccess)
-                {
-                    if (previousSchedule != null)
-                    {
-                        Schedule newSchedule = new Schedule(null, weeklyLog.Id, nextWeeklyLog, newDuration.Value);
-                        await scheduleRepository.AddAsync(newSchedule);
-                    }
-                }
             }
         }
     }

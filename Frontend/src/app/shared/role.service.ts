@@ -24,7 +24,7 @@ export class RoleService {
     }
 
     addRoleToPerson(roleId: string, personId: string) {
-        return this.http.post(`${environment.BASE_API_URL}/person-role`, {roleId, personId})
+        return this.http.post(`${environment.BASE_API_URL}/personRole`, {roleId, personId})
             .pipe(
                 tap(data => {
                     console.log(data);
@@ -34,7 +34,7 @@ export class RoleService {
     }
 
     getAllRoles(): Observable<Role[]> {
-        return this.http.get<Role[]>(`${environment.BASE_API_URL}/roles`)
+        return this.http.get<Role[]>(`${environment.BASE_API_URL}/role`)
             .pipe(
                 tap(data => {
                     console.log(data);

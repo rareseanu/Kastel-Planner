@@ -40,7 +40,8 @@ export class WeeklyLogComponent implements OnInit {
                 this.weeklyLog = data;
                 this.weeklyLogEditForm = this.formBuilder.group({
                     startTime: [this.weeklyLog.startTime, Validators.required],
-                    dayOfWeek: [this.weeklyLog.dayOfWeek, Validators.required]
+                    dayOfWeek: [this.weeklyLog.dayOfWeek, Validators.required],
+                    duration: [this.weeklyLog.duration, Validators.required]
                 });
             });
         }

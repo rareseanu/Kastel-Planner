@@ -8,6 +8,7 @@ using Application.Persons.Requests;
 
 namespace Kastel_Planner_Backend.Controllers
 {
+    [Route("api/[controller]")]
     public class PersonController : Controller
     {
         private readonly IPersonService _personService;
@@ -17,14 +18,14 @@ namespace Kastel_Planner_Backend.Controllers
             _personService = personService;
         }
 
-        [Route("persons")]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var persons = await _personService.GetAllPersonsAsync();
             return Ok(persons);
         }
 
-        [Route("persons/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -42,7 +43,6 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("person")]
         public async Task<IActionResult> Create([FromBody] CreatePersonRequest request)
         {
             if(request == null)
@@ -61,8 +61,7 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
 
-        [HttpDelete]
-        [Route("person/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -79,8 +78,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(null);
         }
 
-        [HttpPatch]
-        [Route("persons/person/{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdatePersonRequest request)
         {
             if (id == Guid.Empty)

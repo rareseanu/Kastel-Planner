@@ -1,9 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white px-0 py-3">
   <div class="container-xl">
     <!-- Logo -->
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" routerLink="home">
       <img
-        src="https://scontent.fsbz1-2.fna.fbcdn.net/v/t1.6435-9/233577681_2984320091806873_4646231544780989887_n.jpg?_nc_cat=103&_nc_rgb565=1&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=RbRNbtFDnscAX9UxyOA&_nc_ht=scontent.fsbz1-2.fna&oh=a607363c30898584f9fdcba5f383cacf&oe=616121F6"
+        src="https://scontent.fsbz3-1.fna.fbcdn.net/v/t1.6435-9/233577681_2984320091806873_4646231544780989887_n.jpg?_nc_cat=103&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=5gOqtmRO06QAX8lo7Xm&_nc_ht=scontent.fsbz3-1.fna&oh=638e1c571bed55b48ec267891c0167f4&oe=61948C76"
         class="h-8 avatar" alt="...">
       Planner
     </a>
@@ -16,10 +16,11 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <!-- Nav -->
       <div class="navbar-nav mx-lg-auto">
-        <a class="nav-item nav-link" href="#" aria-current="page">Home</a>
+        <a class="nav-item nav-link" routerLink="home" routerLinkActive="active">Home</a>
         <a class="nav-item nav-link " routerLink="dashboard" routerLinkActive="active">Dashboard</a>
         <a class="nav-item nav-link " routerLink="calendar" routerLinkActive="active">Calendar</a>
-        <a class="nav-item nav-link " *ngIf="!currentUser" routerLink="reset-password" routerLinkActive="active">Password Reset</a>
+        <a class="nav-item nav-link " *ngIf="!currentUser" routerLink="reset-password"
+          routerLinkActive="active">Password Reset</a>
         <a class="nav-item nav-link " routerLink="register" routerLinkActive="active" *ngIf="currentUser">Register</a>
 
       </div>
@@ -31,7 +32,8 @@
           Sign In
         </a>
         <span *ngIf="currentUser">{{currentUser.email}}&nbsp;</span>
-        <a href="#" class="btn btn-sm btn-primary w-full w-lg-auto" routerLink="login" routerLinkActive="active" (click)="logout()" *ngIf="currentUser">
+        <a href="#" class="btn btn-sm btn-primary w-full w-lg-auto" routerLink="login" routerLinkActive="active"
+          (click)="logout()" *ngIf="currentUser">
           Sign Out
         </a>
       </div>
@@ -41,9 +43,9 @@
 
 <!-- main content container -->
 <div class="jumbotron">
+  <toast></toast>
   <div class="container" style="position:relative">
-    <toast></toast>
-    <div class="row">  
+    <div class="row">
       <router-outlet></router-outlet>
     </div>
   </div>

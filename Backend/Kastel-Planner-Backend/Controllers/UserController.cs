@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Kastel_Planner_Backend.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -16,14 +18,14 @@ namespace Kastel_Planner_Backend.Controllers
             _userService = userService;
         }
 
-        [Route("users")]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
 
-        [Route("users/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -41,7 +43,6 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("user")]
         public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
         {
             if(request == null)
@@ -57,8 +58,7 @@ namespace Kastel_Planner_Backend.Controllers
             return CreatedAtAction(nameof(Details), new { id = result.Value.Id}, result.Value);
         }
 
-        [HttpPost]
-        [Route("reset-password")]
+        [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
             if (request == null)
@@ -74,8 +74,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPost]
-        [Route("forgot-password")]
+        [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] CreatePasswordResetToken request)
         {
             if (request == null)
@@ -91,8 +90,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] AuthenticateRequest request)
         {
             var result = await _userService.Authenticate(request);
@@ -105,7 +103,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPost]
+        [HttpPost("refreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             string refreshToken = request.RefreshToken ?? Request.Cookies["refreshToken"];
@@ -120,7 +118,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPost]
+        [HttpPost("revokeToken")]
         public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenRequest request)
         {
             string refreshToken = request.RefreshToken ?? Request.Cookies["refreshToken"];
@@ -139,8 +137,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
-        [HttpDelete]
-        [Route("user/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -157,8 +154,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(null);
         }
 
-        [HttpPatch]
-        [Route("users/user/{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdateUserRequest request)
         {
             if(id == Guid.Empty)

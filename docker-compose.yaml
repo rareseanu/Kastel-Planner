@@ -1,0 +1,46 @@
+version: "3.4"
+services:
+
+    api:
+      image: kastel.azurecr.io/api
+      domainname: "kastel"
+      command: bash -c 'while !</dev/tcp/postgresql-database/5432; do sleep 1; done; dotnet Kastel-Planner-Backend.dll'
+      build:
+        context: ./Backend
+        dockerfile: Dockerfile
+      depends_on:
+        - postgresql-database
+      environment:
+        - ASPNETCORE_URLS=http://+:44336
+      ports:
+        - "44336:44336"
+        
+    frontend:
+      image: kastel.azurecr.io/frontend
+      domainname: "kastel"
+      build:
+        context: ./Frontend
+        dockerfile: Dockerfile
+      depends_on:
+        - api
+      ports:
+        - "80:80"
+
+    postgresql-database:
+      image: postgres:latest
+      domainname: "kastel"
+      volumes:
+        - database-data:/var/lib/postgresql/foobar
+      environment:
+        - POSTGRES_PASSWORD=
+        - POSTGRES_DB=
+      ports:
+        - "5432:5432"
+
+volumes:
+  database-data:
+    driver: azure_file
+    driver_opts:
+      share_name: database
+      storage_account_name: kastel
+

@@ -67,22 +67,22 @@
             <tbody>
                 <tr *ngFor="let schedule of schedules">
                     <td data-label="Name">
-                        <span>{{schedule.beneficiaryFirstName}}</span>
+                        <span>{{schedule.weeklyLog.beneficiaryFirstName}}</span>
                     </td>
                     <td data-label="Job Title">
-                        <span>{{schedule.beneficiaryLastName}}</span>
+                        <span>{{schedule.weeklyLog.beneficiaryLastName}}</span>
                     </td>
                     <td data-label="Roles">
-                        <span>{{schedule.dayOfWeek}}</span>
+                        <span>{{schedule.weeklyLog.dayOfWeek.name}}</span>
                     </td>
                     <td data-label="Roles">
                         <span>{{schedule.date | date:'dd/MM/yyyy'}}</span>
                     </td>
                     <td data-label="Lead Score">
-                        <span>{{schedule.startTime}}</span>
+                        <span>{{schedule.weeklyLog.startTime}}</span>
                     </td>
                     <td data-label="Company">
-                        <span>{{schedule.minutes}}</span>
+                        <span>{{schedule.weeklyLog.duration}}</span>
                     </td>
                     <td data-label="">
                         <a routerLink="../../schedule/{{schedule.id}}" routerLinkActive="active"
@@ -132,22 +132,22 @@
             <tbody>
                 <tr *ngFor="let schedule of reportSchedules">
                     <td data-label="Name">
-                        <span>{{schedule.beneficiaryFirstName}}</span>
+                        <span>{{schedule.weeklyLog.beneficiaryFirstName}}</span>
                     </td>
                     <td data-label="Job Title">
-                        <span>{{schedule.beneficiaryLastName}}</span>
+                        <span>{{schedule.weeklyLog.beneficiaryLastName}}</span>
                     </td>
                     <td data-label="Roles">
-                        <span>{{schedule.dayOfWeek}}</span>
+                        <span>{{schedule.weeklyLog.dayOfWeek.name}}</span>
                     </td>
                     <td data-label="Roles">
                         <span>{{schedule.date | date:'dd/MM/yyyy'}}</span>
                     </td>
                     <td data-label="Lead Score">
-                        <span>{{schedule.startTime}}</span>
+                        <span>{{schedule.weeklyLog.startTime}}</span>
                     </td>
                     <td data-label="Company">
-                        <span>{{schedule.minutes}}</span>
+                        <span>{{schedule.weeklyLog.duration}}</span>
                     </td>
                 </tr>
             </tbody>

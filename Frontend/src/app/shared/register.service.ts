@@ -102,7 +102,7 @@ export class RegisterService {
         console.log("Role id from register service" + " " +roleId);
         console.log("Person id from register service" + " " +personId);
 
-        return this.http.post<PersonRole>(`${environment.BASE_API_URL}/person-role`, {roleId, personId})
+        return this.http.post<PersonRole>(`${environment.BASE_API_URL}/personRole`, {roleId, personId})
             .pipe(
                 tap(data => { 
                     this.personRoleSubject.next(data);
@@ -113,21 +113,19 @@ export class RegisterService {
     }
 
     getLabelsFromAPI():Observable<Label[]>{
-        return this.http.get<Label[]>(`${environment.BASE_API_URL}/labels`)
+        return this.http.get<Label[]>(`${environment.BASE_API_URL}/label`)
         .pipe(
             map((response: any) => response));
         
     }
 
     getRolesFromAPI():Observable<Role[]>{
-        return this.http.get<Role[]>(`${environment.BASE_API_URL}/roles`)
+        return this.http.get<Role[]>(`${environment.BASE_API_URL}/role`)
         .pipe(
             map(
                 (response: any) => response)
             
             );
-           
-        
     }
 
     insertPersonLabel(labelId: string, personId: string): Observable<PersonLabel>
@@ -136,7 +134,7 @@ export class RegisterService {
         console.log("Label id from service" + " " +labelId);
         console.log("person id from service" + " " +personId);
 
-        return this.http.post<PersonLabel>(`${environment.BASE_API_URL}/person-label`, {labelId, personId})
+        return this.http.post<PersonLabel>(`${environment.BASE_API_URL}/personLabel`, {labelId, personId})
             .pipe(
                 tap(data => { 
                     this.personLabelSubject.next(data);
@@ -148,8 +146,7 @@ export class RegisterService {
 
     insertWeeklyLog(startTime: string, dayOfWeek: string, BeneficiaryId: string): Observable<Beneficiary>
     {
-    
-        return this.http.post<Beneficiary>(`${environment.BASE_API_URL}/weeklylog`, {startTime, dayOfWeek,BeneficiaryId })
+        return this.http.post<Beneficiary>(`${environment.BASE_API_URL}/beneficiaryWeeklyLog`, {startTime, dayOfWeek,BeneficiaryId })
             .pipe(
                 tap(data => { 
                     this.personWeeklyLogSubject.next(data);
@@ -161,7 +158,6 @@ export class RegisterService {
 
     insertUserEmail(email: string, personId: string, password:string): Observable<InsertUser>
     {
-    
         return this.http.post<InsertUser>(`${environment.BASE_API_URL}/user`, {email, personId, password})
             .pipe(
                 tap(data => { 

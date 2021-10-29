@@ -78,14 +78,9 @@ export class PersonDetailsComponent implements OnInit {
         }
 
         this.loading = true;
-        this.weeklyLogService.createWeeklyLog(this.wf.startTime.value, this.wf.dayOfWeek.value, this.person.id)
+        this.weeklyLogService.createWeeklyLog(this.wf.startTime.value, this.wf.dayOfWeek.value, this.wf.minutes.value, this.person.id)
             .subscribe(response => {
                 this.loading = false;
-                this.scheduleService.createSchedule(this.getDateForThisWeek(this.wf.dayOfWeek.value), this.wf.minutes.value,
-                    '', response.id)
-                        .subscribe(schedule => {
-                            
-                        });
                 this.weeklyLogService.getWeeklyLogById(response.id)
                     .subscribe(weeklyLog => {
                         this.weeklyLogs.push(weeklyLog);

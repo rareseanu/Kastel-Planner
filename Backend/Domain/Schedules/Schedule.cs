@@ -1,7 +1,6 @@
 ﻿using Domain.Base;
 using Domain.BeneficiaryWeeklyLogs;
 using Domain.Persons;
-using Domain.Schedules.ValueObjects;
 using System;
 
 namespace Domain.Schedules
@@ -9,7 +8,6 @@ namespace Domain.Schedules
     public class Schedule : BasicEntity
     {
         public DateTime Date { get; set; }
-        public Duration Duration { get; set; }
 
         // Navigation properties
         public Guid? VolunteerId { get; set; }
@@ -21,23 +19,19 @@ namespace Domain.Schedules
         {
         }
 
-        public Schedule(Guid? volunteerId, Guid weeklyLogId, DateTime date,
-                Duration duration)
+        public Schedule(Guid? volunteerId, Guid weeklyLogId, DateTime date)
         {
             Id = Guid.NewGuid();
             VolunteerId = volunteerId;
             WeeklyLogId = weeklyLogId;
             Date = date;
-            Duration = duration;
         }
 
-        public void UpdateSchedule(Guid? volunteerId, Guid weeklyLogId, DateTime date,
-                Duration duration)
+        public void UpdateSchedule(Guid? volunteerId, Guid weeklyLogId, DateTime date)
         {
             VolunteerId = volunteerId;
             WeeklyLogId = weeklyLogId;
             Date = date;
-            Duration = duration;
         }
     }
 }

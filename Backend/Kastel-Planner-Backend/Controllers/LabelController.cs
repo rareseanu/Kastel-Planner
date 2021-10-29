@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kastel_Planner_Backend.Controllers
 {
+    [Route("api/[controller]")]
     public class LabelController : Controller
     {
         private readonly ILabelService _labelService;
@@ -16,14 +17,13 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpGet]
-        [Route("labels")]
         public async Task<IActionResult> Index()
         {
             var labels = await _labelService.GetAllLabelsAsync();
             return Ok(labels);
         }
 
-        [Route("labels/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -41,7 +41,6 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("label")]
         public async Task<IActionResult> Create([FromBody] CreateLabelRequest request)
         {
             if(request == null)
@@ -59,8 +58,7 @@ namespace Kastel_Planner_Backend.Controllers
 
     
 
-        [HttpDelete]
-        [Route("label/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -77,8 +75,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(null);
         }
 
-        [HttpPatch]
-        [Route("labels/label/{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdateLabelRequest request)
         {
             if(id == Guid.Empty)

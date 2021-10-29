@@ -9,7 +9,7 @@ namespace Application.BeneficiaryWeeklyLogs
 {
     public interface IBeneficiaryWeeklyLogService
     {
-        Task<IList<BeneficiaryWeeklyLogResponse>> GetAllWeeklyLogsAsync();
+        Task<IList<BeneficiaryWeeklyLogResponse>> GetAllWeeklyLogsAsync(GetBeneficiaryWeeklyLogRequest request);
         Task<Result<BeneficiaryWeeklyLogResponse>> GetWeeklyLogByAsync(Guid id);
         Task<Result<IList<BeneficiaryWeeklyLogResponse>>> GetAllWeeklyLogsByPersonId(Guid personId);
         Task<Result<BeneficiaryWeeklyLogResponse>> CreateWeeklyLogAsync(CreateBeneficiaryWeeklyLogRequest request);

@@ -1,0 +1,31 @@
+<div class="py-md-32 position-relative mt-5">
+    <div class="container-lg max-w-screen-xl">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-1 ">
+                <!-- Illustration -->
+                <div class="svg-fluid position-relative">
+                    <img src="../../assets/home_illustration.svg" alt="home-illustration">
+                    <!-- Decorations -->
+                    <div
+                        class="position-absolute bottom-0 start-72 h-64 w-64 mt-n4 transform translate-y-n1/2 translate-x-n1/2 gradient-bottom-right start-purple-400 end-cyan-500 filter blur-100 rounded-4 p-5">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 order-md-0">
+                <!-- Heading -->
+                <h1 class="fw-bold display-3 mb-2">
+                    Kastel.
+                </h1>
+                <!-- Text -->
+                <p class="lead mb-10">
+                    Volunteer scheduling.
+                    <!-- Buttons -->
+                <div>
+                    <a [routerLink]="!getCurrentUser() ? ['../login'] : ['../dashboard']" routerLinkActive="active" class="btn btn-lg btn-primary shadow-sm">
+                        Get started
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

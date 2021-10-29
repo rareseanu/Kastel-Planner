@@ -1,19 +1,12 @@
-﻿using Application.BeneficiaryWeeklyLogs.Requests;
-using Microsoft.AspNetCore.Mvc;
-using Application.BeneficiaryWeeklyLogs;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using Application.Persons;
-using Application.Persons.Requests;
-using Application.PersonsLabels;
-using Application.PersonsLabels.Requests;
-using Application.PersonsRoles;
-using Application.PersonsRoles.Requests;
 using Application.Roles;
 using Application.Roles.Requests;
 
 namespace Kastel_Planner_Backend.Controllers
 {
+    [Route("api/[controller]")]
     public class RoleController : Controller
     {
         private readonly IRoleService _roleService;
@@ -23,14 +16,14 @@ namespace Kastel_Planner_Backend.Controllers
             _roleService = roleService;
         }
 
-        [Route("roles")]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var roles = await _roleService.GetAllRolesAsync();
             return Ok(roles);
         }
 
-        [Route("roles/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -48,7 +41,6 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("role")]
         public async Task<IActionResult> Create([FromBody] CreateRoleRequest request)
         {
             if(request == null)
@@ -66,8 +58,7 @@ namespace Kastel_Planner_Backend.Controllers
         }
 
 
-        [HttpDelete]
-        [Route("role/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (id == Guid.Empty)
@@ -84,8 +75,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(null);
         }
 
-        [HttpPatch]
-        [Route("roles/role/{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdateRoleRequest request)
         {
             if (id == Guid.Empty)

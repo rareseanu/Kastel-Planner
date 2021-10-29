@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.BeneficiaryWeeklyLogs.Requests
 {
@@ -10,6 +6,8 @@ namespace Application.BeneficiaryWeeklyLogs.Requests
     {
         public TimeSpan StartTime { get; set; }
         public string DayOfWeek { get; set; }
+        public int Hours { get; set; }
+        public int Minutes { get; set; }
         public Guid BeneficiaryId { get; set; }
     }
 }
