@@ -1,0 +1,21 @@
+<h1>Logs</h1>
+
+<div *ngFor="let ticketMessage of ticketMessages">
+    <p>
+        <b>{{ticketMessage.userId}}: </b> {{ticketMessage.message}}
+    </p>
+</div>
+
+<form id="message-form" (ngSubmit)="sendMessage()">
+    <div class="form-group">
+      <label for="message">Reply</label>
+      <input
+        type="text"
+        class="form-control"
+        id="text"
+        name="message"
+        placeholder="Message"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

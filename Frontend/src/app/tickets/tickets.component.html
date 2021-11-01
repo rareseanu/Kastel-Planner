@@ -1,0 +1,36 @@
+<hr class="my-2">
+<h3 class="fw-bold"> Tickets </h3>
+<hr class="my-2">
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-nowrap">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Status</th>
+                <th scope="col">Opened Date</th>
+                <th scope="col">Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let ticket of tickets">
+                    <td data-label="Name">
+                        <span>{{ticket.id}}</span>
+                    </td>
+                    <td data-label="Job Title">
+                        <span>{{ticket.status}}</span>
+                    </td>
+                    <td data-label="Lead Score">
+                        <span>{{ticket.openedDate}}</span>
+                    </td>
+                    <td data-label="Lead Score">
+                        <span>{{ticket.type}}</span>
+                    </td>
+                    <td data-label="">
+                        <a routerLink="../ticket/{{ticket.id}}" class="text-primary text-decoration-none me-2">Edit</a>
+                    </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
