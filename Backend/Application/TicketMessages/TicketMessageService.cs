@@ -12,12 +12,15 @@ namespace Application.TicketMessages
     public class TicketMessageService : ITicketMessageService
     {
         private readonly ITicketMessageRepository _ticketMessageRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ITicketRepository _ticketRepository;
 
-        public TicketMessageService(ITicketRepository ticketRepository, ITicketMessageRepository ticketMessageRepository)
+        public TicketMessageService(ITicketRepository ticketRepository, ITicketMessageRepository ticketMessageRepository,
+                IUserRepository userRepository)
         {
             _ticketRepository = ticketRepository;
             _ticketMessageRepository = ticketMessageRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<Result<TicketMessageResponse>> CreateTicketMessageAsync(CreateTicketMessageRequest request)
@@ -26,17 +29,21 @@ namespace Application.TicketMessages
 
             await _ticketMessageRepository.AddAsync(ticketMessage);
 
-            var response = new TicketMessageResponse()
+            var user = await _userRepository.GetFirstByPredicateAsync(u => u.Id.Equals(ticketMessage.UserId), u => u.Person);
+
+            var ticketResponse = new TicketMessageResponse()
             {
                 Id = ticketMessage.Id,
                 Message = ticketMessage.Message,
                 SentAt = ticketMessage.SentAt,
                 UserId = ticketMessage.UserId,
+                UserFirstName = user.Person.Name.FirstName,
+                UserLastName = user.Person.Name.LastName,
                 TicketId = ticketMessage.TicketId
-                
+
             };
 
-            return Result.Success(response);
+            return Result.Success(ticketResponse);
         }
 
         public async Task<Result<IList<TicketMessageResponse>>> GetTicketMessagesByTicketIdAsync(Guid ticketId)
@@ -52,12 +59,16 @@ namespace Application.TicketMessages
             var ticketMessages = await _ticketMessageRepository.GetAllByPredicateAsync(tm=> tm.TicketId.Equals(ticketId));
             foreach (var ticketMessage in ticketMessages)
             {
+                var user = await _userRepository.GetFirstByPredicateAsync(u => u.Id.Equals(ticketMessage.UserId), u => u.Person);
+
                 var ticketResponse = new TicketMessageResponse()
                 {
                     Id = ticketMessage.Id,
                     Message = ticketMessage.Message,
                     SentAt = ticketMessage.SentAt,
                     UserId = ticketMessage.UserId,
+                    UserFirstName = user.Person.Name.FirstName,
+                    UserLastName = user.Person.Name.LastName,
                     TicketId = ticketMessage.TicketId
 
                 };

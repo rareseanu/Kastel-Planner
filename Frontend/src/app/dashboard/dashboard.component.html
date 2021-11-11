@@ -1,7 +1,6 @@
 <hr class="my-2">
 <h3 class="fw-bold"> Dashboard </h3>
 <hr class="my-2">
-
 <div class="table-responsive">
     <table class="table table-bordered table-hover table-nowrap">
         <thead class="thead-light">
@@ -39,6 +38,7 @@
                         <a routerLink="../person/{{person.id}}" routerLinkActive="active" class="text-primary text-decoration-none me-2">Edit</a>
                         <a *ngIf="person.isActive" (click)="toggleIsActive(person)" class="text-danger text-decoration-none">Disable</a>
                         <a *ngIf="!person.isActive" (click)="toggleIsActive(person)" class="text-success text-decoration-none">Enable</a>
+                        <a (click)="anonymize(person)" class="ms-2 text-success text-decoration-none">Anonymize</a>
                     </td>
             </tr>
         </tbody>

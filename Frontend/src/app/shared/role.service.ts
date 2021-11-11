@@ -33,6 +33,16 @@ export class RoleService {
             );
     }
 
+    removeRolesFromPerson(personId: string) {
+        return this.http.post(`${environment.BASE_API_URL}/personRole/removeRoles`, {personId: personId})
+        .pipe(
+            tap(data => {
+                console.log(data);
+            }),
+            catchError(this.handleError)
+        );
+    }
+
     getAllRoles(): Observable<Role[]> {
         return this.http.get<Role[]>(`${environment.BASE_API_URL}/role`)
             .pipe(

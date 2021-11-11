@@ -39,6 +39,23 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details([FromRoute] Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            var result = await _ticketService.GetTicketByIdAsync(id);
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
         [HttpGet("ticket-by-id/{userId}")]
         public async Task<IActionResult> GetSchedulesById([FromRoute] Guid userId)
         {

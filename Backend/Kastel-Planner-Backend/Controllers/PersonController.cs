@@ -42,6 +42,22 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
+        [HttpPost("anonymize")]
+        public async Task<IActionResult> Anonymize([FromBody] AnonymizeRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+            var result = await _personService.Anonymize(request);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePersonRequest request)
         {

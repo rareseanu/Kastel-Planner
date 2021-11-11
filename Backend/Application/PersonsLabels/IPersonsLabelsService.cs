@@ -16,5 +16,6 @@ namespace Application.PersonsLabels
         Task<Result<PersonsLabelsResponse>> CreatePersonLabelAsync(CreatePersonsLabelsRequest request);
         Task<Result<PersonsLabelsResponse>> UpdatePersonLabelAsync(Guid personLabelId, UpdatePersonsLabelsRequest request);
         Task<Result> DeletePersonLabelAsync(Guid personLabelId);
+        Task<Result> DeletePersonLabels(RemoveLabelsRequest request);
     }
 }

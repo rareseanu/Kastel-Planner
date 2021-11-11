@@ -45,6 +45,16 @@ export class TicketService {
             );
     }
 
+    getTicketById(ticketId: string): Observable<Ticket> {
+        return this.http.get<Ticket>(`${environment.BASE_API_URL}/ticket/${ticketId}`)
+        .pipe(
+            tap(data => {
+                console.log(data);
+            }),
+            catchError(this.handleError)
+        );
+    }
+
     getTicketsByUserId(userId: string) : Observable<Ticket[]> {
         return this.http.get<Ticket[]>(`${environment.BASE_API_URL}/ticket-by-id/${userId}`)
         .pipe(

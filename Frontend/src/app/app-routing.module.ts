@@ -25,8 +25,8 @@ const routes: Routes = [
   { path: 'person/:id', component: PersonDetailsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
   { path: 'schedule/:id', component: ScheduleDetailsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
   { path: 'weekly-log/:id', component: WeeklyLogComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
-  { path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
-  { path: 'ticket/:id', component: TicketComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
+  { path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard], data: {roles: ['Admin', 'Volunteer']}},
+  { path: 'ticket/:id', component: TicketComponent, canActivate: [AuthGuard], data: {roles: ['Admin', 'Volunteer']}},
   { path: '**', redirectTo: 'home'}
 ]
 

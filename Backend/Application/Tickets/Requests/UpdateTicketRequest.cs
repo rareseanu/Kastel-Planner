@@ -6,6 +6,7 @@ namespace Application.Tickets.Requests
     {
         public string Subject { get; set; }
         public string Status { get; set; }
+        public string Description { get; set; }
         public DateTime OpenedDate { get; set; }
         public string Type { get; set; }
         public Guid UserID { get; set; }

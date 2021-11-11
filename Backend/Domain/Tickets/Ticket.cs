@@ -11,6 +11,7 @@ namespace Domain.Tickets
 
         // Could be enum like weekdays
         public string Status { get; set; }
+        public string Description { get; set; }
         public DateTime OpenedDate { get; set; }
         // Feature request / functionality bug (could be enum)
         public string Type { get; set; }

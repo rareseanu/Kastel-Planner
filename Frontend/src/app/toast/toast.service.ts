@@ -26,7 +26,7 @@ export class ToastService {
         ++this.toastCounter;
         setTimeout(() => {
             this.removeToast(toast)
-        }, 3000);
+        }, 5000);
     }
 
     removeToast(toast: Message) {

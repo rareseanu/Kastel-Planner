@@ -1,5 +1,6 @@
 ﻿using Application.PersonsLabels.Requests;
 using Application.PersonsLabels.Responses;
+using Application.PersonsRoles.Requests;
 using Application.RepositoryInterfaces;
 using Domain;
 using Domain.PersonsLabels;
@@ -51,6 +52,17 @@ namespace Application.PersonsLabels
 
             await _personLabelRepository.Delete(personLabel);
 
+            return Result.Success();
+        }
+
+        public async Task<Result> DeletePersonLabels(RemoveLabelsRequest request)
+        {
+            var personLabels = await _personLabelRepository.GetAllByPredicateAsync(p => p.PersonId.ToString().Equals(request.PersonId), p => p.Person);
+
+            foreach (var personRole in personLabels)
+            {
+                await _personLabelRepository.Delete(personRole);
+            }
             return Result.Success();
         }
 

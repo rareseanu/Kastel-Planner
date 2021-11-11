@@ -16,5 +16,6 @@ namespace Application.Persons
         Task<Result<PersonResponse>> CreatePersonAsync(CreatePersonRequest request);
         Task<Result<PersonResponse>> UpdatePersonAsync(Guid personId, UpdatePersonRequest request);
         Task<Result> DeletePersonAsync(Guid personId);
+        Task<Result<PersonResponse>> Anonymize(AnonymizeRequest request);
     }
 }

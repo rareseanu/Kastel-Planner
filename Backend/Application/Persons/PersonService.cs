@@ -181,5 +181,35 @@ namespace Application.Persons
 
             return Result.Success(response);
         }
+
+        public async Task<Result<PersonResponse>> Anonymize(AnonymizeRequest request)
+        {
+            var user = await _personRepository.GetByIdAsync(request.PersonId);
+            const string defaultPhoneValue = "0000000000";
+
+            if (user != null)
+            {
+                foreach (string field in request.Fields)
+                {
+                    if(field.Equals("PhoneNumber"))
+                    {
+                        user.PhoneNumber = PhoneNumber.Create(defaultPhoneValue).Value;
+                    }
+                }
+            }
+
+            var response = new PersonResponse()
+            {
+                Id = user.Id,
+                FirstName = user.Name.FirstName,
+                LastName = user.Name.LastName,
+                PhoneNumber = user.PhoneNumber.Number,
+                IsActive = user.IsActive
+            };
+
+            await _personRepository.Update(user);
+
+            return Result.Success(response);
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace Application.Tickets
                 Subject = ticket.Subject,
                 Status = ticket.Status,
                 OpenedDate = ticket.OpenedDate,
+                Description = ticket.Description,
                 Type = ticket.Type,
                 UserID = ticket.UserId
             };
@@ -57,6 +58,7 @@ namespace Application.Tickets
                     Subject = ticket.Subject,
                     Status = ticket.Status,
                     OpenedDate = ticket.OpenedDate,
+                    Description = ticket.Description,
                     Type = ticket.Type,
                     UserID = ticket.UserId
                 };
@@ -66,9 +68,26 @@ namespace Application.Tickets
             return response;
         }
 
-        public Task<Result<TicketResponse>> GetTicketByIdAsync(Guid id)
+        public async Task<Result<TicketResponse>> GetTicketByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var ticket = await _ticketRepository.GetByIdAsync(id);
+            if (ticket == null)
+            {
+                return Result.Failure<TicketResponse>($"Ticket with Id {id} was not found");
+            }
+
+            var response = new TicketResponse()
+            {
+                Subject = ticket.Subject,
+                Status = ticket.Status,
+                Description = ticket.Description,
+                Type = ticket.Type,
+                OpenedDate = ticket.OpenedDate,
+                UserID = ticket.UserId,
+                Id = ticket.Id
+            };
+
+            return Result.Success(response);
         }
 
         public async Task<Result<IList<TicketResponse>>> GetTicketsByUserIdAsync(Guid userId)
@@ -90,6 +109,7 @@ namespace Application.Tickets
                     Subject = ticket.Subject,
                     Status = ticket.Status,
                     OpenedDate = ticket.OpenedDate,
+                    Description = ticket.Description,
                     Type = ticket.Type,
                     UserID = ticket.UserId
                 };

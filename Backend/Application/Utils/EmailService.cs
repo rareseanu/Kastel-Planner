@@ -23,6 +23,7 @@ namespace Application.Utils
         {
             // create message
             var email = new MailMessage();
+            email.IsBodyHtml = true;
             email.From = new MailAddress(from ?? _smtpConfig.From);
             email.To.Add(new MailAddress(to));
             email.Subject = subject;

@@ -11,6 +11,7 @@ import { ScheduleService } from '../shared/schedule.service';
 import { Schedule } from '../shared/schedule.model';
 import { WeeklyLog } from '../shared/weekly-log.model';
 import { WeeklyLogService } from '../shared/weekly-log.service';
+import { ToastService } from '../toast/toast.service';
 
 @Component({
     templateUrl: 'person-details.component.html',
@@ -31,6 +32,7 @@ export class PersonDetailsComponent implements OnInit {
     weeklyLogForm: FormGroup;
     loading = false;
     submitted = false;
+    submittedLog = false;
     returnUrl: string;
     error: string;
 
@@ -55,8 +57,8 @@ export class PersonDetailsComponent implements OnInit {
     };
 
     constructor(private personService: PersonService, private route: ActivatedRoute, private formBuilder: FormBuilder,
-            private roleService: RoleService, private labelService: LabelService, private scheduleService: ScheduleService,
-            private weeklyLogService: WeeklyLogService) {
+        private roleService: RoleService, private labelService: LabelService, private scheduleService: ScheduleService,
+        private weeklyLogService: WeeklyLogService, public toastService: ToastService) {
     }
 
     ngOnInit(): void {
@@ -71,9 +73,9 @@ export class PersonDetailsComponent implements OnInit {
     }
 
     onSubmitNewWeeklyLog() {
-        this.submitted = true;
+        this.submittedLog = true;
 
-        if(this.weeklyLogForm.invalid) {
+        if (this.weeklyLogForm.invalid) {
             return;
         }
 
@@ -84,12 +86,13 @@ export class PersonDetailsComponent implements OnInit {
                 this.weeklyLogService.getWeeklyLogById(response.id)
                     .subscribe(weeklyLog => {
                         this.weeklyLogs.push(weeklyLog);
+                        this.toastService.success("Weekly log created successfully.");
                     })
             },
-            (error) => {
-                this.error = error;
-                this.loading = false;
-            });
+                (error) => {
+                    this.error = error;
+                    this.loading = false;
+                });
     }
 
     onSubmitReportForm() {
@@ -106,10 +109,10 @@ export class PersonDetailsComponent implements OnInit {
                 this.reportSchedules = response;
                 this.loading = false;
             },
-            (error) => {
-                this.error = error;
-                this.loading = false;
-            });
+                (error) => {
+                    this.error = error;
+                    this.loading = false;
+                });
     }
 
     get f() { return this.loginForm.controls; }
@@ -124,35 +127,45 @@ export class PersonDetailsComponent implements OnInit {
         }
 
         this.loading = true;
-
+        this.person.roles = this.person.roles.filter((role, index, self) =>
+            index === self.findIndex((r) => (
+                r.roleName === role.roleName
+            ))
+        )
         this.personService.updatePerson(this.person).subscribe(response => {
-            for(let role of this.person.roles) {
-                this.roleService.addRoleToPerson(role.id, this.person.id)
-                .subscribe(
-                    (data) => {
-                        this.loading = false;
-                    },
-                    (error) => {
-                        this.error = error;
-                        this.loading = false;
-                    });
-            }
-            for(let label of this.person.labels) {
-                this.labelService.addLabelToPerson(label.id, this.person.id)
-                .subscribe(
-                    (data) => {
-                        this.loading = false;
-                    },
-                    (error) => {
-                        this.error = error;
-                        this.loading = false;
-                    });
-            }
+            this.roleService.removeRolesFromPerson(this.person.id).subscribe(data => {
+                for (let role of this.person.roles) {
+                    this.roleService.addRoleToPerson(role.id, this.person.id)
+                        .subscribe(
+                            (data) => {
+                                this.loading = false;
+                            },
+                            (error) => {
+                                this.error = error;
+                                this.loading = false;
+                            });
+                }
+            });
+            this.labelService.removeLabelsFromPerson(this.person.id).subscribe(data => {
+                for (let label of this.person.labels) {
+                    this.labelService.addLabelToPerson(label.id, this.person.id)
+                        .subscribe(
+                            (data) => {
+                                this.loading = false;
+                            },
+                            (error) => {
+                                this.error = error;
+                                this.loading = false;
+                            });
+                }
+            });
+            this.toastService.success(`${this.person.firstName} ${this.person.lastName} updated successfully.`);
         },
             (error) => {
+                this.toastService.danger(error);
                 this.error = error;
                 this.loading = false;
-        });
+            });
     }
 
     deleteSchedule(schedule: Schedule) {
@@ -172,13 +185,13 @@ export class PersonDetailsComponent implements OnInit {
     loadPerson() {
         const personId = this.route.snapshot.paramMap.get('id');
 
-        if(personId) {
+        if (personId) {
             this.personService.getById(personId).subscribe(person => {
                 this.person = person;
                 this.loginForm = this.formBuilder.group({
                     firstName: [this.person.firstName, Validators.required],
                     lastName: [this.person.lastName, Validators.required],
-                    phoneNumber: [this.person.phoneNumber, Validators.required],
+                    phoneNumber: [this.person.phoneNumber],
                     roles: [this.person.roles],
                     labels: [this.person.labels]
                 });
@@ -187,21 +200,21 @@ export class PersonDetailsComponent implements OnInit {
                     this.roles = roles;
                     this.labelService.getAllLabels().subscribe(labels => {
                         this.labels = labels;
-                        
+
                         this.isBeneficiary = this.person.roles.some(r => r.roleName == 'Beneficiary');
-                        if(this.isBeneficiary) {
+                        if (this.isBeneficiary) {
                             this.weeklyLogService.getWeeklyLogsByPersonId(personId).subscribe(weeklyLogs => {
                                 this.weeklyLogs = weeklyLogs;
                             });
                             this.weeklyLogForm = this.formBuilder.group({
                                 startTime: ['', Validators.required],
                                 dayOfWeek: ['', Validators.required],
-                                minutes: [0, Validators.required]
+                                minutes: [0, [Validators.required, Validators.min(1)]]
                             });
                         }
 
                         this.isVolunteer = this.person.roles.some(r => r.roleName === 'Volunteer');
-                        if(this.isVolunteer) {
+                        if (this.isVolunteer) {
                             this.scheduleService.getSchedulesByPersonId(personId).subscribe(schedules => {
                                 this.schedules = schedules;
                             })

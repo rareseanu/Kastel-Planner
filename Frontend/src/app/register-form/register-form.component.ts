@@ -113,9 +113,10 @@ export class RegisterFormComponent implements OnInit {
               (data) => {
                 console.log("perosn id from insertPersonRole" + data.personId);
                 console.log("role id from insertPersonRole" + data.roleId);
+                console.log(this.selectedRoleName);
                 this.loading = false;
                 //daca rolul persoanei este de beneficiar
-                if (this.selectedRoleName == 'Beneficiary') {
+                if (this.selectedRoleName === 'Beneficiary') {
                   this.weeklyLogService.createWeeklyLog(this.registerForm.get('beneficiary')?.value.startTime, this.selectedDayOfWeekFromParentComponent, this.registerForm.get('beneficiary')?.value.duration, this.insertedPersonId)
                     .subscribe(
                       (data) => {
@@ -128,7 +129,7 @@ export class RegisterFormComponent implements OnInit {
                       });
                 }
                 //daca rolul persoanei este de voluntar sau admin 
-                else if (this.selectedRoleName == 'Volunteer') {
+                else if (this.selectedRoleName === 'Volunteer') {
                   this.registerService.insertUserEmail(this.registerForm.get('user')?.value.email, this.insertedPersonId, "123456Az*")
                     .subscribe(
                       (data) => {
@@ -141,7 +142,7 @@ export class RegisterFormComponent implements OnInit {
                       });
 
                 }
-                else (this.selectedRoleName == 'Admin')
+                else if (this.selectedRoleName === 'Admin')
                 {
                   this.registerService.insertUserEmail(this.registerForm.get('user')?.value.email, this.insertedPersonId, "123456Az*")
                     .subscribe(
@@ -150,7 +151,8 @@ export class RegisterFormComponent implements OnInit {
                         this.loading = false;
                       },
                       (error) => {
-                        this.error = error;
+                        this.error = error;     
+                        this.toastService.danger(error);
                         this.loading = false;
                       });
 
@@ -170,7 +172,6 @@ export class RegisterFormComponent implements OnInit {
         });
 
     this.submitted = true;
-    this.toastService.success("User created successfully!");
 
   }
 

@@ -1,25 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Ticket } from '../shared/ticket.model';
 import { TicketService } from '../shared/ticket.service';
 import { TicketMessage } from '../shared/ticketMessage.model';
 import { AuthenticationService } from 'src/app/shared/authentication.service';
 import { TicketMessageService } from '../shared/ticketMessage.service';
 import { ToastService } from '../toast/toast.service';
-import { User } from '../shared/user.model';
+import { Ticket } from '../shared/ticket.model';
 @Component({
     templateUrl: 'ticket.component.html'
 })
 export class TicketComponent implements OnInit {
     ticketMessages: TicketMessage[];
     ticketMessageForm: FormGroup;
+    newMessage: string;
+    loading = false;
+    submitted = false;
+    error: string;
+    ticket: Ticket;
+    ticketId: string | null;
 
     constructor(private route: ActivatedRoute,
-                private ticketService: TicketService,
                  private ticketMessageService: TicketMessageService,
+                 private ticketService: TicketService,
                  public toastService: ToastService,
-                 private formBuilder: FormBuilder,
                  private authenticationService: AuthenticationService) {
     }
 
@@ -37,7 +41,11 @@ export class TicketComponent implements OnInit {
 
     }
 
+    get f() { return this.ticketMessageForm.controls; }
+
+
     sendMessage() {
+        this.submitted = true;
         const ticketId = this.route.snapshot.paramMap.get('id');
 
         if (this.ticketMessageForm.invalid) {
@@ -46,7 +54,7 @@ export class TicketComponent implements OnInit {
 
         let user = this.getCurrentUser();
         if(user && ticketId){
-            this.ticketMessageService.createTicketMessage(this.ticketMessageForm.get('message')?.value, new Date(), user.id, ticketId).subscribe(data => {
+            this.ticketMessageService.createTicketMessage(this.f['message'].value, new Date(), ticketId, user.id).subscribe(data => {
                 this.ticketMessages.push(data);
             })
         }
@@ -57,13 +65,17 @@ export class TicketComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const ticketId = this.route.snapshot.paramMap.get('id');
+        this.ticketId = this.route.snapshot.paramMap.get('id');
 
-        if(ticketId) {
-            this.ticketMessageService.getTicketsByTicketId(ticketId).subscribe(data => {
+        if(this.ticketId) {
+            this.ticketService.getTicketById(this.ticketId).subscribe(data => {
+                this.ticket = data;
+            });
+
+            this.ticketMessageService.getTicketsByTicketId(this.ticketId).subscribe(data => {
                 this.ticketMessages = data;
-                this.ticketMessageForm = this.formBuilder.group({
-                    message: ["", Validators.required]
+                this.ticketMessageForm = new FormGroup({
+                    message: new FormControl('', [Validators.required, Validators.minLength(2)])
                 })
                 console.log(data);
             })

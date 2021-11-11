@@ -75,6 +75,18 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(null);
         }
 
+        [HttpPost("removeLabels")]
+        public async Task<IActionResult> RemoveLabelsFromPerson([FromBody] RemoveLabelsRequest request)
+        {
+            var result = await _personsLabelsService.DeletePersonLabels(request);
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(null);
+        }
+
         [HttpPatch("{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdatePersonsLabelsRequest request)
         {

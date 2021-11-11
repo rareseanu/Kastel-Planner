@@ -17,11 +17,12 @@
       <!-- Nav -->
       <div class="navbar-nav mx-lg-auto">
         <a class="nav-item nav-link" routerLink="home" routerLinkActive="active">Home</a>
-        <a class="nav-item nav-link " routerLink="dashboard" routerLinkActive="active">Dashboard</a>
-        <a class="nav-item nav-link " routerLink="calendar" routerLinkActive="active">Calendar</a>
-        <a class="nav-item nav-link " *ngIf="!currentUser" routerLink="reset-password"
+        <a class="nav-item nav-link " *ngIf="currentUser" routerLink="dashboard" routerLinkActive="active">Dashboard</a>
+        <a class="nav-item nav-link " *ngIf="currentUser" routerLink="calendar" routerLinkActive="active">Calendar</a>
+        <a class="nav-item nav-link " *ngIf="!currentUser" routerLink="forgot-password"
           routerLinkActive="active">Password Reset</a>
         <a class="nav-item nav-link " routerLink="register" routerLinkActive="active" *ngIf="currentUser">Register</a>
+        <a class="nav-item nav-link " routerLink="tickets" routerLinkActive="active" *ngIf="currentUser">Tickets</a>
 
       </div>
       <!-- Right navigation -->
@@ -30,10 +31,16 @@
         <a href="#" class="btn btn-sm btn-primary w-full w-lg-auto" routerLink="login" routerLinkActive="active"
           *ngIf="!currentUser">
           Sign In
+          <svg xmlns="http://www.w3.org/2000/svg" height="17px" width="17px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
         </a>
         <span *ngIf="currentUser">{{currentUser.email}}&nbsp;</span>
         <a href="#" class="btn btn-sm btn-primary w-full w-lg-auto" routerLink="login" routerLinkActive="active"
           (click)="logout()" *ngIf="currentUser">
+          <svg xmlns="http://www.w3.org/2000/svg" height="17px" width="17px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+          </svg>
           Sign Out
         </a>
       </div>

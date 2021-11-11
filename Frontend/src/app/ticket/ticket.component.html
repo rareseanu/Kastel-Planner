@@ -1,21 +1,37 @@
-<h1>Logs</h1>
+<hr class="my-2">
+<div class="row">
+    <div class="col-md-12 d-flex">
+    <h3 *ngIf="ticket" class="fw-bold"> {{ticket.subject}}</h3>
+        <button routerLink="../../tickets" class="btn btn-light text-primary border-primary ms-auto">
+            <svg xmlns="http://www.w3.org/2000/svg"  height="17px" width="17px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
+            </svg>
+            Go back
+        </button>
+        </div>
+</div>
 
+<hr class="my-2">
+<h4 class="fw-bold">Details</h4>
+<h5><b>Description: </b>{{ticket.description}}</h5>
+<h5><b>Status: </b>{{ticket.status}}</h5>
+<h5><b>Opened date: </b>{{ticket.openedDate | date: 'short'}}</h5>
+<h5><b>Type: </b>{{ticket.type}}</h5>
+
+<hr class="my-2">
+<h4 class="fw-bold">Logs</h4>
 <div *ngFor="let ticketMessage of ticketMessages">
-    <p>
-        <b>{{ticketMessage.userId}}: </b> {{ticketMessage.message}}
+    <p [ngClass]="{'text-end' : ticketMessage.userId === getCurrentUser()?.id}">
+        <b>{{ticketMessage.userFirstName}} {{ticketMessage.userLastName}}</b> ({{ticketMessage.sentAt | date:'short'}}) <br> {{ticketMessage.message}}
     </p>
 </div>
 
-<form id="message-form" (ngSubmit)="sendMessage()">
-    <div class="form-group">
-      <label for="message">Reply</label>
-      <input
-        type="text"
-        class="form-control"
-        id="text"
-        name="message"
-        placeholder="Message"
-      />
+<form class="text-center" [formGroup]="ticketMessageForm" id="message-form" (ngSubmit)="sendMessage()"  *ngIf="ticketMessageForm">
+    <textarea rows="5" cols="33" formControlName="message" class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.message.errors }" placeholder="New ticket message."></textarea>
+    <div *ngIf="submitted && f.message.errors" class="invalid-feedback">
+        <div *ngIf="f.message.errors">INvalid message.</div>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    <button *ngIf="ticket.userId === getCurrentUser()?.id" class="btn btn-danger mt-2 ms-4">Close Ticket</button>
 </form>

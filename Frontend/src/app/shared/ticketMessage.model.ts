@@ -3,5 +3,7 @@ export class TicketMessage {
     public message: string;
     public sentAt: Date;
     public ticketId: string;
+    public userFirstName: string;
+    public userLastName: string;
     public userId: string;
 }

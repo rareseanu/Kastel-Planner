@@ -6,6 +6,7 @@ import { Schedule } from '../shared/schedule.model';
 import { PersonService } from '../shared/person.service';
 import { WeeklyLogService } from '../shared/weekly-log.service';
 import { WeeklyLog } from '../shared/weekly-log.model';
+import { ToastService } from '../toast/toast.service';
 
 @Component({
     templateUrl: 'calendar.component.html',
@@ -39,7 +40,7 @@ export class CalendarComponent {
     lastIndex0Pos: number;
 
     constructor(private resolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef, private scheduleService: ScheduleService,
-            private personService: PersonService, private weeklyLogService: WeeklyLogService) { 
+            private personService: PersonService, private weeklyLogService: WeeklyLogService, private toastService: ToastService) { 
         this.loadWeek(new Date());
     }
 
@@ -108,6 +109,21 @@ export class CalendarComponent {
             this.events = data;
             this.setupEventComponents();
         });
+    }
+
+    
+    danger() {
+        this.toastService.danger("Danger notification test.");
+    }
+
+    success() {
+        this.toastService.success("Success notification test.");
+
+    }
+
+    info() {
+        this.toastService.info("Info notification test.");
+
     }
 
     setupEventComponents() {

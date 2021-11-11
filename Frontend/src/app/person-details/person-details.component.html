@@ -1,5 +1,16 @@
 <hr class="my-2">
-<h3 class="fw-bold"> {{person?.firstName}} {{person?.lastName}}</h3>
+<div class="row">
+    <div class="col-md-12 d-flex">
+        <h3 class="fw-bold"> {{person?.firstName}} {{person?.lastName}}</h3>
+        <button routerLink="../../dashboard" class="btn btn-light text-primary border-primary ms-auto">
+            <svg xmlns="http://www.w3.org/2000/svg"  height="17px" width="17px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
+              </svg>
+            Go back
+        </button>
+    </div>
+</div>
+
 <hr class="my-2">
 <div *ngIf="error" class="alert alert-danger">{{error}}</div>
 <h4 class="fw-bold">Person Details</h4>
@@ -99,17 +110,17 @@
         <div class="mb-3">
             <label class="form-label" for="startDate">Start Date</label>
             <input type="date" formControlName="startDate" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && rf.startDate.errors }" />
-            <div *ngIf="submitted && rf.startDate.errors" class="invalid-feedback">
-                <div *ngIf="rf.startDate.errors.required">Start date is required.</div>
+                [ngClass]="{ 'is-invalid': rf.startDate.errors }" />
+            <div *ngIf="rf.startDate.errors" class="invalid-feedback">
+                <div *ngIf="rf.startDate.invalid">Start date is required.</div>
             </div>
         </div>
         <div class="mb-3">
             <label class="form-label" for="endDate">End Date</label>
             <input type="date" formControlName="endDate" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && rf.endDate.errors }" />
-            <div *ngIf="submitted && rf.endDate.errors" class="invalid-feedback">
-                <div *ngIf="rf.endDate.errors.required">End date is required.</div>
+                [ngClass]="{ 'is-invalid': rf.endDate.errors }" />
+            <div *ngIf="rf.endDate.errors" class="invalid-feedback">
+                <div *ngIf="rf.endDate.invalid">End date is required.</div>
             </div>
         </div>
         <button [disabled]="loading" class="btn btn-primary">
@@ -186,27 +197,30 @@
             <div class="mb-3">
                 <label class="form-label" for="startTime">Start time</label>
                 <input type="time" formControlName="startTime" class="form-control"
-                    [ngClass]="{ 'is-invalid': submitted && wf.startTime.errors }" placeholder="Start time" />
-                <div *ngIf="submitted && wf.startTime.errors" class="invalid-feedback">
+                    [ngClass]="{ 'is-invalid': submittedLog &&  wf.startTime.errors }" placeholder="Start time" />
+                <div *ngIf="submittedLog && wf.startTime.errors" class="invalid-feedback">
                     <div *ngIf="wf.startTime.errors.required">Start time is required.</div>
                 </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="dayOfWeek">Day of week</label>
-                <select class="form-select" (change)="changeDay($event)" formControlName="dayOfWeek">
+                <select class="form-select" (change)="changeDay($event)" formControlName="dayOfWeek"
+                        [ngClass]="{ 'is-invalid': submittedLog && wf.dayOfWeek.errors }">
                     <option value="" disabled>Choose a day</option>
                     <option *ngFor="let day of days" value="{{day}}">{{day}}</option>
                  </select>
-                <div *ngIf="submitted && wf.dayOfWeek.errors" class="invalid-feedback">
+                <div *ngIf="submittedLog && wf.dayOfWeek.errors" class="invalid-feedback">
                     <div *ngIf="wf.dayOfWeek.errors.required">Day of week is required.</div>
+                    <div *ngIf="wf.dayOfWeek.errors.nullValidator">Day of week is required.</div>
                 </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="minutes">Minutes</label>
                 <input type="number" formControlName="minutes" class="form-control"
-                    [ngClass]="{ 'is-invalid': submitted && wf.minutes.errors }" placeholder="Duration" />
-                <div *ngIf="submitted && wf.minutes.errors" class="invalid-feedback">
-                    <div *ngIf="wf.minutes.errors.required">Duration is required.</div>
+                    [ngClass]="{ 'is-invalid': submittedLog && wf.minutes.errors }" placeholder="Duration" />
+                <div *ngIf="submittedLog && wf.minutes.errors" class="invalid-feedback">
+                    <div *ngIf="wf.minutes.errors?.required">Duration is required.</div>
+                    <div *ngIf="wf.minutes.errors?.min">Duration is invalid.</div>
                 </div>
             </div>
             <button [disabled]="loading" class="btn btn-primary">

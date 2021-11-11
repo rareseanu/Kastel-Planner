@@ -36,7 +36,7 @@ export class TicketMessageService {
     }
 
     getTicketsByTicketId(ticketId: string) : Observable<TicketMessage[]> {
-        return this.http.get<TicketMessage[]>(`${environment.BASE_API_URL}/ticketmessages-by-id/${ticketId}`)
+        return this.http.get<TicketMessage[]>(`${environment.BASE_API_URL}/ticketMessage/ticketmessages-by-id/${ticketId}`)
         .pipe(
             tap(data => {
                 console.log(data);
