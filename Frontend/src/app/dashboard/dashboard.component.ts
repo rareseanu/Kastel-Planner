@@ -33,10 +33,20 @@ export class DashboardComponent implements OnInit {
         })
     }
 
+    anonymize(person: Person) {
+        if(confirm("Are you sure you want to anonymize this user?")) {
+            this.personService.anonymize(person).subscribe(response => {
+                person = response;
+            });
+        }
+    } 
+
     toggleIsActive(person: Person) {
-        person.isActive = !person.isActive;
-        this.personService.updatePerson(person).subscribe(response => {
-            console.log(response);
-        });
+        if(!person.isActive || (person.isActive && confirm("Are you sure you want to disable this user?"))) {
+            person.isActive = !person.isActive;
+            this.personService.updatePerson(person).subscribe(response => {
+                console.log(response);
+            });
+        }
     }
 }

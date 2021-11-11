@@ -28,6 +28,8 @@ namespace Infrastructure
             services.AddScoped<IScheduleRepository, ScheduleRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository> ();
             services.AddScoped<IResetPasswordTokenRepository, ResetPasswordTokenRepository>();
+            services.AddScoped<ITicketMessageRepository, TicketMessageRepository>();
+            services.AddScoped<ITicketRepository, TicketRepository>();
         }
     }
 }

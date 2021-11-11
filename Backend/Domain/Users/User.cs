@@ -2,6 +2,8 @@
 using Domain.Persons;
 using Domain.RefreshTokens;
 using Domain.ResetPasswordTokens;
+using Domain.TicketMessages;
+using Domain.Tickets;
 using Domain.Users.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,8 @@ namespace Domain.Users
         public Guid PersonId { get; set; }
         public ICollection<RefreshToken> RefreshTokens { get; set; }
         public ICollection<ResetPasswordToken> ResetPasswordTokens { get; set; }
+        public ICollection<TicketMessage> TicketMessages { get; set; }
+        public ICollection<Ticket> Tickets { get; set; }
 
         private User()
         {

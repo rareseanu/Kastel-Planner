@@ -11,6 +11,8 @@ import { PersonDetailsComponent } from './person-details/person-details.componen
 import { ScheduleDetailsComponent } from './schedule-details/schedule-details.component';
 import { WeeklyLogComponent } from './weekly-log/weekly-log.component';
 import { HomeComponent } from './home/home.component';
+import { TicketsComponent } from './tickets/tickets.component';
+import { TicketComponent } from './ticket/ticket.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent},
@@ -23,6 +25,8 @@ const routes: Routes = [
   { path: 'person/:id', component: PersonDetailsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
   { path: 'schedule/:id', component: ScheduleDetailsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
   { path: 'weekly-log/:id', component: WeeklyLogComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
+  { path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard], data: {roles: ['Admin', 'Volunteer']}},
+  { path: 'ticket/:id', component: TicketComponent, canActivate: [AuthGuard], data: {roles: ['Admin', 'Volunteer']}},
   { path: '**', redirectTo: 'home'}
 ]
 

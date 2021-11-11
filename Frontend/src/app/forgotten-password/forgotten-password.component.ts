@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 import { AuthenticationService } from '../shared/authentication.service'
+import { ToastService } from '../toast/toast.service';
 
 @Component({
     templateUrl: 'forgotten-password.component.html'
@@ -18,13 +19,21 @@ export class ForgottenPasswordComponent {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private toastService: ToastService
     ) {
+    }
+
+    emailValidator(nameRe: RegExp): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+          const forbidden = nameRe.test(control.value);
+          return forbidden ? {forbiddenName: {value: control.value}} : null;
+        };
     }
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
-            email: ['', Validators.required]
+            email: ['', [Validators.required, Validators.email]]
         });
 
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';        
@@ -45,6 +54,7 @@ export class ForgottenPasswordComponent {
                 (data) => {
                     this.loading = false;
                     this.router.navigate(['reset-password']);
+                    this.toastService.info("Check your email inbox.")
                 },
                 (error) => {
                     this.error = error;

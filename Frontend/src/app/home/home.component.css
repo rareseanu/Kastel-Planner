@@ -1,0 +1,11 @@
+.decoration {
+    transform: translateX(-50%) translateY(-50%) perspective(0) rotate(0) rotateX(0) rotateY(0) skewX(0) skewY(0)
+            scaleX(1) scaleY(1);
+    width: 25rem;
+    height: 25rem;
+    margin-top: 2rem;
+    left: 15.5rem;
+    bottom: 0;
+    filter: blur(100px);
+    background-image: linear-gradient(to bottom right, #a179ff, #00D4FF);
+}

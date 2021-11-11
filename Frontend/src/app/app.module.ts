@@ -28,6 +28,8 @@ import { WeeklyLogComponent } from './weekly-log/weekly-log.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastComponent } from './toast/toast.component';
 import { HomeComponent } from './home/home.component';
+import { TicketComponent } from './ticket/ticket.component';
+import { TicketsComponent } from './tickets/tickets.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import { HomeComponent } from './home/home.component';
     ScheduleDetailsComponent,
     WeeklyLogComponent,
     ToastComponent,
-    HomeComponent
+    HomeComponent,
+    TicketComponent,
+    TicketsComponent
   ],
   imports: [
     BrowserModule,

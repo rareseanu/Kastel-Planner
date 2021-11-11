@@ -1,7 +1,7 @@
 <div class="mb-3">
 
   <form [formGroup]="labelForm">
-    <label for="select-label" class="form-label" style="font-weight: bold;">Working ability</label>
+    <label for="select-label" class="form-label">Working ability</label>
     <ng-multiselect-dropdown id="select-label" [placeholder]="'Optional: Choose person working ability'"
       [data]="labelsInDropdown" [(ngModel)]="selectedLabels" [settings]="dropdownSettings"
       (onSelect)="onItemSelect($event)" (onDeSelect)="onItemDeSelect($event)">

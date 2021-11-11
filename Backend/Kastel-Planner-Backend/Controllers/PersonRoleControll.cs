@@ -77,6 +77,18 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(null);
         }
 
+        [HttpPost("removeRoles")]
+        public async Task<IActionResult> RemoveRolesFromPerson([FromBody] RemoveRolesRequest request)
+        {
+            var result = await _personsRolesService.DeletePersonRolesAsync(request);
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(null);
+        }
+
         [HttpPatch("{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] UpdatePersonsRolesRequest request)
         {

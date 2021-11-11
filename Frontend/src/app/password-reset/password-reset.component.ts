@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthenticationService } from '../shared/authentication.service'
+import { ToastService } from '../toast/toast.service';
 
 @Component({
     templateUrl: 'password-reset.component.html'
@@ -18,7 +19,8 @@ export class PasswordResetComponent {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private toastService: ToastService
     ) {
     }
 
@@ -46,7 +48,7 @@ export class PasswordResetComponent {
             .subscribe(
                 (data) => {
                     this.loading = false;
-                    this.error = "Password reset succesfully.";
+                    this.toastService.success("Password changed successfully.");
                 },
                 (error) => {
                     this.error = error;

@@ -38,6 +38,13 @@ export class EventComponent {
         this.zIndex = this.zIndexBackup;
     }
 
+    assignableEvent(): boolean {
+        if(this.date >= new Date()) {
+            return false;
+        }
+        return true;
+    }
+
     renderHour(hour: number) {
         let hours = Math.floor(hour);
         let minutes = Math.floor((hour - hours) * 60);
@@ -73,7 +80,10 @@ export class EventComponent {
             this.scheduleService.createSchedule(this.date, this.authenticationService.getCurrentUser.personId, this.weeklyLog.id).subscribe(data => {
                 this.weeklyLog.Schedule = data;
                 this.toastService.info("Schedule assigned.");
-            })
+            },
+            (error) => {
+                this.toastService.danger(error);
+            });
         }
     }
 

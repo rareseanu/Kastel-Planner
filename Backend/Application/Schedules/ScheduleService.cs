@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.BeneficiaryWeeklyLogs.Responses;
+using System.Linq;
 
 namespace Application.Schedules
 {
@@ -27,6 +28,18 @@ namespace Application.Schedules
 
         public async Task<Result<ScheduleResponse>> CreateScheduleAsync(CreateScheduleRequest request)
         {
+            var weeklyLog = await _weeklyLogRepository.GetFirstByPredicateAsync(p => p.Id.Equals(request.WeeklyLogId), p => p.Person);
+            var beneficiary = await _personRepository.GetFirstByPredicateAsync(p => p.Id.Equals(weeklyLog.BeneficiaryId), p => p.PersonLabels);
+            var volunteer = await _personRepository.GetFirstByPredicateAsync(p => p.Id.Equals(request.VolunteerId), p =>p.PersonLabels);
+
+            foreach(var label in beneficiary.PersonLabels)
+            {
+                if(!volunteer.PersonLabels.Any(p => p.LabelId.Equals(label.LabelId)))
+                {
+                    return Result.Failure<ScheduleResponse>("You don't have the appropriate labels.");
+                }
+            }
+
             var schedule = new Schedule(request.VolunteerId, request.WeeklyLogId, request.Date);
 
             await _scheduleRepository.AddAsync(schedule);

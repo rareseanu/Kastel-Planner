@@ -1,30 +1,29 @@
 <h4 class="fw-bold">Beneficiary info</h4>
-<h6>Please provide the time and the day of the week when beneficiary is available</h6>
+<span class="text-secondary">Please provide the time and the day of the week for this beneficiary's first schedule. You
+    can add more schedules later using the
+    <a class="text-decoration-none" routerLink="../dashboard">dashboard</a>.
+</span>
 <form [formGroup]="beneficiaryForm">
 
 
     <div class="mb-3">
-        <div class="form-group required"><label for="start-time" class="form-label" style="font-weight: bold;">Time</label></div>
+        <div class="form-group required"><label for="start-time" class="form-label">Time</label></div>
         <input formControlName="startTime" class="form-control" id="start-time" placeholder="hh:mm:ss"
-        [ngClass]="{ 'is-invalid': (submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid) }">
+            [ngClass]="{ 'is-invalid': (submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid) }">
 
         <div class="invalid-feedback"
-        *ngIf="(submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid)">
-        <div *ngIf="beneficiaryForm.controls.startTime.errors?.required">Hour is required</div>
-        <div *ngIf="beneficiaryForm.controls.startTime.errors?.pattern">hh:mm:ss format</div>
+            *ngIf="(submitted && beneficiaryForm.controls.startTime.errors) || (!beneficiaryForm.controls.startTime.pristine && beneficiaryForm.controls.startTime.invalid)">
+            <div *ngIf="beneficiaryForm.controls.startTime.errors?.required">Hour is required</div>
+            <div *ngIf="beneficiaryForm.controls.startTime.errors?.pattern">hh:mm:ss format</div>
 
-         </div>
+        </div>
     </div>
 
     <div class="mb-3">
-        <div class="form-group required"> <label for="day" class="form-label" style="font-weight: bold;">Day Of The Week</label></div>
-        <select #dayOfWeekSelect 
-                class="form-select"
-                formControlName="dayOfWeek"
-                id = "day"
-                (click)="selectedHandlerDayOfWeek($event)" 
-                (change)="onDayOfWeekSelected(dayOfWeekSelect.value)">      
-            <option value ="default" disabled selected>Please select beneficiary disponibility</option>
+        <div class="form-group required"> <label for="day" class="form-label">Day Of The Week</label></div>
+        <select #dayOfWeekSelect class="form-select" formControlName="dayOfWeek" id="day"
+            (click)="selectedHandlerDayOfWeek($event)" (change)="onDayOfWeekSelected(dayOfWeekSelect.value)">
+            <option value="default" disabled selected>Please select beneficiary disponibility</option>
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
             <option value="Wednesday">Wednesday</option>
@@ -36,11 +35,16 @@
     </div>
 
     <div class="mb-3">
-        <label class="form-label" for="duration">Duration (minutes)</label>
-        <input [(ngModel)]="beneficiaryForm.controls.duration" type="number" formControlName="duration" class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && beneficiaryForm.controls.duration.errors }" placeholder="Minutes" />
-        <div *ngIf="submitted && beneficiaryForm.controls.duration.errors" class="invalid-feedback">
-            <div *ngIf="beneficiaryForm.controls.duration.errors.required">Duration is required.</div>
-        </div>
+        <div class="form-group required"><label class="form-label" for="duration">Duration (minutes)</label></div>
+        <input type="number" min="0" formControlName="duration"
+            class="form-control" placeholder="Minutes"
+            [ngClass]="{ 'is-invalid': (submitted && beneficiaryForm.controls.duration.errors) || (!beneficiaryForm.controls.duration.pristine && beneficiaryForm.controls.duration.invalid) }">
+
+            <div class="invalid-feedback"
+                *ngIf="(submitted && beneficiaryForm.controls.duration.errors) || (!beneficiaryForm.controls.duration.pristine && beneficiaryForm.controls.duration.invalid)">
+                <div *ngIf="beneficiaryForm.controls.duration.errors?.required">Duration is required.</div>
+                <div *ngIf="beneficiaryForm.controls.duration.errors?.min">Duration is invalid.</div>
+    
+            </div>
     </div>
 </form>

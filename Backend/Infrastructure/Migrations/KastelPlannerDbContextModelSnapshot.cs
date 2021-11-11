@@ -212,6 +212,64 @@ namespace Infrastructure.Migrations
                     b.ToTable("schedule");
                 });
 
+            modelBuilder.Entity("Domain.TicketMessages.TicketMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TicketMessage");
+                });
+
+            modelBuilder.Entity("Domain.Tickets.Ticket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("OpenedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Ticket");
+                });
+
             modelBuilder.Entity("Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -468,6 +526,30 @@ namespace Infrastructure.Migrations
                     b.Navigation("Volunteer");
                 });
 
+            modelBuilder.Entity("Domain.TicketMessages.TicketMessage", b =>
+                {
+                    b.HasOne("Domain.Tickets.Ticket", null)
+                        .WithMany("TicketMessages")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Users.User", null)
+                        .WithMany("TicketMessages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Tickets.Ticket", b =>
+                {
+                    b.HasOne("Domain.Users.User", null)
+                        .WithMany("Tickets")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Users.User", b =>
                 {
                     b.HasOne("Domain.Persons.Person", "Person")
@@ -552,11 +634,20 @@ namespace Infrastructure.Migrations
                     b.Navigation("PersonRoles");
                 });
 
+            modelBuilder.Entity("Domain.Tickets.Ticket", b =>
+                {
+                    b.Navigation("TicketMessages");
+                });
+
             modelBuilder.Entity("Domain.Users.User", b =>
                 {
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("ResetPasswordTokens");
+
+                    b.Navigation("TicketMessages");
+
+                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

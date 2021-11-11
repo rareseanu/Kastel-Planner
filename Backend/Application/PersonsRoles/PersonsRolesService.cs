@@ -74,6 +74,17 @@ namespace Application.PersonsRoles
             return Result.Success();
         }
 
+        public async Task<Result> DeletePersonRolesAsync(RemoveRolesRequest request)
+        {
+            var personRoles = await _personRoleRepository.GetAllByPredicateAsync(p => p.PersonId.ToString().Equals(request.PersonId));
+
+            foreach (var personRole in personRoles)
+            {
+                await _personRoleRepository.Delete(personRole);
+            }
+            return Result.Success();
+        }
+
         public async Task<IList<PersonsRolesResponse>> GetAllPersonsRolesAsync()
         {
             var response = new List<PersonsRolesResponse>();

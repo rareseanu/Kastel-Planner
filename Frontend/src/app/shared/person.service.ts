@@ -45,6 +45,16 @@ export class PersonService {
             );
     }
 
+    anonymize(person: Person) {
+        return this.http.post<Person>(`${environment.BASE_API_URL}/person/anonymize`, {personId: person.id, fields: ['PhoneNumber']})
+            .pipe(
+                tap(data => {
+                    console.log(data);
+                }),
+                catchError(this.handleError)
+            );
+    }
+
     getById(id: string): Observable<Person> {
         return this.http.get<Person>(`${environment.BASE_API_URL}/person/${id}`)
             .pipe(

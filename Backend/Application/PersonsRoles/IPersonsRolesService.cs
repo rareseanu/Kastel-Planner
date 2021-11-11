@@ -16,5 +16,6 @@ namespace Application.PersonsRoles
         Task<Result<PersonsRolesResponse>> CreatePersonRoleAsync(CreatePersonsRolesRequest request);
         Task<Result<PersonsRolesResponse>> UpdatePersonRoleAsync(Guid personRoleId, UpdatePersonsRolesRequest request);
         Task<Result> DeletePersonRoleAsync(Guid personRoleId);
+        Task<Result> DeletePersonRolesAsync(RemoveRolesRequest request);
     }
 }

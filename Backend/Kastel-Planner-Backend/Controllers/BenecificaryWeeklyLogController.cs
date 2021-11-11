@@ -58,7 +58,7 @@ namespace Kastel_Planner_Backend.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBeneficiaryWeeklyLogRequest request)
         {
             if(request == null)

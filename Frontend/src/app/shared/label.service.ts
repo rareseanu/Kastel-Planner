@@ -34,6 +34,16 @@ export class LabelService {
             );
     }
 
+    removeLabelsFromPerson(personId: string) {
+        return this.http.post(`${environment.BASE_API_URL}/personLabel/removeLabels`, {personId: personId})
+        .pipe(
+            tap(data => {
+                console.log(data);
+            }),
+            catchError(this.handleError)
+        );
+    }
+
     getAllLabels(): Observable<Label[]> {
         return this.http.get<Label[]>(`${environment.BASE_API_URL}/label`)
             .pipe(

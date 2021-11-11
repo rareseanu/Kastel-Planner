@@ -1,0 +1,90 @@
+<hr class="my-2">
+<h3 class="fw-bold"> Tickets </h3>
+<hr class="my-2">
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-nowrap">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Subject</th>
+                <th scope="col">Status</th>
+                <th scope="col">Opened Date</th>
+                <th scope="col">Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let ticket of tickets">
+                    <td data-label="Subject">
+                        <span>{{ticket.subject}}</span>
+                    </td>
+                    <td data-label="Job Title">
+                        <span>{{ticket.status}}</span>
+                    </td>
+                    <td data-label="Lead Score">
+                        <span>{{ticket.openedDate}}</span>
+                    </td>
+                    <td data-label="Lead Score">
+                        <span>{{ticket.type}}</span>
+                    </td>
+                    <td data-label="">
+                        <a routerLink="../ticket/{{ticket.id}}" [state]="{ ticket: ticket}" class="text-primary text-decoration-none me-2">View</a>
+                    </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTicketModal">
+    New Ticket
+  </button>
+
+<div class="modal fade" id="newTicketModal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="staticBackdropLabel">New Ticket</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="newTicketForm" (ngSubmit)="onSubmit()" *ngIf="newTicketForm">
+            <div class="mb-3">
+                <label class="form-label" for="subject">Subject</label>
+                <input type="text" formControlName="subject" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.subject.errors }" placeholder="Ticket title." />
+                <div *ngIf="submitted && f.subject.errors" class="invalid-feedback">
+                    <div *ngIf="f.subject.errors.required">Subject is required.</div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <input type="text" formControlName="description" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.description.errors }" placeholder="Ticket description." />
+                <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                    <div *ngIf="f.description.errors.required">Description is required.</div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="type">Type</label>
+                <select class="form-select" (change)="changeType($event)" formControlName="type"
+                        [ngClass]="{ 'is-invalid': submitted && f.type.errors }">
+                    <option value="" disabled>Choose a type</option>
+                    <option *ngFor="let type of types" value="{{type}}">{{type}}</option>
+                </select>
+                <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+                    <div *ngIf="f.type.errors.required">Type is required.</div>
+                </div>
+            </div>
+            <button [disabled]="loading" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Create
+            </button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
