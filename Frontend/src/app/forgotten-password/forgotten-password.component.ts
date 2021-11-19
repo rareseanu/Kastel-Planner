@@ -53,7 +53,7 @@ export class ForgottenPasswordComponent {
             .subscribe(
                 (data) => {
                     this.loading = false;
-                    this.router.navigate(['reset-password']);
+                    this.router.navigate(['password-reset']);
                     this.toastService.info("Check your email inbox.")
                 },
                 (error) => {

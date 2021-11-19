@@ -137,6 +137,7 @@ export class RegisterFormComponent implements OnInit {
                         this.loading = false;
                       },
                       (error) => {
+                        this.toastService.danger(error);
                         this.error = error;
                         this.loading = false;
                       });

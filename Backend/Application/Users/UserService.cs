@@ -215,7 +215,7 @@ namespace Application.Users
                 ResetPasswordToken = resetToken.Token.Value
             };
             _emailService.Send(user.Email.Value, "Kastel Planner - New Account",
-                $"<h2>Hello,</h2> <h3>Choose your password using the link below. Make sure to use the security token provided in this email. </h3> https://localhost:4200/password-reset <br> <h3>Security token:</h3> <span>{resetToken.Token.Value}</span>");
+                $"<h2>Hello,</h2> <h3>Choose your password using the link below. Make sure to use the security token provided in this email. </h3> http://kastel.westeurope.azurecontainer.io/password-reset <br> <h3>Security token:</h3> <span>{resetToken.Token.Value}</span>");
 
             return Result.Success(userResponse);
         }
@@ -250,7 +250,7 @@ namespace Application.Users
                 Email = foundUser.Email.Value,
                 ResetPasswordToken = resetToken.Token.Value
             };
-            _emailService.Send(foundUser.Email.Value, "Kastel Planner - Forgotten Password", $"<h2>Hello,</h2> <h3>Reset your password using the link below. Make sure to use the security token provided in this email. </h3> https://localhost:4200/password-reset <br> <h3>Security token:</h3> <span>{resetToken.Token.Value}</span>");
+            _emailService.Send(foundUser.Email.Value, "Kastel Planner - Forgotten Password", $"<h2>Hello,</h2> <h3>Reset your password using the link below. Make sure to use the security token provided in this email. </h3> http://kastel.westeurope.azurecontainer.io/password-reset <br> <h3>Security token:</h3> <span>{resetToken.Token.Value}</span>");
 
             return Result.Success(userResponse);
 

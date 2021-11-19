@@ -7,7 +7,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms"
 import { AuthenticationService } from '../shared/authentication.service';
 
 @Component({
-    templateUrl: 'tickets.component.html'
+    templateUrl: 'tickets.component.html',
+    styleUrls: ['tickets.component.css']
 })
 export class TicketsComponent implements OnInit {
     tickets: Ticket[];

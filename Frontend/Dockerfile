@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json /app
 RUN npm install
 COPY . /app
-RUN npm run build -- --configuration=development
+RUN npm run build -- --aot --output-hashing=all --configuration=development
 
 FROM nginx
 RUN rm -rf /usr/share/nginx/html/* && rm -rf /etc/nginx/nginx.conf

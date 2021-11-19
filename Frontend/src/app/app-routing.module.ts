@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard], data: {roles: ['Admin', 'Volunteer']}},
   { path: 'forgot-password', component: ForgottenPasswordComponent},
-  { path: 'reset-password', component: PasswordResetComponent},
+  { path: 'password-reset', component: PasswordResetComponent},
   { path: 'register', component: RegisterFormComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},
   { path: 'person/:id', component: PersonDetailsComponent, canActivate: [AuthGuard], data: {roles: ['Admin']}},

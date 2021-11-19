@@ -176,7 +176,7 @@ namespace Kastel_Planner_Backend.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = false,
                 Expires = expires,
                 SameSite = SameSiteMode.None
             };
